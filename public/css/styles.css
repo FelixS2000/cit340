@@ -158,20 +158,6 @@ main {
   font-size: 1rem;
 }
 
-.btn {
-  display: inline-block;
-  background: #00bcd4;
-  color: #fff;
-  padding: 0.7rem 1.5rem;
-  text-decoration: none;
-  border-radius: 5px;
-  transition: background 0.3s;
-}
-
-.btn:hover {
-  background: #008ba3;
-}
-
 /* Footer */
 footer {
   background: #1e1e2f;
