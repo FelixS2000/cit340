@@ -1,6 +1,140 @@
-/******* Change Box Model ***************/
-*,
-*:before,
-*:after {
-  box-sizing: border-box;
+/* Global Styles */
+* {
+  box-sizing: border-box; 
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: sans-serif; 
+  line-height: 1.6; 
+  color: #333; /* Main text color */
+}
+
+/* Wrapper */
+#wrapper {
+  max-width: 960px; /* Adjust as needed */
+  margin: 0 auto; 
+  padding: 20px; 
+}
+
+/* Header */
+header {
+  background-color: #f0f0f0; /* Light gray background */
+  padding: 15px 0;
+  display: flex;
+  justify-content: space-between; /* Align logo and tools */
+  align-items: center; 
+}
+
+.siteName {
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+.siteName a {
+  text-decoration: none;
+  color: #007bff; 
+}
+
+#tools a {
+  text-decoration: none;
+  color: #333;
+  margin-left: 15px; /* Add spacing between links */
+}
+
+/* Navigation */
+nav ul {
+  list-style: none;
+  display: flex;
+  justify-content: center; 
+  margin-top: 20px; 
+}
+
+nav li {
+  margin: 0 15px; 
+}
+
+nav a {
+  text-decoration: none;
+  color: #333; 
+  transition: color 0.3s ease; 
+}
+
+nav a:hover {
+  color: #007bff; 
+}
+
+/* Hero Section */
+.hero {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.hero-image {
+  max-width: 100%; 
+  height: auto;
+}
+
+/* Content Section */
+.content h2 {
+  margin-bottom: 20px;
+}
+
+.vehicle-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.vehicle-list figure {
+  width: 45%; /* Adjust for 2 columns */
+  margin-bottom: 20px; 
+}
+
+.vehicle-list img {
+  max-width: 100%;
+  height: auto;
+}
+
+.vehicle-list figcaption {
+  text-align: center;
+}
+
+/* Call-to-Action Section */
+.call-to-action {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.btn {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #007bff; 
+  color: #fff;
+  text-decoration: none;
+  border-radius: 5px; 
+  transition: background-color 0.3s ease; 
+}
+
+.btn:hover {
+  background-color: #0062cc; 
+}
+
+/* Footer */
+footer {
+  background-color: #f0f0f0; /* Light gray background */
+  padding: 15px 0;
+  text-align: center;
+}
+
+/* Media Queries (for larger screens) */
+@media (min-width: 768px) {
+  .vehicle-list {
+    justify-content: space-around; 
+  }
+
+  .vehicle-list figure {
+    width: 30%; /* Adjust for 3 columns */
+  }
 }
