@@ -12,6 +12,10 @@ body {
   color: #333;
 }
 
+h1{
+  text-align: center;
+}
+
 /* Site Name and Tools Links */
 .siteName a,
 #tools a {
