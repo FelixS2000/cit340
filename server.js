@@ -38,3 +38,5 @@ app.listen(port, () => {
 app.set("view engine", "ejs")
 app.use(expressLayouts)
 app.set("layout", "./layouts/layout.ejs")
+
+app.use(express.static('public'))
