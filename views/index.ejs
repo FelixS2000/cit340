@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('./partials/head') %> 
+  <body>
+    <div id="wrapper"> 
+      <%- include('../partials/header') %> 
+      <%- include('../partials/navigation') %> 
+
+      <main>
+        <section class="hero">
+          <img src="/images/upgrades/flux-cap.png" alt="CSE Motors Hero Image" class="hero-image"> 
+        </section> 
+
+        <section class="content">
+          <h2>Our Inventory</h2>
+          <div class="vehicle-list"> 
+            <figure>
+              <img src="/images/vehicles/adventador.jpg" alt="Car 1">
+              <figcaption>Car 1</figcaption>
+            </figure>
+            <figure>
+              <img src="/images/vehicles/batmobile.jpg" alt="Car 2">
+              <figcaption>Car 2</figcaption>
+            </figure>
+          </div>
+        </section>
+
+        <section class="call-to-action">
+          <h2>Contact Us</h2>
+          <p>Schedule a test drive or learn more.</p>
+          <a href="#" class="btn">Contact</a>
+        </section>
+      </main>
+
+      <%- include('../partials/footer') %> 
+    </div>
+  </body>
+</html>
