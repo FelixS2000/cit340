@@ -33,9 +33,7 @@ app.listen(port, () => {
   console.log(`app listening on ${host}:${port}`)
 })
 
-/* ***********************
- * View Engine and Templates
- *************************/
+//View Engine and Templates
 app.set("view engine", "ejs")
 app.use(expressLayouts)
 app.set("layout", "./layouts/layout.ejs")
