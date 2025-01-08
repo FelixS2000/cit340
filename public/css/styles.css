@@ -24,10 +24,12 @@ h1{
   text-decoration: none;
   border-radius: 5px;
   transition: background-color 0.3s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for better definition */
 }
 
 .btn:hover {
   background-color: #008ba3; /* Slightly darker shade on hover */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Slightly stronger shadow on hover */
 }
 /* Site Name and Tools Links */
 .siteName a,
