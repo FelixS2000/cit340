@@ -12,6 +12,26 @@ body {
   color: #333;
 }
 
+/* Site Name and Tools Links */
+.siteName a,
+#tools a {
+  color: #ffffff; /* White text for maximum contrast */
+  background-color: #1e1e2f; /* Dark navy background */
+  text-decoration: none; /* Remove underline for cleaner look */
+  font-weight: bold; /* Make text slightly bolder for emphasis */
+  padding: 0.3rem 0.6rem; /* Add spacing around text */
+  border-radius: 4px; /* Smooth rounded corners */
+  transition: background-color 0.3s ease, color 0.3s ease; /* Smooth hover effect */
+}
+
+.siteName a:hover,
+#tools a:hover {
+  background-color: #008ba3; /* Slightly lighter blue on hover */
+  color: #f4f4f9; /* Light gray text on hover */
+  text-decoration: underline; /* Add underline on hover for clarity */
+}
+
+
 #wrapper {
   display: flex;
   flex-direction: column;
