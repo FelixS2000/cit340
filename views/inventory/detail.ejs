@@ -1,16 +1,27 @@
-<!-- views/inventory/detail.ejs -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <%- include('../partials/head'); %>
     <title><%= title %></title>
+    <meta name="description" content="<%= vehicle.description %>">
+    <meta name="keywords" content="<%= vehicle.make %>, <%= vehicle.model %>, <%= vehicle.year %>">
 </head>
 <body>
     <%- include('../partials/header'); %>
-    <main class="vehicle-detail">
+    <nav aria-label="breadcrumb">
+        <ul class="breadcrumb">
+            <li><a href="/">Home</a></li>
+            <li><a href="/inventory/classification/<%= vehicle.classification_id %>">Back to Inventory</a></li>
+            <li aria-current="page"><%= title %></li>
+        </ul>
+    </nav>
+    <main class="vehicle-detail" role="main">
         <h1><%= title %></h1>
-        <%= vehicleHTML %>
+        <% if (vehicleHTML) { %>
+            <%= vehicleHTML %>
+        <% } else { %>
+            <p>Vehicle details are not available at the moment.</p>
+        <% } %>
     </main>
     <%- include('../partials/footer'); %>
 </body>
