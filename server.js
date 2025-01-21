@@ -12,6 +12,9 @@ const app = express()
 const static = require("./routes/static")
 const expressEjsLayouts = require("express-ejs-layouts")
 const errorRoutes = require('./routes/error');
+const inventoryRoutes = require('./routes/inventory');
+app.use('/inventory', inventoryRoutes);
+
 /* ***********************
  * Routes
  *************************/
@@ -47,5 +50,6 @@ app.listen(port, () => {
 app.set("view engine", "ejs")
 app.use(expressLayouts)
 app.set("layout", "./layouts/layout.ejs")
+
 
 app.use(express.static('public'))

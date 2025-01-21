@@ -3,15 +3,21 @@
 <head>
     <%- include('../partials/head'); %>
     <title><%= title %></title>
-    <meta name="description" content="<%= vehicle.description %>">
-    <meta name="keywords" content="<%= vehicle.make %>, <%= vehicle.model %>, <%= vehicle.year %>">
+    <% if (vehicle) { %>
+        <meta name="description" content="<%= vehicle.description %>">
+        <meta name="keywords" content="<%= vehicle.make %>, <%= vehicle.model %>, <%= vehicle.year %>">
+    <% } else { %>
+        <meta name="description" content="Vehicle details not available">
+    <% } %>
 </head>
 <body>
     <%- include('../partials/header'); %>
     <nav aria-label="breadcrumb">
         <ul class="breadcrumb">
             <li><a href="/">Home</a></li>
-            <li><a href="/inventory/classification/<%= vehicle.classification_id %>">Back to Inventory</a></li>
+            <% if (vehicle && vehicle.classification_id) { %>
+                <li><a href="/inventory/classification/<%= vehicle.classification_id %>">Back to Inventory</a></li>
+            <% } %>
             <li aria-current="page"><%= title %></li>
         </ul>
     </nav>
@@ -21,6 +27,7 @@
             <%= vehicleHTML %>
         <% } else { %>
             <p>Vehicle details are not available at the moment.</p>
+            <a href="/inventory" class="btn">Return to Inventory</a>
         <% } %>
     </main>
     <%- include('../partials/footer'); %>
