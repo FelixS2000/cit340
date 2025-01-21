@@ -57,6 +57,24 @@ h1{
   min-height: 100vh;
 }
 
+/* Vehicle detail */
+
+.vehicle-detail {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.vehicle-detail img {
+  max-width: 100%;
+  height: auto;
+}
+
+@media (max-width: 768px) {
+  .vehicle-detail {
+      flex-direction: column;
+  }
+}
 /* Header & Navigation */
 header, nav {
   background: #1e1e2f;

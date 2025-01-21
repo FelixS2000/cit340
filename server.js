@@ -11,7 +11,7 @@ const env = require("dotenv").config()
 const app = express()
 const static = require("./routes/static")
 const expressEjsLayouts = require("express-ejs-layouts")
-
+const errorRoutes = require('./routes/error');
 /* ***********************
  * Routes
  *************************/
@@ -20,6 +20,14 @@ app.use(static)
 app.get("/", function(req, res){
   res.render("index", {title: "Home"})
   })
+
+  // Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).render('error', { message: 'Something went wrong!' });
+});
+
+app.use(errorRoutes);
 /* ***********************
  * Local Server Information
  * Values from .env (environment) file
