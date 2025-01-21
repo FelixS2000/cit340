@@ -2,7 +2,11 @@
 
 -- DROP TYPE IF EXISTS public.account_type;
 
-CREATE TYPE public.account_type AS ENUM
+-- Drop the type if it already exists
+DROP TYPE IF EXISTS public.account_type;
+
+-- Create the ENUM type
+CREATE TYPE public.account_type AS ENUM (
     ('Client', 'Employee', 'Admin');
 
 ALTER TYPE public.account_type

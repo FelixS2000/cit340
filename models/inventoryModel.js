@@ -28,6 +28,7 @@ async function getVehicleById(vehicleId) {
     }
 }
 
+
 // Fetch inventory by classification ID
 async function getInventoryByClassification(classificationId) {
     try {

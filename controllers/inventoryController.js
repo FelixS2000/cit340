@@ -1,4 +1,5 @@
-const { getVehicleById, getInventoryByClassification: getClassificationFromModel } = require('../models/inventoryModel');
+// Fetch vehicle details by ID
+const { getVehicleById } = require('../models/inventoryModel');
 const { buildVehicleHTML } = require('../utilities/index');
 
 // Fetch vehicle details by ID
@@ -24,6 +25,7 @@ async function getVehicleDetails(req, res, next) {
         next(error);
     }
 }
+
 
 // Fetch inventory list by classification ID
 async function getInventoryByClassification(req, res, next) {

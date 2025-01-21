@@ -1,20 +1,14 @@
 function buildVehicleHTML(vehicle) {
-  return `
-      <div class="vehicle-detail">
-          <img 
-              src="${vehicle.image}" 
-              alt="${vehicle.year} ${vehicle.make} ${vehicle.model}" 
-              role="img"
-          >
-          <div class="vehicle-info">
-              <h2>${vehicle.year} ${vehicle.make} ${vehicle.model}</h2>
-              <p><strong>Price:</strong> $${vehicle.price.toLocaleString()}</p>
-              <p><strong>Mileage:</strong> ${vehicle.mileage.toLocaleString()} miles</p>
-              <p><strong>Color:</strong> ${vehicle.color}</p>
-              <p>${vehicle.description}</p>
-          </div>
-      </div>
-  `;
+    return `
+        <div class="vehicle-detail">
+            <h1>${vehicle.make} ${vehicle.model}</h1>
+            <img src="${vehicle.image}" alt="${vehicle.year} ${vehicle.make} ${vehicle.model}">
+            <p>Year: ${vehicle.year}</p>
+            <p>Price: $${vehicle.price.toLocaleString()}</p>
+            <p>Mileage: ${vehicle.mileage.toLocaleString()} miles</p>
+            <p>Description: ${vehicle.description}</p>
+        </div>
+    `;
 }
 
 // Export as part of an object for extensibility
