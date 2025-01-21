@@ -1,4 +1,4 @@
-const { getVehicleById, getInventoryByClassification } = require('../models/inventoryModel');
+const { getVehicleById, getInventoryByClassification: getClassificationFromModel } = require('../models/inventoryModel');
 const { buildVehicleHTML } = require('../utilities/index');
 
 // Fetch vehicle details by ID
@@ -29,7 +29,7 @@ async function getVehicleDetails(req, res, next) {
 async function getInventoryByClassification(req, res, next) {
     try {
         const classificationId = req.params.classificationId;
-        const inventory = await getInventoryByClassification(classificationId);
+        const inventory = await getClassificationFromModel(classificationId);
 
         if (!inventory.length) {
             return res.status(404).render('errors/404', { 

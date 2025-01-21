@@ -1,4 +1,4 @@
-const pool = require('../database/db-sql-code.sql'); // Assume connection.js configures the database connection
+const pool = require('../database/connection'); // Updated to import from connection.js
 
 // Fetch vehicle details by ID
 async function getVehicleById(vehicleId) {
