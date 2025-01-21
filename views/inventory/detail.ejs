@@ -3,12 +3,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title><%= vehicleHTML.title %></title>
-    <link rel="stylesheet" href="/public/styles.css">
+    <%- include('../partials/head'); %>
+    <title><%= title %></title>
 </head>
 <body>
-    <div class="vehicle-detail">
+    <%- include('../partials/header'); %>
+    <main class="vehicle-detail">
+        <h1><%= title %></h1>
         <%= vehicleHTML %>
-    </div>
+    </main>
+    <%- include('../partials/footer'); %>
 </body>
 </html>

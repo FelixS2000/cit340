@@ -22,10 +22,11 @@ app.get("/", function(req, res){
   })
 
   // Error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).render('error', { message: 'Something went wrong!' });
+  app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(err.status || 500).render('errors/500', { title: 'Server Error', error: err });
 });
+
 
 app.use(errorRoutes);
 /* ***********************

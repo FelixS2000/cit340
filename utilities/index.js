@@ -1,12 +1,17 @@
 // utilities/index.js
 
-exports.wrapVehicleDetailsInHTML = (vehicle) => {
+function buildVehicleHTML(vehicle) {
   return `
-      <h1>${vehicle.make} ${vehicle.model}</h1>
-      <img src="${vehicle.imageUrl}" alt="${vehicle.make} ${vehicle.model}" />
-      <p>Year: ${vehicle.year}</p>
-      <p>Price: $${vehicle.price.toLocaleString()}</p>
-      <p>Mileage: ${vehicle.mileage.toLocaleString()} miles</p>
-      <p>Description: ${vehicle.description}</p>
+      <div class="vehicle-detail">
+          <img src="/public/images/full/${vehicle.image}" alt="${vehicle.make} ${vehicle.model}">
+          <div class="vehicle-info">
+              <h2>${vehicle.year} ${vehicle.make} ${vehicle.model}</h2>
+              <p>Price: $${vehicle.price.toLocaleString()}</p>
+              <p>Mileage: ${vehicle.mileage.toLocaleString()} miles</p>
+              <p>${vehicle.description}</p>
+          </div>
+      </div>
   `;
-};
+}
+
+module.exports = { buildVehicleHTML };

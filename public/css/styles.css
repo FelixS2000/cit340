@@ -61,13 +61,18 @@ h1{
 
 .vehicle-detail {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
 }
 
 .vehicle-detail img {
   max-width: 100%;
   height: auto;
+  flex: 1 1 40%;
+}
+
+.vehicle-info {
+  flex: 1 1 50%;
 }
 
 @media (max-width: 768px) {
@@ -75,6 +80,7 @@ h1{
       flex-direction: column;
   }
 }
+
 /* Header & Navigation */
 header, nav {
   background: #1e1e2f;

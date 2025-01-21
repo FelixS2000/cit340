@@ -1,9 +1,18 @@
-// models/inventoryModel.js
+const db = require('../database/db-sql-code.sql');
 
-const db = require('../database'); // Assuming you have a database connection
+// Function to retrieve a vehicle by its ID
+async function getVehicleById(inv_id) {
+    try {
+        const sql = 'SELECT * FROM inventory WHERE inv_id = $1';
+        const result = await db.query(sql, [inv_id]);
+        if (result.rows.length === 0) {
+            throw new Error(`Vehicle with ID ${inv_id} not found`);
+        }
+        return result.rows[0];
+    } catch (error) {
+        console.error('Error fetching vehicle by ID:', error.message);
+        throw error;
+    }
+}
 
-exports.getVehicleById = async (id) => {
-    const query = 'SELECT * FROM vehicles WHERE id = ?'; // Use parameterized query
-    const [rows] = await db.execute(query, [id]);
-    return rows[0]; // Return the first vehicle found
-};
+module.exports = { getVehicleById };
