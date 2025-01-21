@@ -23,7 +23,7 @@ async function getVehicleById(vehicleId) {
 
         return result.rows[0] || null; // Return the first row or null if no record exists
     } catch (error) {
-        console.error('Error fetching vehicle data:', error.message);
+        console.error('Error fetching vehicle data:', error.message, 'Details:', error);
         throw error;
     }
 }
@@ -46,7 +46,7 @@ async function getInventoryByClassification(classificationId) {
 
         return result.rows;
     } catch (error) {
-        console.error('Error fetching inventory data:', error.message);
+        console.error('Error fetching inventory data:', error.message, 'Details:', error);
         throw error;
     }
 }
