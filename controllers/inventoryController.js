@@ -30,10 +30,9 @@ async function getVehicleDetails(req, res, next) {
 // Fetch inventory list by classification ID
 async function getInventoryByClassification(req, res, next) {
     const classificationId = req.params.classificationId;
-    const inventory = await getInventoryByClassification(classificationId); // Fixed reference
+    const inventory = await getClassificationFromModel(classificationId);
     try {
-        const classificationId = req.params.classificationId;
-        const inventory = await getClassificationFromModel(classificationId);
+
 
         if (!inventory.length) {
             return res.status(404).render('errors/404', { 
