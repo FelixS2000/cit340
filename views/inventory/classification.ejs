@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Classification</title>
+</head>
+<body>
+    <h1>Inventory Classification</h1>
+    <ul>
+        <% inventory.forEach(function(item) { %>
+            <li>
+                <h2><%= item.make %> <%= item.model %> (<%= item.year %>)</h2>
+                <img src="<%= item.thumbnail %>" alt="<%= item.make %> <%= item.model %>">
+                <p>Price: $<%= item.price %></p>
+            </li>
+        <% }); %>
+    </ul>
+</body>
+</html>
