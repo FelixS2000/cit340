@@ -21,8 +21,11 @@ importers:
         specifier: ^2.5.1
         version: 2.5.1
       pg:
-        specifier: ^8.8.0
+        specifier: ^8.13.1
         version: 8.13.1
+      postgresql:
+        specifier: ^0.0.1
+        version: 0.0.1
     devDependencies:
       nodemon:
         specifier: ^3.1.0
@@ -154,6 +157,10 @@ packages:
     resolution: {integrity: sha512-UeJmFfOrAQS8OJWPZ4qtgHyWExa088/MtK5UEyoJGFH67cDEXkZSviOiKRCZ4Xij0zxI3JECgYs3oKx+AizQBA==}
     engines: {node: '>=0.10.0'}
     hasBin: true
+
+  empty-dir@0.1.0:
+    resolution: {integrity: sha512-EatTcJH5cVS/NXEpy7IWBSpH0WxvJdBnmRkz8Gqr2Jn4GmSqc4Q4E81SmVGOrHHHtCys1SsFKmAoHlhaFkRlmg==}
+    engines: {node: '>= 0.8.0'}
 
   encodeurl@1.0.2:
     resolution: {integrity: sha512-TPJXq8JqFaVYm2CWmPvnP2Iyo4ZSM7/QKcSmuMLDObfpH5fi7RUGmd/rTDf+rut/saiDiQEeVTNgAmJEdAOx0w==}
@@ -410,6 +417,10 @@ packages:
     resolution: {integrity: sha512-9ZhXKM/rw350N1ovuWHbGxnGh/SNJ4cnxHiM0rxE4VN41wsg8P8zWn9hv/buK00RP4WvlOyr/RBDiptyxVbkZQ==}
     engines: {node: '>=0.10.0'}
 
+  postgresql@0.0.1:
+    resolution: {integrity: sha512-qtBS+u3m4UxCVTTQBm58IR4TJWZKYVRa/egONxzkQtqEYhFc9HVno4S7//ABFRJR5LeCcrZtcBpZJ5SJkJkGEA==}
+    engines: {node: '>= 0.10.0'}
+
   proxy-addr@2.0.7:
     resolution: {integrity: sha512-llQsMLSUDUPT44jdrU/O37qlnifitDP+ZwrmmZcoSKyLKvtZxpyV0n2/bD/N4tBAAZ/gJEdZU7KMraoK1+XYAg==}
     engines: {node: '>= 0.10'}
@@ -654,6 +665,8 @@ snapshots:
   ejs@3.1.10:
     dependencies:
       jake: 10.9.2
+
+  empty-dir@0.1.0: {}
 
   encodeurl@1.0.2: {}
 
@@ -910,6 +923,10 @@ snapshots:
   postgres-interval@1.2.0:
     dependencies:
       xtend: 4.0.2
+
+  postgresql@0.0.1:
+    dependencies:
+      empty-dir: 0.1.0
 
   proxy-addr@2.0.7:
     dependencies:
