@@ -1,5 +1,5 @@
 // Fetch vehicle details by ID
-const { getVehicleById } = require('../models/inventoryModel');
+const { getVehicleById, getInventoryByClassification } = require('../models/inventoryModel');
 const { buildVehicleHTML } = require('../utilities/index');
 
 // Fetch vehicle details by ID
@@ -29,6 +29,8 @@ async function getVehicleDetails(req, res, next) {
 
 // Fetch inventory list by classification ID
 async function getInventoryByClassification(req, res, next) {
+    const classificationId = req.params.classificationId;
+    const inventory = await getInventoryByClassification(classificationId); // Fixed reference
     try {
         const classificationId = req.params.classificationId;
         const inventory = await getClassificationFromModel(classificationId);
