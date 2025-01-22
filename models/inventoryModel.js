@@ -28,7 +28,6 @@ async function getVehicleById(vehicleId) {
     }
 }
 
-
 // Fetch inventory by classification ID
 async function getInventoryByClassification(classificationId) {
     try {
@@ -38,8 +37,11 @@ async function getInventoryByClassification(classificationId) {
                 inv_make AS make, 
                 inv_model AS model, 
                 inv_year AS year, 
+                inv_description AS description, 
                 inv_price AS price, 
-                inv_thumbnail AS thumbnail 
+                inv_thumbnail AS thumbnail,
+                inv_miles AS mileage,
+                inv_color AS color
             FROM inventory 
             WHERE classification_id = $1
         `;

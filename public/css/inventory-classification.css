@@ -3,6 +3,7 @@ h1 {
     margin: 20px 0;
     font-size: 2.5rem;
     color: #1e1e2f; /* Dark color for the heading */
+    text-align: center; /* Center the heading */
 }
 
 ul {
@@ -40,6 +41,23 @@ img {
 }
 
 p {
-    font-size: 1.2rem; /* Font size for price */
+    font-size: 1.2rem; /* Font size for price and other details */
     color: #555; /* Slightly lighter text color */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    li {
+        width: 95%; /* Adjust width for smaller screens */
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 2rem; /* Smaller heading on mobile */
+    }
+
+    p {
+        font-size: 1rem; /* Smaller text on mobile */
+    }
 }
