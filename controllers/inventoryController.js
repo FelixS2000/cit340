@@ -1,5 +1,5 @@
 // Fetch vehicle details by ID
-const { getVehicleById, getInventoryByClassification: getInventoryFromModel, saveUserToDatabase } = require('../models/inventoryModel');
+const { getVehicleById, getInventoryByClassification: getInventoryFromModel, saveUserToDatabase, saveClassificationToDatabase, saveInventoryToDatabase } = require('../models/inventoryModel');
 const { buildVehicleHTML } = require('../utilities/index');
 const bcrypt = require("bcryptjs"); // Import bcrypt
 
@@ -31,7 +31,6 @@ async function getVehicleDetails(req, res, next) {
 
 async function registerUser(req, res, next) {
     // Register a new user
-
     try {
         const { firstName, lastName, email, account_password } = req.body;
 
@@ -50,12 +49,11 @@ async function registerUser(req, res, next) {
 
 async function addClassification(req, res, next) {
     // Add a new classification
-
     try {
         const { classificationName } = req.body;
 
-        // Logic to save the classification to the database
-        // await saveClassificationToDatabase(classificationName);
+        // Save the classification to the database
+        await saveClassificationToDatabase(classificationName);
 
         req.flash('message', 'Classification added successfully!');
         res.redirect('/inventory/management'); // Redirect to management view
@@ -66,12 +64,11 @@ async function addClassification(req, res, next) {
 
 async function addInventory(req, res, next) {
     // Add a new inventory item
-
     try {
         const { make, model, year, price, mileage, classification_id } = req.body;
 
-        // Logic to save the inventory item to the database
-        // await saveInventoryToDatabase(make, model, year, price, mileage, classification_id);
+        // Save the inventory item to the database
+        await saveInventoryToDatabase(make, model, year, price, mileage, classification_id);
 
         req.flash('message', 'Inventory item added successfully!');
         res.redirect('/inventory/management'); // Redirect to management view

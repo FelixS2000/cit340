@@ -1,0 +1,56 @@
+/* Add Classification Page Styles */
+
+body {
+    background-color: #f4f4f9; /* Light background for consistency */
+}
+
+h1 {
+    color: #1e1e2f; /* Dark color for the heading */
+    text-align: center; /* Center the heading */
+    margin: 20px 0; /* Spacing around the heading */
+}
+
+.error-message {
+    background-color: #ffcc00; /* Yellow background for error messages */
+    color: #333; /* Dark text color */
+    padding: 10px; /* Padding around the message */
+    border-radius: 5px; /* Rounded corners */
+    text-align: center; /* Center the text */
+    margin: 20px 0; /* Spacing around the error message */
+}
+
+form {
+    max-width: 600px; /* Limit form width */
+    margin: 0 auto; /* Center the form */
+    padding: 20px; /* Padding around the form */
+    background-color: #fff; /* White background for the form */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+label {
+    display: block; /* Block display for labels */
+    margin-bottom: 5px; /* Spacing below labels */
+}
+
+input[type="text"], input[type="number"], select {
+    width: 100%; /* Full width for inputs */
+    padding: 10px; /* Padding inside inputs */
+    margin-bottom: 20px; /* Spacing below inputs */
+    border: 1px solid #ccc; /* Light border */
+    border-radius: 4px; /* Rounded corners */
+}
+
+button {
+    display: inline-block; /* Inline block for button */
+    background-color: rgb(0, 188, 212); /* Button color */
+    color: #000; /* Black text */
+    padding: 10px 15px; /* Padding around the button */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+}
+
+button:hover {
+    background-color: #008ba3; /* Darker shade on hover */
+}
