@@ -1,4 +1,3 @@
-// Fetch vehicle details by ID
 const { getVehicleById, getInventoryByClassification: getInventoryFromModel, saveUserToDatabase, saveClassificationToDatabase, saveInventoryToDatabase } = require('../models/inventoryModel');
 const { buildVehicleHTML } = require('../utilities/index');
 const bcrypt = require("bcryptjs"); // Import bcrypt
@@ -52,6 +51,15 @@ async function addClassification(req, res, next) {
     try {
         const { classificationName } = req.body;
 
+        // Server-side validation
+        if (!classificationName || /\s|[^a-zA-Z0-9]/.test(classificationName)) {
+            req.flash('errorMessage', 'Classification name cannot contain spaces or special characters.');
+            return res.render('inventory/add-classification', {
+                errorMessage: req.flash('errorMessage'),
+                classificationName: classificationName // Retain the value
+            });
+        }
+
         // Save the classification to the database
         await saveClassificationToDatabase(classificationName);
 
@@ -66,6 +74,20 @@ async function addInventory(req, res, next) {
     // Add a new inventory item
     try {
         const { make, model, year, price, mileage, classification_id } = req.body;
+
+        // Server-side validation
+        if (!make || !model || !year || !price || !mileage || isNaN(year) || isNaN(price) || isNaN(mileage)) {
+            req.flash('errorMessage', 'All fields are required and must be valid.');
+            return res.render('inventory/add-inventory', {
+                flashMessage: req.flash('errorMessage'),
+                make: make,
+                model: model,
+                year: year,
+                price: price,
+                mileage: mileage,
+                classification_id: classification_id // Retain the value
+            });
+        }
 
         // Save the inventory item to the database
         await saveInventoryToDatabase(make, model, year, price, mileage, classification_id);

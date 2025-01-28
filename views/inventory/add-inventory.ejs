@@ -45,7 +45,9 @@
         <label for="classification_id">Classification:</label>
         <select name="classification_id" id="classification_id" required>
             <option value="">Select Classification</option>
-            <!-- Options will be populated dynamically -->
+            <% classifications.forEach(function(classification) { %>
+                <option value="<%= classification.classification_id %>" <%= classification.classification_id == classification_id ? 'selected' : '' %>><%= classification.classification_name %></option>
+            <% }); %>
         </select>
 
         <button type="submit">Add Inventory Item</button>

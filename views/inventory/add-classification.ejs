@@ -5,13 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Classification</title>
     <link rel="stylesheet" href="/css/add-classification.css">
+    <script>
+        function validateForm() {
+            const classificationName = document.getElementById('classificationName').value;
+            if (!classificationName || /\s|[^a-zA-Z0-9]/.test(classificationName)) {
+                alert('Classification name cannot contain spaces or special characters.');
+                return false;
+            }
+            return true;
+        }
+    </script>
 </head>
 <body>
     <h1>Add New Classification</h1>
     <% if (errorMessage) { %>
         <div class="error-message"><%= errorMessage %></div>
     <% } %>
-    <form action="/inventory/add-classification" method="POST">
+    <form action="/inventory/add-classification" method="POST" onsubmit="return validateForm()">
         <label for="classificationName">Classification Name:</label>
         <input type="text" name="classificationName" id="classificationName" value="<%= classificationName %>" required>
 

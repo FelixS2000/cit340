@@ -44,7 +44,11 @@ router.get('/add-inventory', (req, res) => {
     res.render('inventory/add-inventory', { 
         errors: null,
         make: '', // Pass an empty string for make
-        model: '' // Pass an empty string for model
+        model: '', // Pass an empty string for model
+        year: '',
+        price: '',
+        mileage: '',
+        classification_id: ''
     }); // Render add inventory view
 });
 
