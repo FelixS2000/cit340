@@ -5,7 +5,8 @@ const { buildVehicleHTML } = require('../utilities/index');
 // Fetch vehicle details by ID
 async function getVehicleDetails(req, res, next) {
     try {
-        const vehicleId = req.params.vehicleId;
+        const vehicleId = req.params.id;
+
         const vehicle = await getVehicleById(vehicleId);
 
         if (!vehicle) {
