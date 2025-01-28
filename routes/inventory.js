@@ -20,7 +20,10 @@ router.post('/register',
 
 // Route for management view
 router.get('/management', (req, res) => {
-    res.render('inventory/management', { flashMessage: req.flash('message') }); // Render management view
+    res.render('inventory/management', { 
+        flashMessage: req.flash('message'),
+        title: 'Inventory Management' // Pass the title variable
+    }); // Render management view
 });
 
 // Route for adding classification (GET)
