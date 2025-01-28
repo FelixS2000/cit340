@@ -40,16 +40,22 @@ router.post('/add-classification',
 );
 
 // Route for adding inventory (GET)
-router.get('/add-inventory', (req, res) => {
-    res.render('inventory/add-inventory', { 
-        errors: null,
-        make: '', // Pass an empty string for make
-        model: '', // Pass an empty string for model
-        year: '',
-        price: '',
-        mileage: '',
-        classification_id: ''
-    }); // Render add inventory view
+router.get('/add-inventory', async (req, res) => {
+    try {
+        const classifications = await getClassificationsFromModel(); // Ensure this function is defined in your model
+        res.render('inventory/add-inventory', { 
+            errors: null,
+            make: '', 
+            model: '', 
+            year: '',
+            price: '',
+            mileage: '',
+            classification_id: '',
+            classifications: classifications // Pass classifications to the view
+        });
+    } catch (error) {
+        next(error);
+    }
 });
 
 router.post('/add-inventory', 

@@ -1,4 +1,4 @@
-const { getVehicleById, getInventoryByClassification: getInventoryFromModel, saveUserToDatabase, saveClassificationToDatabase, saveInventoryToDatabase } = require('../models/inventoryModel');
+const { getVehicleById, getInventoryByClassification: getInventoryFromModel, saveUserToDatabase, saveClassificationToDatabase, saveInventoryToDatabase, getClassificationsFromModel } = require('../models/inventoryModel');
 const { buildVehicleHTML } = require('../utilities/index');
 const bcrypt = require("bcryptjs"); // Import bcrypt
 
@@ -75,6 +75,9 @@ async function addInventory(req, res, next) {
     try {
         const { make, model, year, price, mileage, classification_id } = req.body;
 
+        // Fetch classifications from the database
+        const classifications = await getClassificationsFromModel(); // Ensure this function is defined in your model
+
         // Server-side validation
         if (!make || !model || !year || !price || !mileage || isNaN(year) || isNaN(price) || isNaN(mileage)) {
             req.flash('errorMessage', 'All fields are required and must be valid.');
@@ -85,7 +88,8 @@ async function addInventory(req, res, next) {
                 year: year,
                 price: price,
                 mileage: mileage,
-                classification_id: classification_id // Retain the value
+                classification_id: classification_id, // Retain the value
+                classifications: classifications // Pass classifications to the view
             });
         }
 
