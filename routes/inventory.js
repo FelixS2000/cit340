@@ -5,6 +5,8 @@ const inventoryController = require('../controllers/inventoryController');
 // Route for vehicle details
 router.get('/vehicle/:id', inventoryController.getVehicleDetails);
 
+// Route for registration
+router.post('/register', inventoryController.registerUser);
 
 // Route for classification inventory
 router.get('/classification/:classificationId', inventoryController.getInventoryByClassification);
