@@ -5,10 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Inventory Item</title>
     <link rel="stylesheet" href="/css/styles.css">
+    <script>
+        function validateForm() {
+            const make = document.getElementById('make').value;
+            const model = document.getElementById('model').value;
+            const year = document.getElementById('year').value;
+            const price = document.getElementById('price').value;
+            const mileage = document.getElementById('mileage').value;
+
+            if (!make || !model || !year || !price || !mileage) {
+                alert('All fields are required.');
+                return false;
+            }
+            return true;
+        }
+    </script>
 </head>
 <body>
     <h1>Add New Inventory Item</h1>
-    <form action="/inventory/add-inventory" method="POST">
+    <% if (flashMessage) { %>
+        <div class="flash-message"><%= flashMessage %></div>
+    <% } %>
+    <form action="/inventory/add-inventory" method="POST" onsubmit="return validateForm()">
         <label for="make">Make:</label>
         <input type="text" name="make" id="make" required>
 
