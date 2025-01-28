@@ -1,55 +1,53 @@
-/* ******************************************
- * This server.js file is the primary file of the 
- * application. It is used to control the project.
- *******************************************/
-/* ***********************
- * Require Statements
- *************************/
-const express = require("express")
-const expressLayouts = require("express-ejs-layouts")
-const env = require("dotenv").config()
-const app = express()
-const static = require("./routes/static")
-const expressEjsLayouts = require("express-ejs-layouts")
+const express = require("express");
+const expressLayouts = require("express-ejs-layouts");
+const session = require("express-session");
+const flash = require("connect-flash");
+const env = require("dotenv").config();
+const app = express();
+const static = require("./routes/static");
 const errorRoutes = require('./routes/error');
 const inventoryRoutes = require('./routes/inventory');
+
+app.use(expressLayouts);
+app.set("layout", "./layouts/layout.ejs");
+app.set("view engine", "ejs");
+app.use(express.static('public'));
+
+// Session and flash middleware
+app.use(session({
+    secret: 'c52d24883f30cdd1679db69624f7fc31cb44632b', // Change this to a secure key
+    resave: false,
+    saveUninitialized: true
+}));
+app.use(flash());
+
+// Middleware to set flash messages in response locals
+app.use((req, res, next) => {
+    res.locals.flashMessage = req.flash('message');
+    res.locals.errorMessage = req.flash('error');
+    next();
+});
+
+// Routes
 app.use('/inventory', inventoryRoutes);
-
-/* ***********************
- * Routes
- *************************/
-app.use(static)
-// Index route
+app.use(static);
 app.get("/", function(req, res){
-  res.render("index", {title: "Home"})
-  })
+    res.render("index", {title: "Home"});
+});
 
-  // Error handling middleware
-  app.use((err, req, res, next) => {
+// Error handling middleware
+app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(err.status || 500).render('errors/500', { title: 'Server Error', error: err });
 });
 
-
 app.use(errorRoutes);
-/* ***********************
- * Local Server Information
- * Values from .env (environment) file
- *************************/
-const port = process.env.PORT
-const host = process.env.HOST
 
-/* ***********************
- * Log statement to confirm server operation
- *************************/
+// Local Server Information
+const port = process.env.PORT;
+const host = process.env.HOST;
+
+// Log statement to confirm server operation
 app.listen(port, () => {
-  console.log(`app listening on ${host}:${port}`)
-})
-
-//View Engine and Templates
-app.set("view engine", "ejs")
-app.use(expressLayouts)
-app.set("layout", "./layouts/layout.ejs")
-
-
-app.use(express.static('public'))
+    console.log(`app listening on ${host}:${port}`);
+});
