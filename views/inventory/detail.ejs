@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= title %></title>
+    <title><%= vehicle.year %> <%= vehicle.make %> <%= vehicle.model %></title>
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
@@ -11,9 +11,9 @@
         <h1><%= vehicle.year %> <%= vehicle.make %> <%= vehicle.model %></h1>
         <img src="<%= vehicle.image %>" alt="<%= vehicle.year %> <%= vehicle.make %> <%= vehicle.model %>">
         <div class="vehicle-info">
-            <p>Price: $<%= vehicle.price.toLocaleString() %></p>
-            <p>Mileage: <%= vehicle.mileage.toLocaleString() %> miles</p>
-            <p>Description: <%= vehicle.description %></p>
+            <p><strong>Price:</strong> $<%= vehicle.price.toLocaleString() %></p>
+            <p><strong>Mileage:</strong> <%= vehicle.mileage.toLocaleString() %> miles</p>
+            <p><strong>Description:</strong> <%= vehicle.description %></p>
         </div>
     </div>
 </body>
