@@ -1,0 +1,40 @@
+/* Management Page Styles */
+
+body {
+    background-color: #f4f4f9; /* Light background for consistency */
+}
+
+h1 {
+    color: #1e1e2f; /* Dark color for the heading */
+    text-align: center; /* Center the heading */
+    margin: 20px 0; /* Spacing around the heading */
+}
+
+.flash-message {
+    background-color: #ffcc00; /* Yellow background for flash messages */
+    color: #333; /* Dark text color */
+    padding: 10px; /* Padding around the message */
+    border-radius: 5px; /* Rounded corners */
+    text-align: center; /* Center the text */
+    margin: 20px 0; /* Spacing around the flash message */
+}
+
+nav {
+    display: flex; /* Flexbox for navigation */
+    justify-content: center; /* Center the navigation links */
+    gap: 20px; /* Space between links */
+    margin: 20px 0; /* Spacing around the navigation */
+}
+
+nav a {
+    color: #ffffff; /* White text for links */
+    background-color: #1e1e2f; /* Dark background for links */
+    padding: 10px 15px; /* Padding around the links */
+    border-radius: 5px; /* Rounded corners */
+    text-decoration: none; /* Remove underline */
+    transition: background-color 0.3s; /* Smooth hover effect */
+}
+
+nav a:hover {
+    background-color: #008ba3; /* Lighter blue on hover */
+}
