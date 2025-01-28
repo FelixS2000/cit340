@@ -40,6 +40,27 @@ const registrationRules = () => {
     ];
 };
 
+// Validation rules for classification
+const classificationRules = () => {
+    return [
+        body('classificationName')
+            .notEmpty().withMessage('Classification name is required.')
+            .matches(/^[a-zA-Z0-9]+$/).withMessage('Classification name cannot contain spaces or special characters.')
+    ];
+};
+
+// Validation rules for inventory
+const inventoryRules = () => {
+    return [
+        body('make').notEmpty().withMessage('Make is required.'),
+        body('model').notEmpty().withMessage('Model is required.'),
+        body('year').isNumeric().withMessage('Year must be a number.'),
+        body('price').notEmpty().withMessage('Price is required.'),
+        body('mileage').notEmpty().withMessage('Mileage is required.'),
+        body('classification_id').notEmpty().withMessage('Classification is required.')
+    ];
+};
+
 // Check registration data and return errors or continue
 const checkRegData = (req, res, next) => {
     const errors = validationResult(req);
@@ -55,7 +76,20 @@ const checkRegData = (req, res, next) => {
     next();
 };
 
+// Check validation errors for classification and inventory
+const checkValidationErrors = (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        req.flash('error', errors.array().map(err => err.msg).join(', '));
+        return res.redirect(req.get('referer')); // Redirect back to the previous page
+    }
+    next();
+};
+
 module.exports = {
     registrationRules,
+    classificationRules,
+    inventoryRules,
     checkRegData,
+    checkValidationErrors
 };
