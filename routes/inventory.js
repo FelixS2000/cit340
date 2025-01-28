@@ -28,7 +28,10 @@ router.get('/management', (req, res) => {
 
 // Route for adding classification (GET)
 router.get('/add-classification', (req, res) => {
-    res.render('inventory/add-classification', { errors: null }); // Render add classification view
+    res.render('inventory/add-classification', { 
+        errors: null,
+        classificationName: '' // Pass an empty string for classificationName
+    }); // Render add classification view
 });
 
 router.post('/add-classification', 
@@ -38,7 +41,11 @@ router.post('/add-classification',
 
 // Route for adding inventory (GET)
 router.get('/add-inventory', (req, res) => {
-    res.render('inventory/add-inventory', { errors: null }); // Render add inventory view
+    res.render('inventory/add-inventory', { 
+        errors: null,
+        make: '', // Pass an empty string for make
+        model: '' // Pass an empty string for model
+    }); // Render add inventory view
 });
 
 router.post('/add-inventory', 
