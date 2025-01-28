@@ -36,7 +36,28 @@ async function registerUser(req, res, next) {
         // Save the user to the database
         await saveUserToDatabase(firstName, lastName, email, account_password);
 
-        res.redirect('/'); // Redirect to home or another page after successful registration
+        // Redirect to the registration confirmation page
+        res.redirect('/inventory/register'); // Redirect to the new confirmation page
+    } catch (error) {
+        next(error);
+    }
+}
+
+// Login a user
+async function loginUser(req, res, next) {
+    try {
+        const { email, password } = req.body;
+
+        // Here you would typically add logic to check the user's credentials
+        // For example:
+        // const user = await findUserByEmail(email);
+        // if (user && user.password === password) {
+        //     // Successful login logic
+        // } else {
+        //     // Handle login failure
+        // }
+
+        res.redirect('/'); // Redirect to home or another page after successful login
     } catch (error) {
         next(error);
     }
@@ -66,5 +87,6 @@ async function getInventoryByClassification(req, res, next) {
 module.exports = {
     getVehicleDetails,
     registerUser,
+    loginUser,
     getInventoryByClassification,
 };

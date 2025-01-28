@@ -18,6 +18,14 @@ router.post('/register',
     inventoryController.registerUser
 );
 
+// Route for login (GET)
+router.get('/login', (req, res) => {
+    res.render('login', { errors: null }); // Render the login view
+});
+
+// Route for login (POST)
+router.post('/login', inventoryController.loginUser); // Add this line for login processing
+
 // Route for classification inventory
 router.get('/classification/:classificationId', inventoryController.getInventoryByClassification);
 
