@@ -52,7 +52,19 @@ async function saveClassificationToDatabase(classificationName) {
     }
 }
 
+async function getClassificationsFromModel() {
+    try {
+        const query = "SELECT classification_id, classification_name FROM classifications";
+        const result = await pool.query(query);
+        return result.rows; // Return the rows containing classifications
+    } catch (error) {
+        console.error('Error fetching classifications:', error.message);
+        throw error;
+    }
+}
+
 // Function to save a new inventory item
+
 async function saveInventoryToDatabase(make, model, year, price, mileage, classification_id) {
     try {
         const sql = `
