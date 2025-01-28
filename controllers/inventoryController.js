@@ -29,8 +29,9 @@ async function getVehicleDetails(req, res, next) {
     }
 }
 
-// Register a new user
 async function registerUser(req, res, next) {
+    // Register a new user
+
     try {
         const { firstName, lastName, email, account_password } = req.body;
 
@@ -47,8 +48,9 @@ async function registerUser(req, res, next) {
     }
 }
 
-// Add a new classification
 async function addClassification(req, res, next) {
+    // Add a new classification
+
     try {
         const { classificationName } = req.body;
 
@@ -62,8 +64,9 @@ async function addClassification(req, res, next) {
     }
 }
 
-// Add a new inventory item
 async function addInventory(req, res, next) {
+    // Add a new inventory item
+
     try {
         const { make, model, year, price, mileage, classification_id } = req.body;
 

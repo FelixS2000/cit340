@@ -41,6 +41,31 @@ async function checkExistingEmail(account_email) {
     }
 }
 
+// Function to save a new classification
+async function saveClassificationToDatabase(classificationName) {
+    try {
+        const sql = "INSERT INTO classifications (classification_name) VALUES ($1)";
+        await pool.query(sql, [classificationName]);
+    } catch (error) {
+        console.error('Error saving classification:', error.message);
+        throw error;
+    }
+}
+
+// Function to save a new inventory item
+async function saveInventoryToDatabase(make, model, year, price, mileage, classification_id) {
+    try {
+        const sql = `
+            INSERT INTO inventory (inv_make, inv_model, inv_year, inv_price, inv_miles, classification_id)
+            VALUES ($1, $2, $3, $4, $5, $6)
+        `;
+        await pool.query(sql, [make, model, year, price, mileage, classification_id]);
+    } catch (error) {
+        console.error('Error saving inventory item:', error.message);
+        throw error;
+    }
+}
+
 // Fetch inventory by classification ID
 async function getInventoryByClassification(classificationId) {
     try {
@@ -70,5 +95,7 @@ async function getInventoryByClassification(classificationId) {
 module.exports = {
     getVehicleById,
     checkExistingEmail,
+    saveClassificationToDatabase,
+    saveInventoryToDatabase,
     getInventoryByClassification,
 };
