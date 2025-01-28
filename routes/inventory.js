@@ -28,7 +28,9 @@ router.get('/management', (req, res) => {
 
 // Route for adding classification (GET)
 router.get('/add-classification', (req, res) => {
-    res.render('inventory/add-classification', { 
+    res.render('inventory/add-classification', {
+        title: 'Add Classification', // Pass the title variable
+
         errors: null,
         classificationName: '' // Pass an empty string for classificationName
     }); // Render add classification view
@@ -43,7 +45,9 @@ router.post('/add-classification',
 router.get('/add-inventory', async (req, res) => {
     try {
         const classifications = await getClassificationsFromModel(); // Ensure this function is defined in your model
-        res.render('inventory/add-inventory', { 
+    res.render('inventory/add-inventory', {
+        title: 'Add Inventory', // Pass the title variable
+
             errors: null,
             make: '', 
             model: '', 
