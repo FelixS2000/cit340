@@ -29,16 +29,14 @@ async function getVehicleById(vehicleId) {
     }
 }
 
-// Function to save user data
-async function saveUserToDatabase(firstName, lastName, email, password) {
+// Check for existing email
+async function checkExistingEmail(account_email) {
     try {
-        const query = `
-            INSERT INTO users (first_name, last_name, email, password)
-            VALUES ($1, $2, $3, $4)
-        `;
-        await pool.query(query, [firstName, lastName, email, password]);
+        const sql = "SELECT * FROM users WHERE email = $1"; // Adjust table name as necessary
+        const email = await pool.query(sql, [account_email]);
+        return email.rowCount > 0; // Return true if email exists
     } catch (error) {
-        console.error('Error saving user data:', error.message, 'Details:', error);
+        console.error('Error checking existing email:', error.message);
         throw error;
     }
 }
@@ -71,6 +69,6 @@ async function getInventoryByClassification(classificationId) {
 
 module.exports = {
     getVehicleById,
-    saveUserToDatabase,
+    checkExistingEmail,
     getInventoryByClassification,
 };

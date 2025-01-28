@@ -1,6 +1,7 @@
 // Fetch vehicle details by ID
 const { getVehicleById, getInventoryByClassification: getInventoryFromModel, saveUserToDatabase } = require('../models/inventoryModel');
 const { buildVehicleHTML } = require('../utilities/index');
+const bcrypt = require("bcryptjs"); // Import bcrypt
 
 // Fetch vehicle details by ID
 async function getVehicleDetails(req, res, next) {
@@ -33,8 +34,11 @@ async function registerUser(req, res, next) {
     try {
         const { firstName, lastName, email, account_password } = req.body;
 
+        // Hash the password before storing
+        const hashedPassword = await bcrypt.hash(account_password, 10);
+
         // Save the user to the database
-        await saveUserToDatabase(firstName, lastName, email, account_password);
+        await saveUserToDatabase(firstName, lastName, email, hashedPassword);
 
         // Redirect to the registration confirmation page
         res.redirect('/inventory/register'); // Redirect to the new confirmation page
@@ -43,21 +47,31 @@ async function registerUser(req, res, next) {
     }
 }
 
-// Login a user
-async function loginUser(req, res, next) {
+// Add a new classification
+async function addClassification(req, res, next) {
     try {
-        const { email, password } = req.body;
+        const { classificationName } = req.body;
 
-        // Here you would typically add logic to check the user's credentials
-        // For example:
-        // const user = await findUserByEmail(email);
-        // if (user && user.password === password) {
-        //     // Successful login logic
-        // } else {
-        //     // Handle login failure
-        // }
+        // Logic to save the classification to the database
+        // await saveClassificationToDatabase(classificationName);
 
-        res.redirect('/'); // Redirect to home or another page after successful login
+        req.flash('message', 'Classification added successfully!');
+        res.redirect('/inventory/management'); // Redirect to management view
+    } catch (error) {
+        next(error);
+    }
+}
+
+// Add a new inventory item
+async function addInventory(req, res, next) {
+    try {
+        const { make, model, year, price, mileage, classification_id } = req.body;
+
+        // Logic to save the inventory item to the database
+        // await saveInventoryToDatabase(make, model, year, price, mileage, classification_id);
+
+        req.flash('message', 'Inventory item added successfully!');
+        res.redirect('/inventory/management'); // Redirect to management view
     } catch (error) {
         next(error);
     }
@@ -87,6 +101,7 @@ async function getInventoryByClassification(req, res, next) {
 module.exports = {
     getVehicleDetails,
     registerUser,
-    loginUser,
+    addClassification,
+    addInventory,
     getInventoryByClassification,
 };

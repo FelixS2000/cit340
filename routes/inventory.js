@@ -18,13 +18,26 @@ router.post('/register',
     inventoryController.registerUser
 );
 
-// Route for login (GET)
-router.get('/login', (req, res) => {
-    res.render('login', { errors: null }); // Render the login view
+// Route for management view
+router.get('/management', (req, res) => {
+    res.render('inventory/management', { flashMessage: req.flash('message') }); // Render management view
 });
 
-// Route for login (POST)
-router.post('/login', inventoryController.loginUser); // Add this line for login processing
+// Route for adding classification (GET)
+router.get('/add-classification', (req, res) => {
+    res.render('inventory/add-classification', { errors: null }); // Render add classification view
+});
+
+// Route for adding classification (POST)
+router.post('/add-classification', inventoryController.addClassification);
+
+// Route for adding inventory (GET)
+router.get('/add-inventory', (req, res) => {
+    res.render('inventory/add-inventory', { errors: null }); // Render add inventory view
+});
+
+// Route for adding inventory (POST)
+router.post('/add-inventory', inventoryController.addInventory);
 
 // Route for classification inventory
 router.get('/classification/:classificationId', inventoryController.getInventoryByClassification);
