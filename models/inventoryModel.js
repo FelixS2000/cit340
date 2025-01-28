@@ -1,3 +1,4 @@
+// Existing imports
 const pool = require('../database/connection'); // Updated to import from connection.js
 
 // Fetch vehicle details by ID
@@ -24,6 +25,20 @@ async function getVehicleById(vehicleId) {
         return result.rows[0] || null; // Return the first row or null if no record exists
     } catch (error) {
         console.error('Error fetching vehicle data:', error.message, 'Details:', error);
+        throw error;
+    }
+}
+
+// Function to save user data
+async function saveUserToDatabase(firstName, lastName, email, password) {
+    try {
+        const query = `
+            INSERT INTO users (first_name, last_name, email, password)
+            VALUES ($1, $2, $3, $4)
+        `;
+        await pool.query(query, [firstName, lastName, email, password]);
+    } catch (error) {
+        console.error('Error saving user data:', error.message, 'Details:', error);
         throw error;
     }
 }
@@ -56,5 +71,6 @@ async function getInventoryByClassification(classificationId) {
 
 module.exports = {
     getVehicleById,
+    saveUserToDatabase,
     getInventoryByClassification,
 };

@@ -1,5 +1,5 @@
 // Fetch vehicle details by ID
-const { getVehicleById, getInventoryByClassification: getInventoryFromModel } = require('../models/inventoryModel');
+const { getVehicleById, getInventoryByClassification: getInventoryFromModel, saveUserToDatabase } = require('../models/inventoryModel');
 const { buildVehicleHTML } = require('../utilities/index');
 
 // Fetch vehicle details by ID
@@ -33,9 +33,8 @@ async function registerUser(req, res, next) {
     try {
         const { firstName, lastName, email, account_password } = req.body;
 
-        // Here you would typically add logic to save the user to the database
-        // For example:
-        // await saveUserToDatabase(firstName, lastName, email, account_password);
+        // Save the user to the database
+        await saveUserToDatabase(firstName, lastName, email, account_password);
 
         res.redirect('/'); // Redirect to home or another page after successful registration
     } catch (error) {
