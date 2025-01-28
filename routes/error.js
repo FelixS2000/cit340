@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 
-router.get('/trigger-error', (req, res) => {
-    throw new Error('This is an intentional error for testing purposes.');
-});
+// Commented out the intentional error route
+// router.get('/trigger-error', (req, res) => {
+//     throw new Error('This is an intentional error for testing purposes.');
+// });
 
 // Error handling middleware
 router.use((err, req, res, next) => {
