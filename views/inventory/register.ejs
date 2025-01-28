@@ -3,12 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registration Successful</title>
-    <link rel="stylesheet" href="/css/register.css">
+    <title>Registration</title>
+    <link rel="stylesheet" href="/css/registration.css">
 </head>
 <body>
-    <h1>Registration Successful</h1>
-    <p>Thank you for registering! You can now log in to your account.</p>
-    <a href="/inventory/login" class="btn">Go to Login</a>
+    <h1>Registration</h1>
+    <% if (errorMessage) { %>
+        <div class="error-message"><%= errorMessage %></div>
+    <% } %>
+    <form action="/inventory/register" method="POST">
+        <label for="firstName">First Name:</label>
+        <input type="text" name="firstName" id="firstName" value="<%= firstName %>" required>
+
+        <label for="lastName">Last Name:</label>
+        <input type="text" name="lastName" id="lastName" value="<%= lastName %>" required>
+
+        <label for="email">Email:</label>
+        <input type="email" name="email" id="email" value="<%= email %>" required placeholder="Enter a valid email address">
+
+        <label for="accountPassword">Password:</label>
+        <span>Passwords must be at least 12 characters and contain at least 1 number, 1 capital letter, and 1 special character</span>
+        <input type="password" name="account_password" id="accountPassword" required pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{12,}$">
+
+        <button type="submit">Register</button>
+    </form>
 </body>
 </html>
