@@ -1,4 +1,3 @@
-// Existing imports
 const pool = require('../database/connection'); // Updated to import from connection.js
 
 // Fetch vehicle details by ID
@@ -44,7 +43,7 @@ async function checkExistingEmail(account_email) {
 // Function to save a new classification
 async function saveClassificationToDatabase(classificationName) {
     try {
-        const sql = "INSERT INTO classifications (classification_name) VALUES ($1)";
+        const sql = "INSERT INTO classification (classification_name) VALUES ($1)"; // Use 'classification'
         await pool.query(sql, [classificationName]);
     } catch (error) {
         console.error('Error saving classification:', error.message);
@@ -52,9 +51,10 @@ async function saveClassificationToDatabase(classificationName) {
     }
 }
 
+// Function to fetch all classifications
 async function getClassificationsFromModel() {
     try {
-        const query = "SELECT classification_id, classification_name FROM classifications";
+        const query = "SELECT classification_id, classification_name FROM classification"; // Use 'classification'
         const result = await pool.query(query);
         return result.rows; // Return the rows containing classifications
     } catch (error) {
@@ -64,7 +64,6 @@ async function getClassificationsFromModel() {
 }
 
 // Function to save a new inventory item
-
 async function saveInventoryToDatabase(make, model, year, price, mileage, classification_id) {
     try {
         const sql = `
@@ -110,4 +109,5 @@ module.exports = {
     saveClassificationToDatabase,
     saveInventoryToDatabase,
     getInventoryByClassification,
+    getClassificationsFromModel, // Ensure this function is exported
 };

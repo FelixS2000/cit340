@@ -1,4 +1,6 @@
 const express = require("express");
+const bodyParser = require('body-parser'); // Import body-parser
+
 const expressLayouts = require("express-ejs-layouts");
 const session = require("express-session");
 const flash = require("connect-flash");
@@ -28,7 +30,11 @@ app.use((req, res, next) => {
     next();
 });
 
+app.use(bodyParser.urlencoded({ extended: true })); // Middleware to parse URL-encoded data
+app.use(bodyParser.json()); // Middleware to parse JSON data
+
 // Routes
+
 app.use('/inventory', inventoryRoutes);
 app.use(static);
 app.get("/", function(req, res){
