@@ -8,6 +8,8 @@ async function getVehicleDetails(req, res, next) {
         const vehicleId = req.params.id;
 
         const vehicle = await getVehicleById(vehicleId);
+        console.log('Fetched Vehicle Data:', vehicle); // Log the fetched vehicle data
+
 
         if (!vehicle) {
             return res.status(404).render('errors/404', { 
