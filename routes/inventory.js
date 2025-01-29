@@ -6,18 +6,6 @@ const regValidate = require('../utilities/account-validation'); // Ensure this l
 // Route for vehicle details
 router.get('/vehicle/:id', inventoryController.getVehicleDetails);
 
-// Route for registration (GET)
-router.get('/registration', (req, res) => {
-    res.render('registration', { errors: null }); // Render the registration view
-});
-
-// Route for registration (POST)
-router.post('/register', 
-    regValidate.registrationRules(), 
-    regValidate.checkRegData, 
-    inventoryController.registerUser
-);
-
 // Route for management view
 router.get('/management', (req, res) => {
     res.render('inventory/management', { 
