@@ -56,7 +56,7 @@ async function registerUser(req, res, next) {
 async function addClassification(req, res, next) {
     // Add a new classification
     try {
-        const { classificationName } = req.body;
+        const { classificationName, color, description } = req.body;
 
         // Server-side validation
         if (!classificationName || /\s|[^a-zA-Z0-9]/.test(classificationName)) {
@@ -68,7 +68,7 @@ async function addClassification(req, res, next) {
         }
 
         // Save the classification to the database
-        await saveClassificationToDatabase(classificationName);
+        await saveClassificationToDatabase(classificationName, color, description);
 
         req.flash('message', 'Classification added successfully!');
         res.redirect('/inventory/management'); // Redirect to management view
@@ -80,7 +80,7 @@ async function addClassification(req, res, next) {
 async function addInventory(req, res, next) {
     // Add a new inventory item
     try {
-        const { make, model, year, price, mileage, classification_id } = req.body;
+        const { make, model, year, price, mileage, classification_id, description, color } = req.body;
 
         // Server-side validation
         if (!make || !model || !year || !price || !mileage || isNaN(year) || isNaN(price) || isNaN(mileage)) {
@@ -98,7 +98,7 @@ async function addInventory(req, res, next) {
         }
 
         // Save the inventory item to the database
-        await saveInventoryToDatabase(make, model, year, price, mileage, classification_id);
+        await saveInventoryToDatabase(make, model, year, price, mileage, classification_id, description, color);
 
         req.flash('message', 'Inventory item added successfully!');
         res.redirect('/inventory/management'); // Redirect to management view

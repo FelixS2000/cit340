@@ -8,8 +8,19 @@
     <script>
         function validateForm() {
             const classificationName = document.getElementById('classificationName').value;
+            const color = document.getElementById('color').value;
+            const description = document.getElementById('description').value;
+
             if (!classificationName || /\s|[^a-zA-Z0-9]/.test(classificationName)) {
                 alert('Classification name cannot contain spaces or special characters.');
+                return false;
+            }
+            if (!color) {
+                alert('Color is required.');
+                return false;
+            }
+            if (!description) {
+                alert('Description is required.');
                 return false;
             }
             return true;
@@ -24,6 +35,12 @@
     <form action="/inventory/add-classification" method="POST" onsubmit="return validateForm()">
         <label for="classificationName">Classification Name:</label>
         <input type="text" name="classificationName" id="classificationName" value="<%= classificationName %>" required>
+
+        <label for="color">Color:</label>
+        <input type="text" name="color" id="color" required>
+
+        <label for="description">Description:</label>
+        <textarea name="description" id="description" required></textarea>
 
         <button type="submit">Add Classification</button>
     </form>

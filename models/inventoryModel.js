@@ -3,7 +3,7 @@ const pool = require('../database/connection'); // Updated to import from connec
 // Fetch classifications from the database
 async function getClassificationsFromModel() {
     try {
-        const query = `SELECT classification_id, classification_name FROM classification ORDER BY classification_name ASC`;
+        const query = `SELECT classification_id, classification_name, color, description FROM classification ORDER BY classification_name ASC`;
         const result = await pool.query(query);
         return result.rows; // Return all classifications
     } catch (error) {
@@ -11,7 +11,6 @@ async function getClassificationsFromModel() {
         throw error;
     }
 }
-
 
 // Fetch vehicle details by ID
 async function getVehicleById(vehicleId) {
@@ -42,24 +41,48 @@ async function getVehicleById(vehicleId) {
 }
 
 // Function to save a new inventory item
-async function saveInventoryToDatabase(make, model, year, price, mileage, classification_id, description) {
+async function saveInventoryToDatabase(make, model, year, price, mileage, classification_id, description, color) {
     try {
         const sql = `
-            INSERT INTO inventory (inv_make, inv_model, inv_year, inv_price, inv_miles, classification_id, inv_description)
-            VALUES ($1, $2, $3, $4, $5, $6, $7)
+            INSERT INTO inventory (inv_make, inv_model, inv_year, inv_price, inv_miles, classification_id, inv_description, inv_color)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
         `;
-        await pool.query(sql, [make, model, year, price, mileage, classification_id, description]);
+        await pool.query(sql, [make, model, year, price, mileage, classification_id, description, color]);
     } catch (error) {
         console.error('Error saving inventory item:', error.message);
         throw error;
     }
 }
 
-// Other functions remain unchanged...
+// Fetch inventory by classification ID
+async function getInventoryByClassification(classificationId) {
+    try {
+        const query = `
+            SELECT 
+                inv_id AS id, 
+                inv_image as image,
+                inv_make AS make, 
+                inv_model AS model, 
+                inv_year AS year, 
+                inv_price AS price, 
+                inv_miles AS mileage, 
+                inv_color AS color,
+                inv_description AS description
+            FROM inventory 
+            WHERE classification_id = $1
+        `;
+        const result = await pool.query(query, [classificationId]);
+        return result.rows; // Return all inventory items for the classification
+    } catch (error) {
+        console.error('Error fetching inventory by classification:', error.message);
+        throw error;
+    }
+}
 
+// Export the functions
 module.exports = {
     getVehicleById,
     getClassificationsFromModel,
     saveInventoryToDatabase,
-    // Other exports...
+    getInventoryByClassification, // Export the new function
 };
