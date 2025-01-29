@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const inventoryController = require('../controllers/inventoryController');
-const regValidate = require('../utilities/account-validation'); // Ensure this line is only declared once
 
 // Route for vehicle details
 router.get('/vehicle/:id', inventoryController.getVehicleDetails);
@@ -18,24 +17,21 @@ router.get('/management', (req, res) => {
 router.get('/add-classification', (req, res) => {
     res.render('inventory/add-classification', {
         title: 'Add Classification', // Pass the title variable
-
         errors: null,
         classificationName: '' // Pass an empty string for classificationName
     }); // Render add classification view
 });
 
 router.post('/add-classification', 
-    regValidate.classificationRules(), // Add validation middleware
     inventoryController.addClassification
 );
 
 // Route for adding inventory (GET)
 router.get('/add-inventory', async (req, res) => {
     try {
-        const classifications = await getClassificationsFromModel(); // Ensure this function is defined in your model
-    res.render('inventory/add-inventory', {
-        title: 'Add Inventory', // Pass the title variable
-
+        const classifications = await inventoryController.getClassificationsFromModel(); // Ensure this function is defined in your model
+        res.render('inventory/add-inventory', {
+            title: 'Add Inventory', // Pass the title variable
             errors: null,
             make: '', 
             model: '', 
@@ -51,7 +47,6 @@ router.get('/add-inventory', async (req, res) => {
 });
 
 router.post('/add-inventory', 
-    regValidate.inventoryRules(), // Add validation middleware
     inventoryController.addInventory
 );
 
