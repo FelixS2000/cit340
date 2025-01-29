@@ -12,7 +12,7 @@
         <% inventory.forEach(function(item) { %>
             <li>
                 <h2><%= item.make %> <%= item.model %> (<%= item.year %>)</h2>
-                <img src="/images/<%= item.thumbnail %>" alt="<%= item.make %> <%= item.model %>">
+                <img src="/images/<%= item.image %>" alt="<%= item.make %> <%= item.model %>">
                 <p>Price: $<%= item.price %></p>
                 <p>Mileage: <%= item.mileage %> miles</p>
                 <p>Color: <%= item.color %></p>
