@@ -6,12 +6,7 @@ const inventoryController = require('../controllers/inventoryController');
 router.get('/vehicle/:id', inventoryController.getVehicleDetails);
 
 // Route for management view
-router.get('/management', (req, res) => {
-    res.render('inventory/management', { 
-        flashMessage: req.flash('message'),
-        title: 'Inventory Management' // Pass the title variable
-    }); // Render management view
-});
+router.get('/management', inventoryController.renderManagementView);
 
 // Route for adding classification (GET)
 router.get('/add-classification', (req, res) => {
@@ -29,11 +24,10 @@ router.post('/add-classification',
 // Route for adding inventory (GET)
 router.get('/add-inventory', async (req, res, next) => {
     try {
-const classifications = await inventoryController.getClassificationsFromModel(); // Ensure this function is defined in your model
-    if (!classifications) {
-        throw new Error('Classifications could not be fetched');
-    }
-    
+        const classifications = await inventoryController.getClassificationsFromModel(); // Ensure this function is defined in your model
+        if (!classifications) {
+            throw new Error('Classifications could not be fetched');
+        }
 
         res.render('inventory/add-inventory', {
             title: 'Add Inventory', // Pass the title variable
