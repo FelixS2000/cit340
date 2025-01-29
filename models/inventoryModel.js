@@ -1,5 +1,18 @@
 const pool = require('../database/connection'); // Updated to import from connection.js
 
+// Fetch classifications from the database
+async function getClassificationsFromModel() {
+    try {
+        const query = `SELECT classification_id, classification_name FROM classification ORDER BY classification_name ASC`;
+        const result = await pool.query(query);
+        return result.rows; // Return all classifications
+    } catch (error) {
+        console.error('Error fetching classifications:', error.message);
+        throw error;
+    }
+}
+
+
 // Fetch vehicle details by ID
 async function getVehicleById(vehicleId) {
     try {
@@ -46,6 +59,7 @@ async function saveInventoryToDatabase(make, model, year, price, mileage, classi
 
 module.exports = {
     getVehicleById,
+    getClassificationsFromModel,
     saveInventoryToDatabase,
     // Other exports...
 };

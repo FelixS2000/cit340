@@ -1,4 +1,12 @@
-const { getVehicleById, getInventoryByClassification: getInventoryFromModel, saveUserToDatabase, saveClassificationToDatabase, saveInventoryToDatabase, getClassificationsFromModel } = require('../models/inventoryModel');
+const { 
+    getVehicleById, 
+    getInventoryByClassification: getInventoryFromModel, 
+    saveUserToDatabase, 
+    saveClassificationToDatabase, 
+    saveInventoryToDatabase, 
+    getClassificationsFromModel 
+} = require('../models/inventoryModel');
+
 const { buildVehicleHTML } = require('../utilities/index');
 const bcrypt = require("bcryptjs"); // Import bcrypt
 
@@ -6,7 +14,6 @@ const bcrypt = require("bcryptjs"); // Import bcrypt
 async function getVehicleDetails(req, res, next) {
     try {
         const vehicleId = req.params.id;
-
         const vehicle = await getVehicleById(vehicleId);
         console.log('Fetched Vehicle Data:', vehicle); // Log the fetched vehicle data
 
@@ -116,15 +123,6 @@ async function getInventoryByClassification(req, res, next) {
             title: 'Inventory',
             inventory,
         });
-    } catch (error) {
-        next(error);
-    }
-}
-
-// Function to fetch classifications from the model
-async function getClassificationsFromModel(req, res, next) {
-    try {
-        return await getClassificationsFromModel();
     } catch (error) {
         next(error);
     }
