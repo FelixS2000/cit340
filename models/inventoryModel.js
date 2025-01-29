@@ -3,7 +3,8 @@ const pool = require('../database/connection'); // Updated to import from connec
 // Fetch classifications from the database
 async function getClassificationsFromModel() {
     try {
-        const query = `SELECT classification_id, classification_name, color, description FROM classification ORDER BY classification_name ASC`;
+        const query = `SELECT classification_id, classification_name, description FROM classification ORDER BY classification_name ASC`;
+
         const result = await pool.query(query);
         return result.rows; // Return all classifications
     } catch (error) {

@@ -19,7 +19,12 @@
             <h2>Classifications</h2>
             <ul>
                 <% classifications.forEach(function(classification) { %>
-                    <li><a href="/inventory/classification/<%= classification.classification_id %>"><%= classification.classification_name %></a></li>
+                    <li>
+                        <a href="/inventory/classification/<%= classification.classification_id %>">
+                            <%= classification.classification_name %>
+                        </a>
+                        - <%= classification.description %>
+                    </li>
                 <% }); %>
             </ul>
             <a href="/inventory/add-classification">Add New Classification</a>
