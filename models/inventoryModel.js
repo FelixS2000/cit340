@@ -3,8 +3,7 @@ const pool = require('../database/connection'); // Updated to import from connec
 // Fetch classifications from the database
 async function getClassificationsFromModel() {
     try {
-        const query = `SELECT classification_id, classification_name, description FROM classification ORDER BY classification_name ASC`;
-
+        const query = `SELECT classification_id, classification_name FROM classification ORDER BY classification_name ASC`;
         const result = await pool.query(query);
         return result.rows; // Return all classifications
     } catch (error) {
@@ -33,7 +32,6 @@ async function getVehicleById(vehicleId) {
             WHERE inv_id = $1
         `;
         const result = await pool.query(query, [vehicleId]);
-
         return result.rows[0] || null; // Return the first row or null if no record exists
     } catch (error) {
         console.error('Error fetching vehicle data:', error.message, 'Details:', error);
@@ -51,6 +49,20 @@ async function saveInventoryToDatabase(make, model, year, price, mileage, classi
         await pool.query(sql, [make, model, year, price, mileage, classification_id, description, color]);
     } catch (error) {
         console.error('Error saving inventory item:', error.message);
+        throw error;
+    }
+}
+
+// Function to save a new classification
+async function saveClassificationToDatabase(classificationName, color, description) {
+    try {
+        const sql = `
+            INSERT INTO classification (classification_name, color, description)
+            VALUES ($1, $2, $3)
+        `;
+        await pool.query(sql, [classificationName, color, description]);
+    } catch (error) {
+        console.error('Error saving classification:', error.message);
         throw error;
     }
 }
@@ -85,5 +97,6 @@ module.exports = {
     getVehicleById,
     getClassificationsFromModel,
     saveInventoryToDatabase,
+    saveClassificationToDatabase, // Export the new function
     getInventoryByClassification, // Export the new function
 };
