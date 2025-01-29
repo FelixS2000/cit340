@@ -133,11 +133,13 @@ async function getInventoryByClassification(req, res, next) {
 async function renderManagementView(req, res, next) {
     try {
         const classifications = await getClassificationsFromModel();
+        console.log('Fetched Classifications:', classifications); // Log the fetched classifications
         res.render('inventory/management', {
             title: 'Inventory Management',
             classifications: classifications // Pass classifications to the view
         });
     } catch (error) {
+        console.error('Error fetching classifications:', error.message); // Log any errors
         next(error);
     }
 }
