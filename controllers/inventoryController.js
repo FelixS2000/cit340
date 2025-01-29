@@ -110,8 +110,9 @@ async function addInventory(req, res, next) {
 // Fetch inventory list by classification ID
 async function getInventoryByClassification(req, res, next) {
     const classificationId = req.params.classificationId;
-    const inventory = await getInventoryFromModel(classificationId);
     try {
+        const inventory = await getInventoryFromModel(classificationId);
+        console.log('Fetched Inventory Data:', inventory); // Log the fetched inventory data
         if (!inventory.length) {
             return res.status(404).render('errors/404', { 
                 title: 'No Inventory Found', 
