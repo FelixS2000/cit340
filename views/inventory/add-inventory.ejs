@@ -17,6 +17,13 @@
                 alert('All fields are required.');
                 return false;
             }
+
+            // Additional validation for year, price, and mileage
+            if (isNaN(year) || isNaN(price) || isNaN(mileage)) {
+                alert('Year, price, and mileage must be valid numbers.');
+                return false;
+            }
+
             return true;
         }
     </script>
