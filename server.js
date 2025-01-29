@@ -9,6 +9,7 @@ const app = express();
 const static = require("./routes/static");
 const errorRoutes = require('./routes/error');
 const inventoryRoutes = require('./routes/inventory');
+const { getClassificationsFromModel } = require('./models/inventoryModel'); // Import the function
 
 app.use(expressLayouts);
 app.set("layout", "./layouts/layout.ejs");
@@ -34,11 +35,22 @@ app.use(bodyParser.urlencoded({ extended: true })); // Middleware to parse URL-e
 app.use(bodyParser.json()); // Middleware to parse JSON data
 
 // Routes
-
 app.use('/inventory', inventoryRoutes);
 app.use(static);
 app.get("/", function(req, res){
     res.render("index", {title: "Home"});
+});
+
+// Temporary route to test database connection
+app.get('/test-classifications', async (req, res) => {
+    try {
+        const classifications = await getClassificationsFromModel();
+        console.log('Fetched Classifications:', classifications);
+        res.json(classifications); // Return classifications as JSON
+    } catch (error) {
+        console.error('Error fetching classifications:', error.message);
+        res.status(500).send('Error fetching classifications');
+    }
 });
 
 // Error handling middleware
