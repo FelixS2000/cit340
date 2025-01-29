@@ -1,4 +1,4 @@
-const { getVehicleById, getInventoryByClassification: getInventoryFromModel, saveUserToDatabase, saveClassificationToDatabase, saveInventoryToDatabase, getClassificationsFromModel } = require('../models/inventoryModel');
+const { getVehicleById, getInventoryByClassification: getInventoryFromModel, saveUserToDatabase, saveClassificationToDatabase, saveInventoryToDatabase, getClassificationsFromModel: getClassificationsFromModelModel } = require('../models/inventoryModel');
 const { buildVehicleHTML } = require('../utilities/index');
 const bcrypt = require("bcryptjs"); // Import bcrypt
 
@@ -86,7 +86,7 @@ async function addInventory(req, res, next) {
                 price: price,
                 mileage: mileage,
                 classification_id: classification_id, // Retain the value
-                classifications: await getClassificationsFromModel() // Fetch classifications for the view
+                classifications: await getClassificationsFromModelModel() // Fetch classifications for the view
             });
         }
 
@@ -121,10 +121,20 @@ async function getInventoryByClassification(req, res, next) {
     }
 }
 
+// Function to fetch classifications from the model
+async function getClassificationsFromModel(req, res, next) {
+    try {
+        return await getClassificationsFromModelModel();
+    } catch (error) {
+        next(error);
+    }
+}
+
 module.exports = {
     getVehicleDetails,
     registerUser,
     addClassification,
     addInventory,
     getInventoryByClassification,
+    getClassificationsFromModel, // Export the function
 };
