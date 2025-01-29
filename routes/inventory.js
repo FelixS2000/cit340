@@ -29,7 +29,12 @@ router.post('/add-classification',
 // Route for adding inventory (GET)
 router.get('/add-inventory', async (req, res, next) => {
     try {
-        const classifications = await inventoryController.getClassificationsFromModel(); // Ensure this function is defined in your model
+const classifications = await inventoryController.getClassificationsFromModel(); // Ensure this function is defined in your model
+    if (!classifications) {
+        throw new Error('Classifications could not be fetched');
+    }
+    
+
         res.render('inventory/add-inventory', {
             title: 'Add Inventory', // Pass the title variable
             errors: null,

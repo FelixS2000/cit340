@@ -1,9 +1,12 @@
 <nav>
   <ul>
     <li><a href="/">Home</a></li>
-    <% classifications.forEach(function(classification) { %>
-      <li><a href="/inventory/classification/<%= classification.classification_id %>"><%= classification.classification_name %></a></li>
-    <% }); %>
+    <li><a href="/inventory/classification/1">Custom</a></li>
     <li><a href="/inventory/management">New Cars</a></li>
+
+    <li><a href="/inventory/classification/2">Sport</a></li>
+    <li><a href="/inventory/classification/3">SUV</a></li>
+    <li><a href="/inventory/classification/4">Truck</a></li>
+    <li><a href="/inventory/classification/5">Sedan</a></li>
   </ul>
 </nav>
