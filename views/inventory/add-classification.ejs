@@ -32,10 +32,9 @@
     <% if (errorMessage) { %>
         <div class="error-message"><%= errorMessage %></div>
     <% } %>
-    <form action="/inventory/add-inventory" method="POST" onsubmit="return validateForm()">
+    <form action="/inventory/add-classification" method="POST" onsubmit="return validateForm()">
         <label for="classificationName">Classification Name:</label>
         <input type="text" name="classificationName" id="classificationName" value="<%= classificationName %>" required>
-
         <label for="color">Color:</label>
         <input type="text" name="color" id="color" required>
 
