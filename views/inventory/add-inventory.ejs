@@ -12,8 +12,9 @@
             const year = document.getElementById('year').value;
             const price = document.getElementById('price').value;
             const mileage = document.getElementById('mileage').value;
+            const description = document.getElementById('description').value;
 
-            if (!make || !model || !year || !price || !mileage) {
+            if (!make || !model || !year || !price || !mileage || !description) {
                 alert('All fields are required.');
                 return false;
             }
@@ -48,6 +49,9 @@
 
         <label for="mileage">Mileage:</label>
         <input type="text" name="mileage" id="mileage" value="<%= mileage %>" required>
+
+        <label for="description">Description:</label>
+        <textarea name="description" id="description" required></textarea>
 
         <label for="classification_id">Classification:</label>
         <select name="classification_id" id="classification_id" required>

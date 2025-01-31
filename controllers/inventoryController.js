@@ -85,7 +85,7 @@ async function addInventory(req, res, next) {
         const { make, model, year, price, mileage, classification_id, description, color } = req.body;
 
         // Server-side validation
-        if (!make || !model || !year || !price || !mileage || isNaN(year) || isNaN(price) || isNaN(mileage)) {
+        if (!make || !model || !year || !price || !mileage || !description || isNaN(year) || isNaN(price) || isNaN(mileage)) {
             req.flash('errorMessage', 'All fields are required and must be valid.');
             return res.render('inventory/add-inventory', {
                 flashMessage: req.flash('errorMessage'),
@@ -94,6 +94,7 @@ async function addInventory(req, res, next) {
                 year: year,
                 price: price,
                 mileage: mileage,
+                description: description, // Retain the value
                 classification_id: classification_id, // Retain the value
                 classifications: await getClassificationsFromModel() // Fetch classifications for the view
             });
