@@ -106,7 +106,7 @@ async function addInventory(req, res, next) {
         await saveInventoryToDatabase(make, model, year, price, mileage, classification_id, description, image, thumbnail);
 
         req.flash('message', 'Inventory item added successfully!');
-        res.redirect('/inventory/management'); // Redirect to management view
+        res.redirect('/inventory/classification'); // Redirect to the classification view
     } catch (error) {
         console.error('Error adding inventory:', error); // Log the error for debugging
         req.flash('errorMessage', 'An error occurred while adding the inventory item. Please try again.');
