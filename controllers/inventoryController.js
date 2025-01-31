@@ -82,10 +82,10 @@ async function addInventory(req, res, next) {
     try {
         console.log('Request Body:', req.body); // Log the request body for debugging
 
-        const { make, model, year, price, mileage, classification_id, description, color } = req.body;
+        const { make, model, year, price, mileage, classification_id, description, image } = req.body;
 
         // Server-side validation
-        if (!make || !model || !year || !price || !mileage || !description || isNaN(year) || isNaN(price) || isNaN(mileage)) {
+        if (!make || !model || !year || !price || !mileage || !description || !image || isNaN(year) || isNaN(price) || isNaN(mileage)) {
             req.flash('errorMessage', 'All fields are required and must be valid.');
             return res.render('inventory/add-inventory', {
                 flashMessage: req.flash('errorMessage'),
@@ -95,13 +95,14 @@ async function addInventory(req, res, next) {
                 price: price,
                 mileage: mileage,
                 description: description, // Retain the value
+                image: image, // Retain the value
                 classification_id: classification_id, // Retain the value
                 classifications: await getClassificationsFromModel() // Fetch classifications for the view
             });
         }
 
         // Save the inventory item to the database
-        await saveInventoryToDatabase(make, model, year, price, mileage, classification_id, description, color);
+        await saveInventoryToDatabase(make, model, year, price, mileage, classification_id, description, image);
 
         req.flash('message', 'Inventory item added successfully!');
         res.redirect('/inventory/management'); // Redirect to management view
