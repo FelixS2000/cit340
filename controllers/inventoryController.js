@@ -53,39 +53,15 @@ async function registerUser(req, res, next) {
     }
 }
 
-async function addClassification(req, res, next) {
-    // Add a new classification
-    try {
-        const { classificationName } = req.body;
-
-        // Server-side validation
-        if (!classificationName || /\s|[^a-zA-Z0-9]/.test(classificationName)) {
-            req.flash('errorMessage', 'Classification name cannot contain spaces or special characters.'); 
-            return res.render('inventory/add-classification', {
-                errorMessage: req.flash('errorMessage'),
-                classificationName: classificationName // Retain the value
-            });
-        }
-
-        // Save the classification to the database
-        await saveClassificationToDatabase(classificationName);
-
-        req.flash('message', 'Classification added successfully!');
-        res.redirect('/inventory/management'); // Redirect to management view
-    } catch (error) {
-        next(error);
-    }
-}
-
 async function addInventory(req, res, next) {
     // Add a new inventory item
     try {
         console.log('Request Body:', req.body); // Log the request body for debugging
 
-        const { make, model, year, price, mileage, classification_id, description, image, thumbnail } = req.body;
+        const { make, model, year, price, mileage, classification_id, description, image, thumbnail, color } = req.body;
 
         // Server-side validation
-        if (!make || !model || !year || !price || !mileage || !description || !image || !thumbnail || isNaN(year) || isNaN(price) || isNaN(mileage)) {
+        if (!make || !model || !year || !price || !mileage || !description || !image || !thumbnail || !color || isNaN(year) || isNaN(price) || isNaN(mileage)) {
             req.flash('errorMessage', 'All fields are required and must be valid.');
             return res.render('inventory/add-inventory', {
                 flashMessage: req.flash('errorMessage'),
@@ -97,14 +73,15 @@ async function addInventory(req, res, next) {
                 description: description || '', // Ensure description is defined
                 image: image || '', // Ensure image is defined
                 thumbnail: thumbnail || '', // Ensure thumbnail is defined
+                color: color || '', // Ensure color is defined
                 classification_id: classification_id || '', // Ensure classification_id is defined
                 classifications: await getClassificationsFromModel() // Fetch classifications for the view
             });
         }
 
         // Save the inventory item to the database
-        await saveInventoryToDatabase(make, model, year, price, mileage, classification_id, description, image, thumbnail);
-        console.log(`Inserted Inventory Item: ${make}, ${model}, ${year}, ${price}, ${mileage}, ${classification_id}, ${description}, ${image}, ${thumbnail}`);
+        await saveInventoryToDatabase(make, model, year, price, mileage, classification_id, description, image, thumbnail, color);
+        console.log(`Inserted Inventory Item: ${make}, ${model}, ${year}, ${price}, ${mileage}, ${classification_id}, ${description}, ${image}, ${thumbnail}, ${color}`);
 
         req.flash('message', 'Inventory item added successfully!');
         res.redirect(`/inventory/classification/${classification_id}`); // Redirect to the new classification view
@@ -121,6 +98,7 @@ async function addInventory(req, res, next) {
             description: description || '', // Ensure description is defined
             image: image || '', // Ensure image is defined
             thumbnail: thumbnail || '', // Ensure thumbnail is defined
+            color: color || '', // Ensure color is defined
             classification_id: classification_id || '', // Ensure classification_id is defined
             classifications: await getClassificationsFromModel() // Fetch classifications for the view
         });
@@ -166,8 +144,8 @@ async function renderManagementView(req, res, next) {
 module.exports = {
     getVehicleDetails,
     registerUser,
-    addClassification,
     addInventory,
+    addClassification,
     getInventoryByClassification,
     getClassificationsFromModel, // Export the function
     renderManagementView // Export the new function
