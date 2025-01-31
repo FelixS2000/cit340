@@ -58,11 +58,9 @@ async function addClassification(req, res, next) {
     try {
         const { classificationName } = req.body;
 
-
         // Server-side validation
         if (!classificationName || /\s|[^a-zA-Z0-9]/.test(classificationName)) {
             req.flash('errorMessage', 'Classification name cannot contain spaces or special characters.'); 
-
             return res.render('inventory/add-classification', {
                 errorMessage: req.flash('errorMessage'),
                 classificationName: classificationName // Retain the value
@@ -71,7 +69,6 @@ async function addClassification(req, res, next) {
 
         // Save the classification to the database
         await saveClassificationToDatabase(classificationName);
-
 
         req.flash('message', 'Classification added successfully!');
         res.redirect('/inventory/management'); // Redirect to management view
