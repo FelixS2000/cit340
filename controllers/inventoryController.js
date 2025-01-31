@@ -89,14 +89,14 @@ async function addInventory(req, res, next) {
             req.flash('errorMessage', 'All fields are required and must be valid.');
             return res.render('inventory/add-inventory', {
                 flashMessage: req.flash('errorMessage'),
-                make: make,
-                model: model,
-                year: year,
-                price: price,
-                mileage: mileage,
-                description: description, // Retain the value
-                image: image || '', // Ensure image is defined, default to empty string if undefined
-                classification_id: classification_id, // Retain the value
+                make: make || '', // Ensure make is defined
+                model: model || '', // Ensure model is defined
+                year: year || '', // Ensure year is defined
+                price: price || '', // Ensure price is defined
+                mileage: mileage || '', // Ensure mileage is defined
+                description: description || '', // Ensure description is defined
+                image: image || '', // Ensure image is defined
+                classification_id: classification_id || '', // Ensure classification_id is defined
                 classifications: await getClassificationsFromModel() // Fetch classifications for the view
             });
         }
@@ -111,15 +111,15 @@ async function addInventory(req, res, next) {
         req.flash('errorMessage', 'An error occurred while adding the inventory item. Please try again.');
         return res.render('inventory/add-inventory', {
             flashMessage: req.flash('errorMessage'),
-            make: make,
-            model: model,
-            year: year,
-            price: price,
-            mileage: mileage,
-            description: description,
-            image: image || '',
-            classification_id: classification_id,
-            classifications: await getClassificationsFromModel()
+            make: make || '', // Ensure make is defined
+            model: model || '', // Ensure model is defined
+            year: year || '', // Ensure year is defined
+            price: price || '', // Ensure price is defined
+            mileage: mileage || '', // Ensure mileage is defined
+            description: description || '', // Ensure description is defined
+            image: image || '', // Ensure image is defined
+            classification_id: classification_id || '', // Ensure classification_id is defined
+            classifications: await getClassificationsFromModel() // Fetch classifications for the view
         });
     }
 }
