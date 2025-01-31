@@ -52,6 +52,33 @@ router.post('/add-inventory',
     inventoryController.addInventory
 );
 
+// New route for classification inventory
+router.post('/classification/:id', async (req, res, next) => {
+    const id = req.params.id;
+    const { make, model, year, price, mileage, description, image, thumbnail, classification_id } = req.body;
+
+    try {
+        // Logic to add the inventory item to the database
+        await inventoryController.addInventoryItem({
+            id,
+            make,
+            model,
+            year,
+            price,
+            mileage,
+            description,
+            image,
+            thumbnail,
+            classification_id
+        });
+
+        // Redirect or render a success message
+        res.redirect('/inventory/management'); // Redirect to management view after successful addition
+    } catch (error) {
+        next(error); // Handle errors
+    }
+});
+
 // Route for classification inventory
 router.get('/classification/:classificationId', inventoryController.getInventoryByClassification);
 
