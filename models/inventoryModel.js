@@ -40,13 +40,13 @@ async function getVehicleById(vehicleId) {
 }
 
 // Function to save a new inventory item
-async function saveInventoryToDatabase(make, model, year, price, mileage, classification_id, description, image) {
+async function saveInventoryToDatabase(make, model, year, price, mileage, classification_id, description, image, thumbnail) {
     try {
         const sql = `
-            INSERT INTO inventory (inv_make, inv_model, inv_year, inv_price, inv_miles, classification_id, inv_description, inv_image)
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+            INSERT INTO inventory (inv_make, inv_model, inv_year, inv_price, inv_miles, classification_id, inv_description, inv_image, inv_thumbnail)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
         `;
-        await pool.query(sql, [make, model, year, price, mileage, classification_id, description, image]);
+        await pool.query(sql, [make, model, year, price, mileage, classification_id, description, image, thumbnail]);
     } catch (error) {
         console.error('Error saving inventory item:', error.message);
         throw error;

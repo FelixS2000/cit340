@@ -82,10 +82,10 @@ async function addInventory(req, res, next) {
     try {
         console.log('Request Body:', req.body); // Log the request body for debugging
 
-        const { make, model, year, price, mileage, classification_id, description, image } = req.body;
+        const { make, model, year, price, mileage, classification_id, description, image, thumbnail } = req.body;
 
         // Server-side validation
-        if (!make || !model || !year || !price || !mileage || !description || !image || isNaN(year) || isNaN(price) || isNaN(mileage)) {
+        if (!make || !model || !year || !price || !mileage || !description || !image || !thumbnail || isNaN(year) || isNaN(price) || isNaN(mileage)) {
             req.flash('errorMessage', 'All fields are required and must be valid.');
             return res.render('inventory/add-inventory', {
                 flashMessage: req.flash('errorMessage'),
@@ -96,13 +96,14 @@ async function addInventory(req, res, next) {
                 mileage: mileage || '', // Ensure mileage is defined
                 description: description || '', // Ensure description is defined
                 image: image || '', // Ensure image is defined
+                thumbnail: thumbnail || '', // Ensure thumbnail is defined
                 classification_id: classification_id || '', // Ensure classification_id is defined
                 classifications: await getClassificationsFromModel() // Fetch classifications for the view
             });
         }
 
         // Save the inventory item to the database
-        await saveInventoryToDatabase(make, model, year, price, mileage, classification_id, description, image);
+        await saveInventoryToDatabase(make, model, year, price, mileage, classification_id, description, image, thumbnail);
 
         req.flash('message', 'Inventory item added successfully!');
         res.redirect('/inventory/management'); // Redirect to management view
@@ -118,6 +119,7 @@ async function addInventory(req, res, next) {
             mileage: mileage || '', // Ensure mileage is defined
             description: description || '', // Ensure description is defined
             image: image || '', // Ensure image is defined
+            thumbnail: thumbnail || '', // Ensure thumbnail is defined
             classification_id: classification_id || '', // Ensure classification_id is defined
             classifications: await getClassificationsFromModel() // Fetch classifications for the view
         });
