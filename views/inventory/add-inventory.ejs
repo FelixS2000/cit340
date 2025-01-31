@@ -13,8 +13,9 @@
             const price = document.getElementById('price').value;
             const mileage = document.getElementById('mileage').value;
             const description = document.getElementById('description').value;
+            const image = document.getElementById('image').value;
 
-            if (!make || !model || !year || !price || !mileage || !description) {
+            if (!make || !model || !year || !price || !mileage || !description || !image) {
                 alert('All fields are required.');
                 return false;
             }
@@ -52,6 +53,9 @@
 
         <label for="description">Description:</label>
         <textarea name="description" id="description" required></textarea>
+
+        <label for="image">Image URL:</label>
+        <input type="text" name="image" id="image" value="<%= image %>" required>
 
         <label for="classification_id">Classification:</label>
         <select name="classification_id" id="classification_id" required>
