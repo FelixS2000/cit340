@@ -56,7 +56,7 @@ async function registerUser(req, res, next) {
 async function addClassification(req, res, next) {
     // Add a new classification
     try {
-        const { classificationName, color, description } = req.body;
+        const { classificationName, description } = req.body;
 
         // Server-side validation
         if (!classificationName || /\s|[^a-zA-Z0-9]/.test(classificationName)) {
@@ -67,8 +67,8 @@ async function addClassification(req, res, next) {
             });
         }
 
-        // Save the classification to the database
-        await saveClassificationToDatabase(classificationName, color, description);
+        // Save the classification to the database without color
+        await saveClassificationToDatabase(classificationName, description);
 
         req.flash('message', 'Classification added successfully!');
         res.redirect('/inventory/management'); // Redirect to management view
@@ -95,7 +95,7 @@ async function addInventory(req, res, next) {
                 price: price,
                 mileage: mileage,
                 description: description, // Retain the value
-                image: image, // Retain the value
+                image: image || '', // Ensure image is defined, default to empty string if undefined
                 classification_id: classification_id, // Retain the value
                 classifications: await getClassificationsFromModel() // Fetch classifications for the view
             });
