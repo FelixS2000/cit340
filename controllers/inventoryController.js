@@ -105,6 +105,35 @@ async function addInventory(req, res, next) {
     }
 }
 
+// Function to add a new classification
+async function addClassification(req, res, next) {
+    try {
+        const { classificationName } = req.body;
+
+        // Server-side validation
+        if (!classificationName) {
+            req.flash('errorMessage', 'Classification name is required.');
+            return res.render('inventory/add-classification', {
+                flashMessage: req.flash('errorMessage'),
+                classificationName: classificationName || ''
+            });
+        }
+
+        // Save the classification to the database
+        await saveClassificationToDatabase(classificationName);
+
+        req.flash('message', 'Classification added successfully!');
+        res.redirect('/inventory/management'); // Redirect to management view
+    } catch (error) {
+        console.error('Error adding classification:', error);
+        req.flash('errorMessage', 'An error occurred while adding the classification. Please try again.');
+        return res.render('inventory/add-classification', {
+            flashMessage: req.flash('errorMessage'),
+            classificationName: classificationName || ''
+        });
+    }
+}
+
 // Fetch inventory list by classification ID
 async function getInventoryByClassification(req, res, next) {
     const classificationId = req.params.classificationId;
@@ -145,7 +174,7 @@ module.exports = {
     getVehicleDetails,
     registerUser,
     addInventory,
-    addClassification,
+    addClassification, // Ensure this function is exported
     getInventoryByClassification,
     getClassificationsFromModel, // Export the function
     renderManagementView // Export the new function
