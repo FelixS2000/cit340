@@ -104,6 +104,7 @@ async function addInventory(req, res, next) {
 
         // Save the inventory item to the database
         await saveInventoryToDatabase(make, model, year, price, mileage, classification_id, description, image, thumbnail);
+        console.log(`Inserted Inventory Item: ${make}, ${model}, ${year}, ${price}, ${mileage}, ${classification_id}, ${description}, ${image}, ${thumbnail}`);
 
         req.flash('message', 'Inventory item added successfully!');
         res.redirect('/inventory/classification'); // Redirect to the classification view
