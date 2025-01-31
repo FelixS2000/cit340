@@ -40,13 +40,13 @@ async function getVehicleById(vehicleId) {
 }
 
 // Function to save a new inventory item
-async function saveInventoryToDatabase(make, model, year, price, mileage, classification_id, description, color) {
+async function saveInventoryToDatabase(make, model, year, price, mileage, classification_id, description) {
     try {
         const sql = `
-            INSERT INTO inventory (inv_make, inv_model, inv_year, inv_price, inv_miles, classification_id, inv_description, inv_color)
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+            INSERT INTO inventory (inv_make, inv_model, inv_year, inv_price, inv_miles, classification_id, inv_description)
+            VALUES ($1, $2, $3, $4, $5, $6, $7)
         `;
-        await pool.query(sql, [make, model, year, price, mileage, classification_id, description, color]);
+        await pool.query(sql, [make, model, year, price, mileage, classification_id, description]);
     } catch (error) {
         console.error('Error saving inventory item:', error.message);
         throw error;
@@ -54,13 +54,13 @@ async function saveInventoryToDatabase(make, model, year, price, mileage, classi
 }
 
 // Function to save a new classification
-async function saveClassificationToDatabase(classificationName, color, description) {
+async function saveClassificationToDatabase(classificationName, description) {
     try {
         const sql = `
-            INSERT INTO classification (classification_name, color, description)
-            VALUES ($1, $2, $3)
+            INSERT INTO classification (classification_name, description)
+            VALUES ($1, $2)
         `;
-        await pool.query(sql, [classificationName, color, description]);
+        await pool.query(sql, [classificationName, description]);
     } catch (error) {
         console.error('Error saving classification:', error.message);
         throw error;
