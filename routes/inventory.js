@@ -37,6 +37,8 @@ router.get('/add-inventory', async (req, res, next) => {
             year: '',
             price: '',
             mileage: '',
+            description: '', // Add description
+            image: '', // Add image
             classification_id: '',
             classifications: classifications // Pass classifications to the view
         });
