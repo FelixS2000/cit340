@@ -12,7 +12,7 @@
     <% if (flashMessage.length) { %>
         <div class="alert alert-danger"><%= flashMessage %></div>
     <% } %>
-    <form action="/inventory/classification/id" method="POST">
+    <form action="/inventory/classification/<%= id %>" method="POST">
         <label for="make">Make:</label>
         <input type="text" name="make" id="make" value="<%= make %>" required>
 
@@ -35,7 +35,7 @@
         <input type="text" name="image" id="image" value="<%= image || '' %>" required>
 
         <label for="thumbnail">Thumbnail URL:</label>
-<input type="text" name="thumbnail" id="thumbnail" value="<%= thumbnail || '' %>" required>
+        <input type="text" name="thumbnail" id="thumbnail" value="<%= thumbnail || '' %>" required>
 
         <label for="classification_id">Classification:</label>
         <select name="classification_id" id="classification_id" required>
