@@ -80,6 +80,8 @@ async function addClassification(req, res, next) {
 async function addInventory(req, res, next) {
     // Add a new inventory item
     try {
+        console.log('Request Body:', req.body); // Log the request body for debugging
+
         const { make, model, year, price, mileage, classification_id, description, color } = req.body;
 
         // Server-side validation
@@ -103,6 +105,7 @@ async function addInventory(req, res, next) {
         req.flash('message', 'Inventory item added successfully!');
         res.redirect('/inventory/management'); // Redirect to management view
     } catch (error) {
+        console.error('Error adding inventory:', error); // Log the error for debugging
         next(error);
     }
 }
