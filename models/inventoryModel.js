@@ -40,6 +40,7 @@ async function getVehicleById(vehicleId) {
 }
 
 // Function to save a new inventory item
+// Function to save a new inventory item
 async function saveInventoryToDatabase(make, model, year, price, mileage, classification_id, description, image, thumbnail) {
     try {
         const sql = `
