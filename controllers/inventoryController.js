@@ -108,7 +108,19 @@ async function addInventory(req, res, next) {
         res.redirect('/inventory/management'); // Redirect to management view
     } catch (error) {
         console.error('Error adding inventory:', error); // Log the error for debugging
-        next(error);
+        req.flash('errorMessage', 'An error occurred while adding the inventory item. Please try again.');
+        return res.render('inventory/add-inventory', {
+            flashMessage: req.flash('errorMessage'),
+            make: make,
+            model: model,
+            year: year,
+            price: price,
+            mileage: mileage,
+            description: description,
+            image: image || '',
+            classification_id: classification_id,
+            classifications: await getClassificationsFromModel()
+        });
     }
 }
 
