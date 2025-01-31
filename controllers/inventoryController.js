@@ -133,7 +133,7 @@ async function getInventoryByClassification(req, res, next) {
     try {
         const inventory = await getInventoryFromModel(classificationId);
         console.log('Fetched Inventory Data:', inventory); // Log the fetched inventory data
-        if (!inventory.length) {
+        if (!inventory || inventory.length === 0) {
             return res.status(404).render('errors/404', { 
                 title: 'No Inventory Found', 
                 message: 'No vehicles found for this classification.' 
@@ -145,6 +145,7 @@ async function getInventoryByClassification(req, res, next) {
             inventory,
         });
     } catch (error) {
+        console.error('Error fetching inventory by classification:', error); // Log the error for debugging
         next(error);
     }
 }
