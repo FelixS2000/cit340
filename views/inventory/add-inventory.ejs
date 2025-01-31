@@ -12,7 +12,7 @@
     <% if (flashMessage.length) { %>
         <div class="alert alert-danger"><%= flashMessage %></div>
     <% } %>
-    <form action="/inventory/classification/<%= id %>" method="POST">
+    <form action="/inventory/add-classification" method="POST">
         <label for="make">Make:</label>
         <input type="text" name="make" id="make" value="<%= make %>" required>
 

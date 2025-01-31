@@ -56,19 +56,22 @@ async function registerUser(req, res, next) {
 async function addClassification(req, res, next) {
     // Add a new classification
     try {
-        const { classificationName, description } = req.body;
+        const { classificationName } = req.body;
+
 
         // Server-side validation
         if (!classificationName || /\s|[^a-zA-Z0-9]/.test(classificationName)) {
-            req.flash('errorMessage', 'Classification name cannot contain spaces or special characters.');
+            req.flash('errorMessage', 'Classification name cannot contain spaces or special characters.'); 
+
             return res.render('inventory/add-classification', {
                 errorMessage: req.flash('errorMessage'),
                 classificationName: classificationName // Retain the value
             });
         }
 
-        // Save the classification to the database without color
-        await saveClassificationToDatabase(classificationName, description);
+        // Save the classification to the database
+        await saveClassificationToDatabase(classificationName);
+
 
         req.flash('message', 'Classification added successfully!');
         res.redirect('/inventory/management'); // Redirect to management view
