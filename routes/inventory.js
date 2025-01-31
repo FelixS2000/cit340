@@ -9,11 +9,13 @@ router.get('/vehicle/:id', inventoryController.getVehicleDetails);
 router.get('/management', inventoryController.renderManagementView);
 
 // Route for adding classification (GET)
-router.get('/add-classification', (req, res) => {
+router.get('/add-classification/:id', (req, res) => {
+    const id = req.params.id; // Get the id from the request parameters
     res.render('inventory/add-classification', {
         title: 'Add Classification', // Pass the title variable
         errors: null,
-        classificationName: '' // Pass an empty string for classificationName
+        classificationName: '', // Pass an empty string for classificationName
+        id // Pass the id variable to the view
     }); // Render add classification view
 });
 
