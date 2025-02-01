@@ -10,6 +10,7 @@ const {
 const { buildVehicleHTML } = require('../utilities/index');
 const bcrypt = require("bcryptjs"); // Import bcrypt
 // Function to fetch all inventory items
+// Function to fetch all inventory items
 async function getAllInventory(req, res, next) {
     try {
         const inventory = await getInventoryFromModel(); // Adjust this to fetch all inventory
@@ -18,6 +19,7 @@ async function getAllInventory(req, res, next) {
             inventory: inventory
         });
     } catch (error) {
+        console.error('Error fetching all inventory:', error); // Log the error for debugging
         next(error);
     }
 }
