@@ -91,12 +91,62 @@ async function getInventoryByClassification(classificationId) {
         throw error;
     }
 }
+async function addInventory(req, res, next) {
+    // Add a new inventory item
+    try {
+        console.log('Request Body:', req.body); // Log the request body for debugging
 
+        const { make, model, year, price, mileage, classification_id, description, image, thumbnail, color } = req.body;
+
+        // Server-side validation
+        if (!make || !model || !year || !price || !mileage || !description || !image || !thumbnail || !color || isNaN(year) || isNaN(price) || isNaN(mileage)) {
+            req.flash('errorMessage', 'All fields are required and must be valid.');
+            return res.render('inventory/add-inventory', {
+                flashMessage: req.flash('errorMessage'),
+                make: make || '', // Ensure make is defined
+                model: model || '', // Ensure model is defined
+                year: year || '', // Ensure year is defined
+                price: price || '', // Ensure price is defined
+                mileage: mileage || '', // Ensure mileage is defined
+                description: description || '', // Ensure description is defined
+                image: image || '', // Ensure image is defined
+                thumbnail: thumbnail || '', // Ensure thumbnail is defined
+                color: color || '', // Ensure color is defined
+                classification_id: classification_id || '', // Ensure classification_id is defined
+                classifications: await getClassificationsFromModel() // Fetch classifications for the view
+            });
+        }
+
+        // Save the inventory item to the database
+        await saveInventoryToDatabase(make, model, year, price, mileage, classification_id, description, image, thumbnail, color);
+
+        req.flash('message', 'Inventory item added successfully!');
+        res.redirect('/inventory/management'); // Redirect to management view
+    } catch (error) {
+        console.error('Error adding inventory:', error); // Log the error for debugging
+        req.flash('errorMessage', 'An error occurred while adding the inventory item. Please try again.');
+        return res.render('inventory/add-inventory', {
+            flashMessage: req.flash('errorMessage'),
+            make: make || '', // Ensure make is defined
+            model: model || '', // Ensure model is defined
+            year: year || '', // Ensure year is defined
+            price: price || '', // Ensure price is defined
+            mileage: mileage || '', // Ensure mileage is defined
+            description: description || '', // Ensure description is defined
+            image: image || '', // Ensure image is defined
+            thumbnail: thumbnail || '', // Ensure thumbnail is defined
+            color: color || '', // Ensure color is defined
+            classification_id: classification_id || '', // Ensure classification_id is defined
+            classifications: await getClassificationsFromModel() // Fetch classifications for the view
+        });
+    }
+}
 // Export the functions
 module.exports = {
-    getVehicleById,
-    getClassificationsFromModel,
-    saveInventoryToDatabase,
-    saveClassificationToDatabase, // Export the new function
-    getInventoryByClassification, // Export the new function
+    addInventory: addInventory,
+    getVehicleById: getVehicleById,
+    getClassificationsFromModel: getClassificationsFromModel,
+    saveInventoryToDatabase: saveInventoryToDatabase,
+    saveClassificationToDatabase: saveClassificationToDatabase, // Export the new function
+    getInventoryByClassification: getInventoryByClassification, // Export the new function
 };
