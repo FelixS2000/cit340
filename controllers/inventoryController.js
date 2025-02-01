@@ -9,6 +9,18 @@ const {
 
 const { buildVehicleHTML } = require('../utilities/index');
 const bcrypt = require("bcryptjs"); // Import bcrypt
+// Function to fetch all inventory items
+async function getAllInventory(req, res, next) {
+    try {
+        const inventory = await getInventoryFromModel(); // Adjust this to fetch all inventory
+        res.render('inventory/inventory-display', {
+            title: 'Inventory List',
+            inventory: inventory
+        });
+    } catch (error) {
+        next(error);
+    }
+}
 
 // Fetch vehicle details by ID
 async function getVehicleDetails(req, res, next) {
@@ -175,6 +187,7 @@ async function renderManagementView(req, res, next) {
 
 module.exports = {
     getVehicleDetails,
+    getAllInventory,
     registerUser,
     addInventory,
     addClassification, // Ensure this function is exported

@@ -54,6 +54,19 @@ router.post('/add-inventory',
     inventoryController.addInventory
 );
 
+// New route for inventory display
+router.get('/inventory-display', async (req, res, next) => {
+    try {
+        const inventory = await inventoryController.getAllInventory(); // Adjust this to fetch all inventory
+        res.render('inventory/inventory-display', {
+            title: 'Inventory List',
+            inventory: inventory
+        });
+    } catch (error) {
+        next(error);
+    }
+});
+
 // New route for classification inventory
 router.post('/classification/:id', async (req, res, next) => {
     const id = req.params.id;
