@@ -11,11 +11,11 @@ router.get('/management', inventoryController.renderManagementView);
 // Route for adding classification (GET) without ID
 router.get('/add-classification', (req, res) => {
     res.render('inventory/add-classification', {
-        title: 'Add Classification', // Pass the title variable
+        title: 'Add Classification',
         errors: null,
-        classificationName: '', // Pass an empty string for classificationName
-        id: null // Pass null for id since it's not required
-    }); // Render add classification view
+        classificationName: '',
+        id: null
+    });
 });
 
 router.post('/add-classification', 
@@ -25,24 +25,25 @@ router.post('/add-classification',
 // Route for adding inventory (GET)
 router.get('/add-inventory', async (req, res, next) => {
     try {
-        const classifications = await inventoryController.getClassificationsFromModel(); // Ensure this function is defined in your model
+        const classifications = await inventoryController.getClassificationsFromModel();
         if (!classifications) {
             throw new Error('Classifications could not be fetched');
         }
 
         res.render('inventory/add-inventory', {
-            title: 'Add Inventory', // Pass the title variable
+            title: 'Add Inventory',
             errors: null,
             make: '', 
             model: '', 
             year: '',
             price: '',
             mileage: '',
-            description: '', // Add description
-            image: '', // Add image
-            thumbnail: '', // Add thumbnail
+            description: '',
+            image: '',
+            thumbnail: '',
             classification_id: '',
-            classifications: classifications // Pass classifications to the view
+            color: '', // Add color variable
+            classifications: classifications
         });
     } catch (error) {
         next(error);
@@ -59,7 +60,6 @@ router.post('/classification/:id', async (req, res, next) => {
     const { make, model, year, price, mileage, description, image, thumbnail, classification_id } = req.body;
 
     try {
-        // Logic to add the inventory item to the database
         await inventoryController.addInventoryItem({
             id,
             make,
@@ -73,10 +73,9 @@ router.post('/classification/:id', async (req, res, next) => {
             classification_id
         });
 
-        // Redirect or render a success message
-        res.redirect('/inventory/management'); // Redirect to management view after successful addition
+        res.redirect('/inventory/management');
     } catch (error) {
-        next(error); // Handle errors
+        next(error);
     }
 });
 

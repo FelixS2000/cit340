@@ -58,10 +58,10 @@ async function addInventory(req, res, next) {
     try {
         console.log('Request Body:', req.body); // Log the request body for debugging
 
-        const { make, model, year, price, mileage, classification_id, description, image, thumbnail, color } = req.body;
+        const { make, model, year, price, mileage, classification_id, image, thumbnail, color } = req.body;
 
         // Server-side validation
-        if (!make || !model || !year || !price || !mileage || !description || !image || !thumbnail || !color || isNaN(year) || isNaN(price) || isNaN(mileage)) {
+        if (!make || !model || !year || !price || !mileage || !image || !thumbnail || !color || isNaN(year) || isNaN(price) || isNaN(mileage)) {
             req.flash('errorMessage', 'All fields are required and must be valid.');
             return res.render('inventory/add-inventory', {
                 flashMessage: req.flash('errorMessage'),
@@ -70,7 +70,6 @@ async function addInventory(req, res, next) {
                 year: year || '', // Ensure year is defined
                 price: price || '', // Ensure price is defined
                 mileage: mileage || '', // Ensure mileage is defined
-                description: description || '', // Ensure description is defined
                 image: image || '', // Ensure image is defined
                 thumbnail: thumbnail || '', // Ensure thumbnail is defined
                 color: color || '', // Ensure color is defined
@@ -79,9 +78,61 @@ async function addInventory(req, res, next) {
             });
         }
 
+        // Validate year, price, and mileage ranges
+        if (year < 1886 || year > new Date().getFullYear()) {
+            req.flash('errorMessage', 'Year must be a valid year.');
+            return res.render('inventory/add-inventory', {
+                flashMessage: req.flash('errorMessage'),
+                make: make || '',
+                model: model || '',
+                year: year || '',
+                price: price || '',
+                mileage: mileage || '',
+                image: image || '',
+                thumbnail: thumbnail || '',
+                color: color || '',
+                classification_id: classification_id || '',
+                classifications: await getClassificationsFromModel()
+            });
+        }
+
+        if (price < 0) {
+            req.flash('errorMessage', 'Price must be a positive number.');
+            return res.render('inventory/add-inventory', {
+                flashMessage: req.flash('errorMessage'),
+                make: make || '',
+                model: model || '',
+                year: year || '',
+                price: price || '',
+                mileage: mileage || '',
+                image: image || '',
+                thumbnail: thumbnail || '',
+                color: color || '',
+                classification_id: classification_id || '',
+                classifications: await getClassificationsFromModel()
+            });
+        }
+
+        if (mileage < 0) {
+            req.flash('errorMessage', 'Mileage must be a positive number.');
+            return res.render('inventory/add-inventory', {
+                flashMessage: req.flash('errorMessage'),
+                make: make || '',
+                model: model || '',
+                year: year || '',
+                price: price || '',
+                mileage: mileage || '',
+                image: image || '',
+                thumbnail: thumbnail || '',
+                color: color || '',
+                classification_id: classification_id || '',
+                classifications: await getClassificationsFromModel()
+            });
+        }
+
         // Save the inventory item to the database
-        await saveInventoryToDatabase(make, model, year, price, mileage, classification_id, description, image, thumbnail, color);
-        console.log(`Inserted Inventory Item: ${make}, ${model}, ${year}, ${price}, ${mileage}, ${classification_id}, ${description}, ${image}, ${thumbnail}, ${color}`);
+        await saveInventoryToDatabase(make, model, year, price, mileage, classification_id, image, thumbnail, color);
+        console.log(`Inserted Inventory Item: ${make}, ${model}, ${year}, ${price}, ${mileage}, ${classification_id}, ${image}, ${thumbnail}, ${color}`);
 
         req.flash('message', 'Inventory item added successfully!');
         res.redirect(`/inventory/classification/${classification_id}`); // Redirect to the new classification view
@@ -95,7 +146,6 @@ async function addInventory(req, res, next) {
             year: year || '', // Ensure year is defined
             price: price || '', // Ensure price is defined
             mileage: mileage || '', // Ensure mileage is defined
-            description: description || '', // Ensure description is defined
             image: image || '', // Ensure image is defined
             thumbnail: thumbnail || '', // Ensure thumbnail is defined
             color: color || '', // Ensure color is defined
