@@ -148,9 +148,11 @@ async function getInventoryByClassification(req, res, next) {
             });
         }
 
+        const classifications = await getClassificationsFromModel(); // Fetch classifications for the view
         res.render('inventory/classification', {
             title: 'Inventory',
             inventory,
+            classifications // Pass classifications to the view
         });
     } catch (error) {
         console.error('Error fetching inventory by classification:', error); // Log the error for debugging

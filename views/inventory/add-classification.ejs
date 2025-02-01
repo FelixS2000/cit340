@@ -3,18 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Classification | CSE 340 App</title>
-    <link rel="stylesheet" href="/css/styles.css">
+    <title>Add Classification</title>
 </head>
 <body>
     <h1>Add Classification</h1>
-    <% if (flashMessage) { %>
-        <div class="alert alert-danger"><%= flashMessage %></div>
-    <% } %>
     <form action="/inventory/add-classification" method="POST">
         <label for="classificationName">Classification Name:</label>
-        <input type="text" name="classificationName" id="classificationName" required>
+        <input type="text" id="classificationName" name="classificationName" required><br>
         <button type="submit">Add Classification</button>
     </form>
+    <a href="/inventory/inventory-display">View Inventory</a>
 </body>
 </html>
