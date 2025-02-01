@@ -107,3 +107,76 @@ async function addInventory(req, res, next) {
         });
     }
 }
+
+// Function to fetch vehicle details by ID
+async function getVehicleDetails(req, res, next) {
+    try {
+        const vehicleId = req.params.id;
+        const vehicle = await getVehicleById(vehicleId);
+        console.log('Fetched Vehicle Data:', vehicle); // Log the fetched vehicle data
+
+        if (!vehicle) {
+            return res.status(404).render('errors/404', { 
+                title: 'Vehicle Not Found', 
+                message: 'The requested vehicle does not exist.' 
+            });
+        }
+
+        const vehicleHTML = buildVehicleHTML(vehicle);
+
+        res.render('inventory/detail', {
+            title: `${vehicle.year} ${vehicle.make} ${vehicle.model}`,
+            vehicleHTML,
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
+// Function to render management view
+async function renderManagementView(req, res, next) {
+    try {
+        const classifications = await getClassificationsFromModel();
+        res.render('inventory/management', {
+            title: 'Inventory Management',
+            classifications: classifications
+        });
+    } catch (error) {
+        console.error('Error rendering management view:', error);
+        next(error);
+    }
+}
+
+// Function to fetch inventory by classification
+async function getInventoryByClassification(req, res, next) {
+    try {
+        const classificationId = req.params.classificationId;
+        const inventory = await getInventoryFromModel(classificationId);
+        
+        if (!inventory || inventory.length === 0) {
+            return res.status(404).render('errors/404', { 
+                title: 'No Inventory Found', 
+                message: 'No inventory items found for this classification.' 
+            });
+        }
+
+        res.render('inventory/classification', {
+            title: 'Inventory by Classification',
+            inventory: inventory,
+            classificationId: classificationId
+        });
+    } catch (error) {
+        console.error('Error fetching inventory by classification:', error);
+        next(error);
+    }
+}
+
+module.exports = {
+    getVehicleDetails,
+    fetchAllInventory,
+    addClassification,
+    addInventory,
+    getInventoryByClassification,
+    getClassificationsFromModel,
+    renderManagementView
+};
