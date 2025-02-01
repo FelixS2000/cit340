@@ -57,8 +57,11 @@ async function addInventory(req, res, next) {
     // Add a new inventory item
     try {
         console.log('Request Body:', req.body); // Log the request body for debugging
+        console.log('Values to be saved:', { make, model, year, price, mileage, classification_id, image, thumbnail, color });
 
-        const { make, model, year, price, mileage, classification_id, image, thumbnail, color } = req.body;
+
+        const { make, model, year, price, mileage, classification_id, image, thumbnail, color } = req.body; 
+
 
         // Server-side validation
         if (!make || !model || !year || !price || !mileage || !image || !thumbnail || !color || isNaN(year) || isNaN(price) || isNaN(mileage)) {
