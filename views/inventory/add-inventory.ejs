@@ -3,50 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Inventory Item | CSE 340 App</title>
-    <link rel="stylesheet" href="/css/styles.css">
+    <title>Add Inventory</title>
+    <script>
+        function validateForm() {
+            // Add client-side validation logic here
+            return true; // Placeholder for validation logic
+        }
+    </script>
 </head>
 <body>
-    <h1>Add Inventory Item</h1>
+    <h1>Add New Vehicle to Inventory</h1>
     <% if (flashMessage) { %>
-        <div class="alert alert-danger"><%= flashMessage %></div>
+        <div><%= flashMessage %></div>
     <% } %>
-    <form action="/inventory/add-inventory" method="POST">
+    <form action="/inventory/add-inventory" method="POST" onsubmit="return validateForm()">
         <label for="make">Make:</label>
-        <input type="text" name="make" id="make" required>
+        <input type="text" id="make" name="make" value="<%= make || '' %>" required>
 
         <label for="model">Model:</label>
-        <input type="text" name="model" id="model" required>
+        <input type="text" id="model" name="model" value="<%= model || '' %>" required>
 
         <label for="year">Year:</label>
-        <input type="number" name="year" id="year" required>
+        <input type="number" id="year" name="year" value="<%= year || '' %>" required>
 
         <label for="price">Price:</label>
-        <input type="number" name="price" id="price" required>
+        <input type="number" id="price" name="price" value="<%= price || '' %>" required>
 
         <label for="mileage">Mileage:</label>
-        <input type="number" name="mileage" id="mileage" required>
+        <input type="number" id="mileage" name="mileage" value="<%= mileage || '' %>" required>
 
-        <label for="description">Description:</label>
-        <textarea name="description" id="description" required></textarea>
-
-        <label for="image">Image URL:</label>
-        <input type="text" name="image" id="image" required>
-
-        <label for="thumbnail">Thumbnail URL:</label>
-        <input type="text" name="thumbnail" id="thumbnail" required>
-
-        <label for="color">Color:</label>
-        <input type="text" name="color" id="color" required>
-        
         <label for="classification_id">Classification:</label>
         <select name="classification_id" id="classification_id" required>
-            <% classifications.forEach(function(classification) { %>
-                <option value="<%= classification.classification_id %>"><%= classification.classification_name %></option>
+            <option value="">Choose a Classification</option>
+            <% classifications.forEach(classification => { %>
+                <option value="<%= classification.classification_id %>" <%= classification.classification_id == classification_id ? 'selected' : '' %>><%= classification.classification_name %></option>
             <% }); %>
         </select>
 
-        <button type="submit">Add Inventory Item</button>
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" required><%= description || '' %></textarea>
+
+        <label for="image">Image URL:</label>
+        <input type="text" id="image" name="image" value="<%= image || '' %>" required>
+
+        <label for="thumbnail">Thumbnail URL:</label>
+        <input type="text" id="thumbnail" name="thumbnail" value="<%= thumbnail || '' %>" required>
+
+        <label for="color">Color:</label>
+        <input type="text" id="color" name="color" value="<%= color || '' %>" required>
+
+        <button type="submit">Add Vehicle</button>
     </form>
+    <a href="/inventory/management">Back to Management</a>
 </body>
 </html>

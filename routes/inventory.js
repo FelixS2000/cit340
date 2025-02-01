@@ -8,13 +8,12 @@ router.get('/vehicle/:id', inventoryController.getVehicleDetails);
 // Route for management view
 router.get('/management', inventoryController.renderManagementView);
 
-// Route for adding classification (GET) without ID
+// Route for adding classification (GET)
 router.get('/add-classification', (req, res) => {
     res.render('inventory/add-classification', {
         title: 'Add Classification',
         errors: null,
-        classificationName: '',
-        id: null
+        classificationName: ''
     });
 });
 
@@ -41,8 +40,7 @@ router.get('/add-inventory', async (req, res, next) => {
             description: '',
             image: '',
             thumbnail: '',
-            classification_id: '',
-            color: '', // Add color variable
+            color: '',
             classifications: classifications
         });
     } catch (error) {
@@ -57,36 +55,11 @@ router.post('/add-inventory',
 // New route for inventory display
 router.get('/inventory-display', async (req, res, next) => {
     try {
-        const inventory = await inventoryController.getAllInventory(); // Adjust this to fetch all inventory
+        const inventory = await inventoryController.fetchAllInventory(req, res, next); // Call the renamed function
         res.render('inventory/inventory-display', {
             title: 'Inventory List',
             inventory: inventory
         });
-    } catch (error) {
-        next(error);
-    }
-});
-
-// New route for classification inventory
-router.post('/classification/:id', async (req, res, next) => {
-    const id = req.params.id;
-    const { make, model, year, price, mileage, description, image, thumbnail, classification_id } = req.body;
-
-    try {
-        await inventoryController.addInventoryItem({
-            id,
-            make,
-            model,
-            year,
-            price,
-            mileage,
-            description,
-            image,
-            thumbnail,
-            classification_id
-        });
-
-        res.redirect('/inventory/management');
     } catch (error) {
         next(error);
     }

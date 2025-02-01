@@ -4,14 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Classification</title>
+    <script>
+        function validateForm() {
+            const classificationName = document.getElementById('classificationName').value;
+            const regex = /^[^\s!@#$%^&*()_+={}\[\]:;"'<>,.?\/\\|]*$/; // No spaces or special characters
+            if (!regex.test(classificationName)) {
+                alert('Classification name cannot contain spaces or special characters.');
+                return false;
+            }
+            return true;
+        }
+    </script>
 </head>
 <body>
-    <h1>Add Classification</h1>
-    <form action="/inventory/add-classification" method="POST">
+    <h1>Add New Classification</h1>
+    <% if (flashMessage) { %>
+        <div><%= flashMessage %></div>
+    <% } %>
+    <form action="/inventory/add-classification" method="POST" onsubmit="return validateForm()">
         <label for="classificationName">Classification Name:</label>
-        <input type="text" id="classificationName" name="classificationName" required><br>
+        <input type="text" id="classificationName" name="classificationName" required>
         <button type="submit">Add Classification</button>
     </form>
-    <a href="/inventory/inventory-display">View Inventory</a>
+    <a href="/inventory/management">Back to Management</a>
 </body>
 </html>

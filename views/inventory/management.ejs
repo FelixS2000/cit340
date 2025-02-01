@@ -7,8 +7,14 @@
 </head>
 <body>
     <h1>Inventory Management</h1>
-    <a href="/inventory/add-inventory">Add New Inventory Item</a><br>
-    <a href="/inventory/add-classification">Add New Classification</a><br>
-    <a href="/inventory/inventory-display">View Inventory</a><br>
+    <% if (flashMessage) { %>
+        <div><%= flashMessage %></div>
+    <% } %>
+    <nav>
+        <ul>
+            <li><a href="/inventory/add-classification">Add New Classification</a></li>
+            <li><a href="/inventory/add-inventory">Add New Inventory</a></li>
+        </ul>
+    </nav>
 </body>
 </html>
