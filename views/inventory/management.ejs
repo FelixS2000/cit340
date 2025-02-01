@@ -3,29 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= title %></title>
+    <title>Inventory Management | CSE 340 App</title>
     <link rel="stylesheet" href="/css/management.css">
 </head>
 <body>
-    <div id="wrapper">
-        <main>
-            <h1><%= title %></h1>
-            <% if (flashMessage) { %>
-                <div class="flash-message"><%= flashMessage %></div>
-            <% } %>
-            <h2>Classifications</h2>
-            <ul>
-                <% classifications.forEach(function(classification) { %>
-                    <li>
-                        <a href="/inventory/classification/<%= classification.classification_id %>">
-                            <%= classification.classification_name %>
-                        </a>
-                    </li>
-                <% }); %>
-            </ul>
-            <a href="/inventory/add-classification">Add New Classification</a>
-            <a href="/inventory/add-inventory">Add New Inventory Item</a>
-        </main>
-    </div>
+    <h1>Inventory Management</h1>
+    <% if (flashMessage) { %>
+        <div class="alert alert-success"><%= flashMessage %></div>
+    <% } %>
+    <nav>
+        <a href="/inventory/add-classification">Add Classification</a>
+        <a href="/inventory/add-inventory">Add Inventory Item</a>
+    </nav>
 </body>
 </html>

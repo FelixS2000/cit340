@@ -57,11 +57,11 @@ async function addInventory(req, res, next) {
     // Add a new inventory item
     try {
         console.log('Request Body:', req.body); // Log the request body for debugging
-        console.log('Values to be saved:', { make, model, year, price, mileage, classification_id, image, thumbnail, color });
-
 
         const { make, model, year, price, mileage, classification_id, image, thumbnail, color } = req.body; 
 
+        // Log the values being passed to the database
+        console.log('Values to be saved:', { make, model, year, price, mileage, classification_id, image, thumbnail, color });
 
         // Server-side validation
         if (!make || !model || !year || !price || !mileage || !image || !thumbnail || !color || isNaN(year) || isNaN(price) || isNaN(mileage)) {
@@ -78,58 +78,6 @@ async function addInventory(req, res, next) {
                 color: color || '', // Ensure color is defined
                 classification_id: classification_id || '', // Ensure classification_id is defined
                 classifications: await getClassificationsFromModel() // Fetch classifications for the view
-            });
-        }
-
-        // Validate year, price, and mileage ranges
-        if (year < 1886 || year > new Date().getFullYear()) {
-            req.flash('errorMessage', 'Year must be a valid year.');
-            return res.render('inventory/add-inventory', {
-                flashMessage: req.flash('errorMessage'),
-                make: make || '',
-                model: model || '',
-                year: year || '',
-                price: price || '',
-                mileage: mileage || '',
-                image: image || '',
-                thumbnail: thumbnail || '',
-                color: color || '',
-                classification_id: classification_id || '',
-                classifications: await getClassificationsFromModel()
-            });
-        }
-
-        if (price < 0) {
-            req.flash('errorMessage', 'Price must be a positive number.');
-            return res.render('inventory/add-inventory', {
-                flashMessage: req.flash('errorMessage'),
-                make: make || '',
-                model: model || '',
-                year: year || '',
-                price: price || '',
-                mileage: mileage || '',
-                image: image || '',
-                thumbnail: thumbnail || '',
-                color: color || '',
-                classification_id: classification_id || '',
-                classifications: await getClassificationsFromModel()
-            });
-        }
-
-        if (mileage < 0) {
-            req.flash('errorMessage', 'Mileage must be a positive number.');
-            return res.render('inventory/add-inventory', {
-                flashMessage: req.flash('errorMessage'),
-                make: make || '',
-                model: model || '',
-                year: year || '',
-                price: price || '',
-                mileage: mileage || '',
-                image: image || '',
-                thumbnail: thumbnail || '',
-                color: color || '',
-                classification_id: classification_id || '',
-                classifications: await getClassificationsFromModel()
             });
         }
 

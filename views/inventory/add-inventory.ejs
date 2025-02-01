@@ -3,48 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= title %> | CSE 340 App</title>
+    <title>Add Inventory Item | CSE 340 App</title>
     <link rel="stylesheet" href="/css/styles.css">
-    <link rel="shortcut icon" href="/images/site/favicon-32x32.png" type="image/x-icon">
 </head>
 <body>
     <h1>Add Inventory Item</h1>
-    <% if (flashMessage.length) { %>
+    <% if (flashMessage) { %>
         <div class="alert alert-danger"><%= flashMessage %></div>
     <% } %>
     <form action="/inventory/add-inventory" method="POST">
         <label for="make">Make:</label>
-        <input type="text" name="make" id="make" value="<%= make %>" required>
+        <input type="text" name="make" id="make" required>
 
         <label for="model">Model:</label>
-        <input type="text" name="model" id="model" value="<%= model %>" required>
+        <input type="text" name="model" id="model" required>
 
         <label for="year">Year:</label>
-        <input type="number" name="year" id="year" value="<%= year %>" required>
+        <input type="number" name="year" id="year" required>
 
         <label for="price">Price:</label>
-        <input type="number" name="price" id="price" value="<%= price %>" required>
+        <input type="number" name="price" id="price" required>
 
         <label for="mileage">Mileage:</label>
-        <input type="number" name="mileage" id="mileage" value="<%= mileage %>" required>
+        <input type="number" name="mileage" id="mileage" required>
 
         <label for="description">Description:</label>
-        <textarea name="description" id="description" required><%= description %></textarea>
+        <textarea name="description" id="description" required></textarea>
 
         <label for="image">Image URL:</label>
-        <input type="text" name="image" id="image" value="<%= image || '' %>" required>
+        <input type="text" name="image" id="image" required>
 
         <label for="thumbnail">Thumbnail URL:</label>
-        <input type="text" name="thumbnail" id="thumbnail" value="<%= thumbnail || '' %>" required>
+        <input type="text" name="thumbnail" id="thumbnail" required>
 
         <label for="color">Color:</label>
-        <input type="text" name="color" id="color" value="<%= color || '' %>" required>
+        <input type="text" name="color" id="color" required>
         
         <label for="classification_id">Classification:</label>
-
         <select name="classification_id" id="classification_id" required>
             <% classifications.forEach(function(classification) { %>
-                <option value="<%= classification.classification_id %>" <%= classification_id == classification.classification_id ? 'selected' : '' %>><%= classification.classification_name %></option>
+                <option value="<%= classification.classification_id %>"><%= classification.classification_name %></option>
             <% }); %>
         </select>
 
