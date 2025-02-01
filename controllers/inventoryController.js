@@ -11,9 +11,16 @@ const { buildVehicleHTML } = require('../utilities/index');
 const bcrypt = require("bcryptjs"); // Import bcrypt
 // Function to fetch all inventory items
 // Function to fetch all inventory items
+// Function to fetch all inventory items
 async function getAllInventory(req, res, next) {
     try {
         const inventory = await getInventoryFromModel(); // Adjust this to fetch all inventory
+        if (!inventory) {
+            return res.status(404).render('errors/404', { 
+                title: 'No Inventory Found', 
+                message: 'No inventory items available.' 
+            });
+        }
         res.render('inventory/inventory-display', {
             title: 'Inventory List',
             inventory: inventory

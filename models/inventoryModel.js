@@ -141,10 +141,22 @@ async function addInventory(req, res, next) {
         });
     }
 }
+// Fetch all inventory items
+async function getAllInventory() {
+    try {
+        const query = `SELECT * FROM inventory`; // Adjust this query as needed
+        const result = await pool.query(query);
+        return result.rows; // Return all inventory items
+    } catch (error) {
+        console.error('Error fetching all inventory:', error.message);
+        throw error;
+    }
+}
 // Export the functions
 module.exports = {
     addInventory: addInventory,
     getVehicleById: getVehicleById,
+    getAllInventory: getAllInventory,
     getClassificationsFromModel: getClassificationsFromModel,
     saveInventoryToDatabase: saveInventoryToDatabase,
     saveClassificationToDatabase: saveClassificationToDatabase, // Export the new function
