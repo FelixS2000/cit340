@@ -4,9 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Inventory</title>
+    <link rel="stylesheet" href="/css/styles.css"> <!-- Link to your CSS file -->
     <script>
         function validateForm() {
             // Add client-side validation logic here
+            // Example: Check if the year is a valid number
+            const year = document.getElementById('year').value;
+            if (year < 1886 || year > new Date().getFullYear()) { // The first car was made in 1886
+                alert('Please enter a valid year.');
+                return false;
+            }
             return true; // Placeholder for validation logic
         }
     </script>
@@ -14,7 +21,7 @@
 <body>
     <h1>Add New Vehicle to Inventory</h1>
     <% if (flashMessage) { %>
-        <div><%= flashMessage %></div>
+        <div class="alert"><%= flashMessage %></div>
     <% } %>
     <form action="/inventory/add-inventory" method="POST" onsubmit="return validateForm()">
         <label for="make">Make:</label>
@@ -24,13 +31,13 @@
         <input type="text" id="model" name="model" value="<%= model || '' %>" required>
 
         <label for="year">Year:</label>
-        <input type="number" id="year" name="year" value="<%= year || '' %>" required>
+        <input type="number" id="year" name="year" value="<%= year || '' %>" required min="1886" max="<%= new Date().getFullYear() %>">
 
         <label for="price">Price:</label>
-        <input type="number" id="price" name="price" value="<%= price || '' %>" required>
+        <input type="number" id="price" name="price" value="<%= price || '' %>" required min="0">
 
         <label for="mileage">Mileage:</label>
-        <input type="number" id="mileage" name="mileage" value="<%= mileage || '' %>" required>
+        <input type="number" id="mileage" name="mileage" value="<%= mileage || '' %>" required min="0">
 
         <label for="classification_id">Classification:</label>
         <select name="classification_id" id="classification_id" required>
@@ -44,10 +51,10 @@
         <textarea id="description" name="description" required><%= description || '' %></textarea>
 
         <label for="image">Image URL:</label>
-        <input type="text" id="image" name="image" value="<%= image || '' %>" required>
+        <input type="url" id="image" name="image" value="<%= image || '' %>" required>
 
         <label for="thumbnail">Thumbnail URL:</label>
-        <input type="text" id="thumbnail" name="thumbnail" value="<%= thumbnail || '' %>" required>
+        <input type="url" id="thumbnail" name="thumbnail" value="<%= thumbnail || '' %>" required>
 
         <label for="color">Color:</label>
         <input type="text" id="color" name="color" value="<%= color || '' %>" required>

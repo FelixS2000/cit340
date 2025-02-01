@@ -29,6 +29,8 @@ router.get('/add-inventory', async (req, res, next) => {
             throw new Error('Classifications could not be fetched');
         }
 
+        const classification_id = req.query.classification_id || null; // Get classification_id from query
+
         res.render('inventory/add-inventory', {
             title: 'Add Inventory',
             errors: null,
@@ -41,19 +43,17 @@ router.get('/add-inventory', async (req, res, next) => {
             image: '',
             thumbnail: '',
             color: '',
-            classifications: classifications
+            classifications: classifications,
+            classification_id: classification_id // Pass classification_id to the template
         });
     } catch (error) {
         next(error);
     }
 });
 
-router.post('/add-inventory', 
-    inventoryController.addInventory
-);
+router.post('/add-inventory', inventoryController.addInventory);
 
 router.get('/inventory-display', inventoryController.fetchAllInventory);
-
 
 // Route for classification inventory
 router.get('/classification/:classificationId', inventoryController.getInventoryByClassification);

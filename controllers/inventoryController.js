@@ -1,7 +1,6 @@
 const { 
     getVehicleById, 
     getInventoryByClassification: getInventoryFromModel, 
-    saveUserToDatabase, 
     saveClassificationToDatabase, 
     saveInventoryToDatabase, 
     getClassificationsFromModel,
@@ -12,10 +11,11 @@ const { buildVehicleHTML } = require('../utilities/index');
 const bcrypt = require("bcryptjs"); // Import bcrypt
 
 // Function to fetch all inventory items
+// Function to fetch all inventory items
 async function fetchAllInventory(req, res, next) {
     try {
         const inventory = await getAllInventory(); // Call the correct function to fetch all inventory
-        if (!inventory) {
+        if (!inventory || inventory.length === 0) {
             return res.status(404).render('errors/404', { 
                 title: 'No Inventory Found', 
                 message: 'No inventory items available.' 
@@ -75,7 +75,7 @@ async function addInventory(req, res, next) {
                 year: year || '',
                 price: price || '',
                 mileage: mileage || '',
-                classification_id: classification_id || '',
+                classification_id: classification_id || '', // Ensure this is passed
                 description: description || '',
                 image: image || '',
                 thumbnail: thumbnail || '',
@@ -98,7 +98,7 @@ async function addInventory(req, res, next) {
             year: year || '',
             price: price || '',
             mileage: mileage || '',
-            classification_id: classification_id || '',
+            classification_id: classification_id || '', // Ensure this is passed
             description: description || '',
             image: image || '',
             thumbnail: thumbnail || '',
@@ -116,7 +116,7 @@ async function getVehicleDetails(req, res, next) {
         console.log('Fetched Vehicle Data:', vehicle); // Log the fetched vehicle data
 
         if (!vehicle) {
-            return res.status(404).render('errors/404', { 
+            return res.status( 404).render('errors/404', { 
                 title: 'Vehicle Not Found', 
                 message: 'The requested vehicle does not exist.' 
             });
@@ -179,4 +179,4 @@ module.exports = {
     getInventoryByClassification,
     getClassificationsFromModel,
     renderManagementView
-};
+}; 
