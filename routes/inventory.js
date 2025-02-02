@@ -6,7 +6,18 @@ const inventoryController = require('../controllers/inventoryController');
 router.get('/vehicle/:id', inventoryController.getVehicleDetails);
 
 // Route for management view
-router.get('/management', inventoryController.renderManagementView);
+router.get('/management', async (req, res, next) => {
+    try {
+        const classifications = await inventoryController.getClassificationsFromModel();
+        res.render('inventory/management', {
+            title: 'Inventory Management',
+            classifications: classifications // Pass classifications to the view
+        });
+    } catch (error) {
+        console.error('Error rendering management view:', error);
+        next(error);
+    }
+});
 
 // Route for adding classification (GET)
 router.get('/add-classification', (req, res) => {

@@ -36,5 +36,12 @@ nav a {
 }
 
 nav a:hover {
-    background-color: #008ba3; /* Lighter blue on hover */
+    background-color: #007b8a; /* Adjusted hover color for better visibility */
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    nav {
+        flex-direction: column; /* Stack navigation links on smaller screens */
+    }
 }
