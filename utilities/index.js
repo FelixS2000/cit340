@@ -1,5 +1,3 @@
-const Util = {}; // Define the Util object
-
 function buildVehicleHTML(vehicle) {
     return `
         <div class="vehicle-detail">
@@ -13,17 +11,5 @@ function buildVehicleHTML(vehicle) {
     `;
 }
 
-/* ****************************************
- *  Check Login
- * ************************************ */
-Util.checkLogin = (req, res, next) => {
-    if (res.locals.loggedin) {
-        next();
-    } else {
-        req.flash("notice", "Please log in.");
-        return res.redirect("/account/login");
-    }
-};
-
 // Export as part of an object for extensibility
-module.exports = { buildVehicleHTML, checkLogin: Util.checkLogin };
+module.exports = { buildVehicleHTML };

@@ -2,10 +2,7 @@ const express = require('express');
 const router = express.Router();
 const inventoryController = require('../controllers/inventoryController');
 
-const utilities = require('../utilities/index'); // Import utilities for error handling
-
 // Route for vehicle details
-
 router.get('/vehicle/:id', inventoryController.getVehicleDetails);
 
 // Route for management view
@@ -22,9 +19,7 @@ router.get('/management', async (req, res, next) => {
     }
 });
 
-// New route for fetching inventory by classification
-router.get("/getInventory/:classification_id", utilities.handleErrors(inventoryController.getInventoryJSON));
-
+// Route for adding classification (GET)
 router.get('/add-classification', (req, res) => {
     res.render('inventory/add-classification', {
         title: 'Add Classification',
