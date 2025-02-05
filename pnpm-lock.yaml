@@ -17,6 +17,9 @@ importers:
       connect-flash:
         specifier: ^0.1.1
         version: 0.1.1
+      cookie-parser:
+        specifier: ^1.4.7
+        version: 1.4.7
       cse340:
         specifier: 'file:'
         version: 'file:'
@@ -140,6 +143,10 @@ packages:
   content-type@1.0.5:
     resolution: {integrity: sha512-nTjqfcBFEipKdXCv4YDQWCfmcLZKm81ldF0pAopTvyrFGVbcR6P/VAAd5G7N+0tTr8QqiU0tFadD6FK4NtJwOA==}
     engines: {node: '>= 0.6'}
+
+  cookie-parser@1.4.7:
+    resolution: {integrity: sha512-nGUvgXnotP3BsjiLX2ypbQnWoGUPIIfHQNZkkC668ntrzGWEZVW70HDEB1qnNGMicPje6EttlIgzo51YSwNQGw==}
+    engines: {node: '>= 0.8.0'}
 
   cookie-signature@1.0.6:
     resolution: {integrity: sha512-QADzlaHc8icV8I7vbaJXJwod9HWYp8uCqf1xa4OfNu1T7JVxQIrUgOWtHdNDtPiywmFbiS12VjotIXLrKM3orQ==}
@@ -745,6 +752,11 @@ snapshots:
 
   content-type@1.0.5: {}
 
+  cookie-parser@1.4.7:
+    dependencies:
+      cookie: 0.7.2
+      cookie-signature: 1.0.6
+
   cookie-signature@1.0.6: {}
 
   cookie-signature@1.0.7: {}
@@ -758,6 +770,7 @@ snapshots:
       bcryptjs: 2.4.3
       body-parser: 1.20.3
       connect-flash: 0.1.1
+      cookie-parser: 1.4.7
       dotenv: 16.4.7
       ejs: 3.1.10
       express: 4.21.2
