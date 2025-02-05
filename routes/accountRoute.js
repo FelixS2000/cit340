@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const utilities = require('../utilities/index'); // Ensure to import utilities
+const jwt = require('jsonwebtoken'); // Import JWT
+const db = require('../database/connection'); // Import database connection
 
 // Sample route for account
 router.get('/', utilities.checkLogin, (req, res) => {
@@ -12,14 +14,24 @@ router.get('/login', (req, res) => {
     res.render('account/login', { title: 'Login' });
 });
 
-router.post('/login', (req, res) => {
-    // Placeholder for login logic
+router.post('/login', async (req, res) => {
     const { username, password } = req.body;
-    // Here you would typically check the credentials against a database
-    if (username === 'test' && password === 'password') {
-        res.json({ message: 'Login successful!' });
-    } else {
-        res.status(401).json({ message: 'Invalid credentials' });
+
+    try {
+        // Check the credentials against the database
+        const user = await db.query('SELECT * FROM public.account WHERE account_email = $1', [username]);
+        
+        if (user.rows.length > 0 && user.rows[0].account_password === password) {
+            // Generate JWT token
+            const token = jwt.sign({ id: user.rows[0].id, account_type: user.rows[0].account_type }, 'your_jwt_secret', { expiresIn: '1h' });
+            res.cookie('jwt', token, { httpOnly: true });
+            res.json({ message: 'Login successful!', token });
+        } else {
+            res.status(401).json({ message: 'Invalid credentials' });
+        }
+    } catch (error) {
+        console.error('Error during login:', error);
+        res.status(500).json({ message: 'Internal server error' });
     }
 });
 
@@ -30,10 +42,8 @@ router.get('/register', (req, res) => {
 });
 
 router.post('/register', (req, res) => {
-    // Handle registration logic here
     const { firstname, lastname, email, password } = req.body;
     // Logic to save the new user to the database goes here
-    // For now, just send a success message
     res.json({ message: 'Registration successful!' });
 });
 

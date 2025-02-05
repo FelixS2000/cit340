@@ -2,10 +2,16 @@
 INSERT INTO public.account (account_firstname, account_lastname, account_email, account_password)
 VALUES ('Tony', 'Stark', 'tony@starkent.com', 'Iam1ronM@n');
 
--- Task 2: Modify the Tony Stark record to change the account_type to 'Admin'
+-- Task 2: Modify the Employee account to change the account_type to 'Employee'
+UPDATE public.account
+SET account_type = 'Employee'
+WHERE account_email = 'employee@example.com'; -- Replace with actual employee email
+
+-- Task 3: Modify the Manager account to change the account_type to 'Admin'
 UPDATE public.account
 SET account_type = 'Admin'
-WHERE account_email = 'tony@starkent.com';
+WHERE account_email = 'manager@example.com'; -- Replace with actual manager email
+
 
 -- Task 3: Delete the Tony Stark record from the database
 DELETE FROM public.account
