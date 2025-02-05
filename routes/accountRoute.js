@@ -23,4 +23,18 @@ router.post('/login', (req, res) => {
     }
 });
 
+// New route for registration
+router.get('/register', (req, res) => {
+    // Render the registration page
+    res.render('account/register', { title: 'Register' });
+});
+
+router.post('/register', (req, res) => {
+    // Handle registration logic here
+    const { firstname, lastname, email, password } = req.body;
+    // Logic to save the new user to the database goes here
+    // For now, just send a success message
+    res.json({ message: 'Registration successful!' });
+});
+
 module.exports = router;
