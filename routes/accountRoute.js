@@ -28,6 +28,10 @@ router.post('/login', async (req, res) => {
                 // Generate JWT token
                 const token = jwt.sign({ id: user.rows[0].id, account_type: user.rows[0].account_type }, 'your_jwt_secret', { expiresIn: '1h' });
                 res.cookie('jwt', token, { httpOnly: true });
+                
+                // Store account type in session
+                req.session.accountType = user.rows[0].account_type;
+
                 res.json({ message: 'Login successful!', token });
             } else {
                 res.status(401).json({ message: 'Invalid credentials' });
@@ -47,10 +51,28 @@ router.get('/register', (req, res) => {
     res.render('account/register', { title: 'Register' });
 });
 
-router.post('/register', (req, res) => {
+router.post('/register', async (req, res) => {
     const { firstname, lastname, email, password } = req.body;
-    // Logic to save the new user to the database goes here
-    res.json({ message: 'Registration successful!' });
+
+    try {
+        // Hash the password
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Insert the new user into the database
+        await db.query('INSERT INTO public.account (account_firstname, account_lastname, account_email, account_password) VALUES ($1, $2, $3, $4)', [firstname, lastname, email, hashedPassword]);
+
+        res.json({ message: 'Registration successful!' });
+    } catch (error) {
+        console.error('Error during registration:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
+// New route for account management
+router.get('/management', (req, res) => {
+    // Assuming accountType is stored in the session or JWT
+    const accountType = req.session.accountType || 'Guest'; // Default to 'Guest' if not set
+    res.render('account/management', { title: 'Account Management', accountType });
 });
 
 module.exports = router;
