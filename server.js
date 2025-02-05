@@ -9,8 +9,11 @@ const app = express();
 const static = require("./routes/static");
 const errorRoutes = require('./routes/error');
 const inventoryRoutes = require('./routes/inventory');
+const accountRoute = require('./routes/accountRoute'); // Import the account route
 const { getClassificationsFromModel } = require('./models/inventoryModel'); // Import the function
+const cookieParser = require("cookie-parser");
 
+app.use(cookieParser());
 app.use(expressLayouts);
 app.set("layout", "./layouts/layout.ejs");
 app.set("view engine", "ejs");
@@ -36,6 +39,7 @@ app.use(bodyParser.json()); // Middleware to parse JSON data
 
 // Routes
 app.use('/inventory', inventoryRoutes);
+app.use('/account', accountRoute); // Add this line to include the account routes
 app.use(static);
 app.get("/", function(req, res){
     res.render("index", {title: "Home"});
