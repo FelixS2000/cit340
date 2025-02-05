@@ -12,4 +12,12 @@ function buildVehicleHTML(vehicle) {
 }
 
 // Export as part of an object for extensibility
-module.exports = { buildVehicleHTML };
+function checkLogin(req, res, next) {
+    if (req.session && req.session.user) {
+        return next(); // User is authenticated, proceed to the next middleware
+    } else {
+        return res.status(401).json({ message: 'Unauthorized' }); // User is not authenticated
+    }
+}
+
+module.exports = { buildVehicleHTML, checkLogin };

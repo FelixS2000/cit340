@@ -13,6 +13,8 @@
             <li>
                 <h2><%= item.make %> <%= item.model %> (<%= item.year %>)</h2>
                 <img src="<%= item.image.startsWith('/images/') ? item.image : '/images/' + item.image %>" alt="<%= item.make %> <%= item.model %>">
+
+
                 <p>Price: $<%= item.price %></p>
                 <p>Mileage: <%= item.mileage %> miles</p>
                 <p>Color: <%= item.color %></p>
