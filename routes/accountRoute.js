@@ -3,6 +3,7 @@ const router = express.Router();
 const utilities = require('../utilities/index'); // Ensure to import utilities
 const jwt = require('jsonwebtoken'); // Import JWT
 const db = require('../database/connection'); // Import database connection
+const bcrypt = require("bcryptjs"); // Import bcrypt
 
 // Sample route for account
 router.get('/', utilities.checkLogin, (req, res) => {
@@ -21,11 +22,16 @@ router.post('/login', async (req, res) => {
         // Check the credentials against the database
         const user = await db.query('SELECT * FROM public.account WHERE account_email = $1', [username]);
         
-        if (user.rows.length > 0 && user.rows[0].account_password === password) {
-            // Generate JWT token
-            const token = jwt.sign({ id: user.rows[0].id, account_type: user.rows[0].account_type }, 'your_jwt_secret', { expiresIn: '1h' });
-            res.cookie('jwt', token, { httpOnly: true });
-            res.json({ message: 'Login successful!', token });
+        if (user.rows.length > 0) {
+            const isMatch = await bcrypt.compare(password, user.rows[0].account_password);
+            if (isMatch) {
+                // Generate JWT token
+                const token = jwt.sign({ id: user.rows[0].id, account_type: user.rows[0].account_type }, 'your_jwt_secret', { expiresIn: '1h' });
+                res.cookie('jwt', token, { httpOnly: true });
+                res.json({ message: 'Login successful!', token });
+            } else {
+                res.status(401).json({ message: 'Invalid credentials' });
+            }
         } else {
             res.status(401).json({ message: 'Invalid credentials' });
         }
