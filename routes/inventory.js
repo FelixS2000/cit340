@@ -1,12 +1,15 @@
 const express = require('express');
+const { checkAuth, checkAdmin } = require('../utilities/authMiddleware'); // Import the middleware
 const router = express.Router();
+
 const inventoryController = require('../controllers/inventoryController');
 
 // Route for vehicle details
 router.get('/vehicle/:id', inventoryController.getVehicleDetails);
 
 // Route for management view
-router.get('/management', async (req, res, next) => {
+router.get('/management', checkAuth, checkAdmin, async (req, res, next) => {
+
     try {
         const classifications = await inventoryController.getClassificationsFromModel();
         res.render('inventory/management', {
@@ -31,6 +34,40 @@ router.get('/add-classification', (req, res) => {
 router.post('/add-classification', 
     inventoryController.addClassification
 );
+
+// Route for adding inventory (GET)
+router.get('/add-inventory', async (req, res, next) => {
+    try {
+        const classifications = await inventoryController.getClassificationsFromModel();
+        if (!classifications) {
+            throw new Error('Classifications could not be fetched');
+        }
+
+        const classification_id = req.query.classification_id || null; // Get classification_id from query
+
+        res.render('inventory/add-inventory', {
+            title: 'Add Inventory',
+            errors: null,
+            make: '', 
+            model: '', 
+            year: '',
+            price: '',
+            mileage: '',
+            description: '',
+            image: '',
+            thumbnail: '',
+            color: '',
+            classifications: classifications,
+            classification_id: classification_id // Pass classification_id to the template
+        });
+    } catch (error) {
+        next(error);
+    }
+});
+
+router.post('/add-inventory', checkAuth, checkAdmin, inventoryController.addInventory); // Protect the route
+router.post('/add-classification', checkAuth, checkAdmin, inventoryController.addClassification); // Protect the route
+
 
 // Route for adding inventory (GET)
 router.get('/add-inventory', async (req, res, next) => {
