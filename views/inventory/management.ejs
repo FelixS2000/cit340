@@ -8,38 +8,27 @@
 </head>
 <body>
     <h1>Inventory Management</h1>
-    <% if (userLoggedIn) { %>
-        <h2>Welcome <%= userName %></h2>
-        <% if (userAccountType === 'Employee' || userAccountType === 'Admin') { %>
-            <h3>Manage Inventory</h3>
-            <p>Select a classification from the list to see the items belonging to that classification.</p>
-            <select id="classificationList">
-                <% classifications.forEach(function(classification) { %>
-                    <option value="<%= classification.classification_id %>"><%= classification.classification_name %></option>
-                <% }); %>
-            </select>
-        <% } %>
-    <% } %>
 
-    <li><a href="/inventory/add-classification">Add New Classification</a></li>
-    <li><a href="/inventory/add-inventory">Add New Inventory</a></li>
-    
-    <h2>Manage Inventory</h2>
+    <h3>Manage Inventory</h3>
     <p>Select a classification from the list to see the items belonging to that classification.</p>
+
     <select id="classificationList">
         <% classifications.forEach(function(classification) { %>
             <option value="<%= classification.classification_id %>"><%= classification.classification_name %></option>
         <% }); %>
     </select>
-    
-    <table id="inventoryDisplay"></table>
-    
-    <noscript>JavaScript must be enabled to use this page.</noscript>
 
-            
-    <% if (flashMessage) { %>
-        <div><%= flashMessage %></div>
-    <% } %>
+    <ul>
+        <li><a href="/inventory/add-classification">Add New Classification</a></li>
+        <li><a href="/inventory/add-inventory">Add New Inventory</a></li>
+    </ul>
+
+    <h2>Inventory List</h2>
+    <table id="inventoryDisplay"></table>
+
     
+    <% if (flashMessage) { %>
+        <div class="flash-message"><%= flashMessage %></div>
+    <% } %>
 </body>
 </html>

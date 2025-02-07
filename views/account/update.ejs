@@ -4,40 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Update Account</title>
-    <link rel="stylesheet" href="/css/management.css">
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-    <h1>Update Account Information</h1>
+    <header>
+        <h1>Update Account Information</h1>
+    </header>
+    <main>
+        <form action="/account/update" method="POST">
+            <label for="firstname">First Name:</label>
+            <input type="text" id="firstname" name="firstname" required value="<%= user.firstname %>">
+            
+            <label for="lastname">Last Name:</label>
+            <input type="text" id="lastname" name="lastname" required value="<%= user.lastname %>">
+            
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required value="<%= user.email %>">
+            
+            <input type="hidden" name="account_id" value="<%= user.account_id %>">
+            
+            <input type="submit" value="Update Account">
+        </form>
 
-    <% if (flashMessage) { %>
-        <div><%= flashMessage %></div>
-    <% } %>
-
-    <form action="/account/update" method="POST">
-        <h2>Account Update</h2>
-        <label for="firstname">First Name:</label>
-        <input type="text" name="firstname" value="<%= user.firstname %>" required>
-        
-        <label for="lastname">Last Name:</label>
-        <input type="text" name="lastname" value="<%= user.lastname %>" required>
-        
-        <label for="email">Email:</label>
-        <input type="email" name="email" value="<%= user.email %>" required>
-        
-        <input type="hidden" name="account_id" value="<%= user.id %>">
-        <input type="submit" value="Update Account">
-    </form>
-
-    <form action="/account/change-password" method="POST">
-        <h2>Change Password</h2>
-        <label for="newPassword">New Password:</label>
-        <input type="password" name="newPassword" required>
-        
-        <input type="hidden" name="account_id" value="<%= user.id %>">
-        <p>Note: Entering a new password will change your current password.</p>
-        <input type="submit" value="Change Password">
-    </form>
-
-    <noscript>JavaScript must be enabled to use this page.</noscript>
+        <form action="/account/change-password" method="POST">
+            <h2>Change Password</h2>
+            <label for="newPassword">New Password:</label>
+            <input type="password" id="newPassword" name="newPassword" required>
+            <input type="hidden" name="account_id" value="<%= user.account_id %>">
+            <input type="submit" value="Change Password">
+        </form>
+    </main>
+    <footer>
+        <p>&copy; 2023 Your Company</p>
+    </footer>
 </body>
 </html>

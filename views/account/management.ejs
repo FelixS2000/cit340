@@ -11,10 +11,20 @@
         <h1>Account Management</h1>
     </header>
     <main>
-        <h2>Welcome to your account management page!</h2>
-        <p>You are logged in as: <%= accountType %></p>
-        <p>Your JWT token is stored in a cookie.</p>
-    </main>
+<h2>
+    <% if (accountType === 'Client') { %>
+        Welcome Basic
+    <% } else { %>
+        Welcome <%= userName %>
+    <% } %>
+</h2>
+<% if (accountType === 'Employee' || accountType === 'Admin') { %>
+    <h3>Inventory Management</h3>
+    <p><a href="/account/management">Access Inventory Management</a></p>
+<% } %>
+<p>Your JWT token is stored in a cookie.</p>
+
+     </main>
     <footer>
         <p>&copy; 2023 Your Company</p>
     </footer>

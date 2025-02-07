@@ -29,4 +29,12 @@ function checkAdmin(req, res, next) {
     next(); // Proceed if authorized
 }
 
-module.exports = { checkAuth, checkAdmin };
+function checkEmployeeOrAdmin(req, res, next) {
+    if (!req.user || !['Employee', 'Admin'].includes(req.user.account_type)) {
+        req.flash('errorMessage', 'Unauthorized access.');
+        return res.redirect('/account/login'); // Redirect if not authorized
+    }
+    next(); // Proceed if authorized
+}
+
+module.exports = { checkAuth, checkAdmin, checkEmployeeOrAdmin };

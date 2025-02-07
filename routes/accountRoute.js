@@ -10,21 +10,13 @@ router.get('/', utilities.checkLogin, (req, res) => {
     res.json({ message: 'Account route is working!' });
 });
 
-router.get("/test", (req, res) => {
-    res.send("Test route is working!");
-});
-
-
 // Login page route
 router.get("/login", (req, res) => {
-    console.log("GET /account/login route hit!"); // Debugging
     res.render("account/login", { title: "Login" });
 });
 
-
 // Login route
 router.post('/login', async (req, res) => {
-    console.log("Request Body:", req.body); // Debugging
     const { username, password } = req.body;
 
     if (!username || !password) {
@@ -39,29 +31,33 @@ router.post('/login', async (req, res) => {
             if (isMatch) {
                 req.session.userLoggedIn = true;
                 req.session.userName = user.rows[0].username;
-                return res.redirect('/account/management');
+                req.session.accountType = user.rows[0].account_type; // Set account type in session
+                
+                console.log('User logged in:', req.session.userName);
+                console.log('Account Type:', req.session.accountType);
+                
+                req.session.accountType = user.rows[0].account_type; // Set account type in session
+                return res.redirect('/account/management'); 
+
             }
         }
         req.flash('errorMessage', 'Invalid username or password');
         return res.redirect('/account/login');
     } catch (error) {
-        console.error('Error during login:', error);
         req.flash('errorMessage', 'An error occurred during login. Please try again.');
         return res.redirect('/account/login');
     }
 });
 
-
-// Registration route
-router.get('/register', (req, res) => {
-    res.render('account/register', { title: 'Register' });
-});
-
 // Account management route
 router.get('/management', (req, res) => {
-    const accountType = req.session.accountType || 'Guest';
-    const userLoggedIn = req.session.userLoggedIn || false;
-    const userName = req.session.userName || '';
+    const accountType = req.session.accountType || 'Guest'; // Ensure account type is set
+    const userLoggedIn = req.session.userLoggedIn || false; // Check if user is logged in
+    const userName = req.session.userName || ''; // Get the user's name
+
+    console.log('Account Type:', accountType); // Debugging log
+    console.log('User Logged In:', userLoggedIn); // Debugging log
+    console.log('User Name:', userName); // Debugging log
 
     res.render('account/management', { 
         title: 'Account Management', 
@@ -71,13 +67,10 @@ router.get('/management', (req, res) => {
     });
 });
 
-
 // Account update view route
 router.get('/update', utilities.checkLogin, (req, res) => {
     const user = req.session.user; // Assuming user info is stored in session
-    const userLoggedIn = req.session.userLoggedIn || false; // Check if user is logged in
-    const userName = req.session.userName || ''; // Get the user's name
-    res.render('account/update', { title: 'Update Account', user, userLoggedIn, userName });
+    res.render('account/update', { title: 'Update Account', user });
 });
 
 // Handle account update
@@ -89,7 +82,6 @@ router.post('/update', utilities.checkLogin, async (req, res) => {
         req.flash('message', 'Account updated successfully!');
         return res.redirect('/account/management'); // Redirect to management view
     } catch (error) {
-        console.error('Error updating account:', error);
         req.flash('errorMessage', 'An error occurred while updating the account. Please try again.');
         return res.redirect('/account/update'); // Redirect back to update view
     }
@@ -105,12 +97,10 @@ router.post('/change-password', utilities.checkLogin, async (req, res) => {
         req.flash('message', 'Password changed successfully!');
         return res.redirect('/account/management'); // Redirect to management view
     } catch (error) {
-        console.error('Error changing password :', error);
         req.flash('errorMessage', 'An error occurred while changing the password. Please try again.');
         return res.redirect('/account/update'); // Redirect back to update view
     }
 });
-
 
 // Logout route
 router.get('/logout', (req, res) => {

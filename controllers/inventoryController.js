@@ -11,7 +11,6 @@ const { buildVehicleHTML } = require('../utilities/index');
 const bcrypt = require("bcryptjs"); // Import bcrypt
 
 // Function to fetch all inventory items
-// Function to fetch all inventory items
 async function fetchAllInventory(req, res, next) {
     try {
         const inventory = await getAllInventory(); // Call the correct function to fetch all inventory
@@ -116,7 +115,7 @@ async function getVehicleDetails(req, res, next) {
         console.log('Fetched Vehicle Data:', vehicle); // Log the fetched vehicle data
 
         if (!vehicle) {
-            return res.status( 404).render('errors/404', { 
+            return res.status(404).render('errors/404', { 
                 title: 'Vehicle Not Found', 
                 message: 'The requested vehicle does not exist.' 
             });
@@ -149,10 +148,14 @@ async function renderManagementView(req, res, next) {
 
 // Function to fetch inventory by classification
 async function getInventoryByClassification(req, res, next) {
+    console.log('Fetching inventory for classification ID:', req.params.classificationId); // Log the classification ID
+
     try {
         const classificationId = req.params.classificationId;
-        const inventory = await getInventoryFromModel(classificationId);
-        
+        const inventory = await getInventoryFromModel(classificationId); // Fetch the inventory data
+
+        console.log('Inventory data:', JSON.stringify(inventory, null, 2)); // Log the inventory data
+
         if (!inventory || inventory.length === 0) {
             return res.status(404).render('errors/404', { 
                 title: 'No Inventory Found', 
@@ -171,6 +174,8 @@ async function getInventoryByClassification(req, res, next) {
     }
 }
 
+
+
 module.exports = {
     getVehicleDetails,
     fetchAllInventory,
@@ -179,4 +184,4 @@ module.exports = {
     getInventoryByClassification,
     getClassificationsFromModel,
     renderManagementView
-}; 
+};

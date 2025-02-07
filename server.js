@@ -21,6 +21,10 @@ app.use(express.static('public'));
 app.use(express.json()); // Parse JSON requests
 app.use(express.urlencoded({ extended: true })); // Parse form data
 
+// ✅ Register Routes
+app.use('/inventory', inventoryRoutes);
+app.use('/account', accountRoute); // Register account route
+app.use(static);
 // Session and flash middleware
 app.use(session({
     secret: 'c52d24883f30cdd1679db69624f7fc31cb44632b',
@@ -42,10 +46,6 @@ app.use((req, res, next) => {
     next();
 });
 
-// ✅ Register Routes
-app.use('/inventory', inventoryRoutes);
-app.use('/account', accountRoute); // Register account route
-app.use(static);
 
 app.get("/", function(req, res){
     res.render("index", {title: "Home"});
