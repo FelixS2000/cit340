@@ -5,7 +5,10 @@ const session = require("express-session");
 const flash = require("connect-flash");
 const env = require("dotenv").config();
 const app = express();
+const path = require("path");
 const static = require("./routes/static");
+const inventoryModel = require('./models/inventoryModel'); // Import inventory model
+
 const errorRoutes = require('./routes/error');
 const inventoryRoutes = require('./routes/inventory');
 const accountRoute = require('./routes/accountRoute');
@@ -14,24 +17,69 @@ const cookieParser = require("cookie-parser");
 app.use(cookieParser());
 app.use(expressLayouts);
 app.set("layout", "./layouts/layout.ejs");
-app.set("view engine", "ejs");
-app.use(express.static('public'));
 
-// ✅ Add these BEFORE your routes
-app.use(express.json()); // Parse JSON requests
-app.use(express.urlencoded({ extended: true })); // Parse form data
+
+
+// Middleware for handling sessions
+app.use(session({
+    secret: 'c52d24883f30cdd1679db69624f7fc31cb44632b',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {secure: false}
+}));
+
+// Middleware for flash messages
+app.use(flash());
+
+// Set the view engine to EJS
+app.set("view engine", "ejs");
+
+// Server static files
+app.use(express.static(path.join(__dirname, "public"))); 
+
+// Middleware to parse request bodies
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+// Route for Inventory Display
+app.get('/inventory/inventory-display', async (req, res, next) => {
+    try {
+        console.log("✅ GET /inventory/inventory-display route hit!");
+
+        // Fetch inventory data (replace with actual model fetching)
+        const inventory = await inventoryModel.getAllInventoryWithClassification();
+
+        if (!inventory || inventory.length === 0) {
+            req.flash("errorMessage", "No inventory items found.");
+        }
+
+        // Render the view with flash messages
+        res.render("inventory/inventory-display", {
+            title: "Inventory List",
+            inventory: inventory || [], // Ensure an empty array if no data
+            flashMessage: req.flash("message"),
+            errorMessage: req.flash("errorMessage"),
+        });
+
+    } catch (error) {
+        console.error("❌ Error fetching inventory:", error);
+        req.flash("errorMessage", "An error occurred while fetching the inventory.");
+        res.redirect("/inventory/inventory-display");
+    }
+});
+
+// Inventory management
+app.get('/inventory/management', (req, res) => {
+    // Just a simple route example
+    res.render('inventory/management', { title: 'Inventory Management' });
+});
 
 // ✅ Register Routes
 app.use('/inventory', inventoryRoutes);
 app.use('/account', accountRoute); // Register account route
 app.use(static);
-// Session and flash middleware
-app.use(session({
-    secret: 'c52d24883f30cdd1679db69624f7fc31cb44632b',
-    resave: false,
-    saveUninitialized: true
-}));
-app.use(flash());
+
+
 
 // Middleware to set flash messages
 app.use((req, res, next) => {
@@ -46,18 +94,6 @@ app.use((req, res, next) => {
     next();
 });
 
-// Test route for flash messages
-app.get('/test-flash', (req, res) => {
-    req.flash('message', 'This is a test flash message!');
-    res.redirect('/test-flash-display');
-});
-
-// Route to display flash messages
-app.get('/test-flash-display', (req, res) => {
-    res.render('test-flash', {
-        flashMessage: req.flash('message')
-    });
-});
 
 app.use((req, res, next) => {
     res.locals.userLoggedIn = req.session.userLoggedIn || false;
