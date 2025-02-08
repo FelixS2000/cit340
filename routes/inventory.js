@@ -26,7 +26,11 @@ router.get('/classification/:id', async (req, res) => {
         const inventoryResult = await db.query('SELECT * FROM inventory WHERE classification_id = $1', [classificationId]);
 
         if (classificationResult.rows.length === 0) {
-            return res.status(404).send('Classification not found');
+            const errorMessage = 'Classification not found';
+            return res.render('inventory/classification', {
+                title: 'Classification Details',
+                errorMessage,
+            });
         }
 
         const classification = classificationResult.rows[0];
@@ -38,13 +42,19 @@ router.get('/classification/:id', async (req, res) => {
         res.render('inventory/classification', {
             title: 'Classification Details',
             classification,
-            inventory
+            inventory,
+            errorMessage: undefined, // Ensure errorMessage is not passed as undefined
         });
     } catch (error) {
         console.error('❌ Error retrieving classification:', error);
-        res.status(500).send('An error occurred while fetching classification');
+        const errorMessage = 'An error occurred while fetching classification';
+        res.render('inventory/classification', {
+            title: 'Classification Details',
+            errorMessage,
+        });
     }
 });
+
 
 // Route to view a specific inventory item
 router.get('/inventory/:id', checkEmployeeOrAdmin, async (req, res) => {
