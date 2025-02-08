@@ -128,6 +128,7 @@ async function getAllInventoryWithClassification() {
     }
 }
 
+
 // Export the functions (removed addInventory since it belongs in the controller)
 module.exports = {
     getVehicleById,

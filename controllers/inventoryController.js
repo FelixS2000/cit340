@@ -141,11 +141,11 @@ async function getInventoryDisplay(req, res, next) {
     }
 }
 
-
 // Function to render management view
 async function renderManagementView(req, res, next) {
     try {
         const classifications = await getClassificationsFromModel();
+        console.log('Fetched Classifications:', classifications); // Log the classifications
         res.render('inventory/management', {
             title: 'Inventory Management',
             classifications
@@ -185,7 +185,6 @@ async function getInventoryByClassification(req, res, next) {
         next(error);
     }
 }
-
 
 module.exports = {
     getVehicleDetails,
