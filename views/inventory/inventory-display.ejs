@@ -7,6 +7,15 @@
 </head>
 <body>
     <h1>Inventory List</h1>
+
+    <% if (flashMessage && flashMessage.length > 0) { %>
+        <div style="color: green;"><%= flashMessage %></div>
+    <% } %>
+
+    <% if (errorMessage && errorMessage.length > 0) { %>
+        <div style="color: red;"><%= errorMessage %></div>
+    <% } %>
+
     <ul>
         <% inventory.forEach(item => { %>
             <li>
@@ -14,12 +23,13 @@
                 <p>Price: $<%= item.price %></p>
                 <p>Mileage: <%= item.mileage %> miles</p>
                 <p>Description: <%= item.description %></p>
-                <p>Classification: <%= item.classification_name %></p> <!-- Added classification name -->
+                <p>Classification: <%= item.classification_name %></p>
                 <img src="<%= item.image %>" alt="<%= item.make %> <%= item.model %>">
                 <a href="/inventory/classification/<%= item.classification_id %>">View Classification</a>
             </li>
         <% }); %>
     </ul>
+
     <a href="/inventory/add-inventory">Add New Inventory Item</a>
 </body>
 </html>

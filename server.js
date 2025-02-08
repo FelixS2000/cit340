@@ -35,10 +35,28 @@ app.use(flash());
 
 // Middleware to set flash messages
 app.use((req, res, next) => {
+    console.log('Session:', req.session); // Log session for debugging
+    console.log('Flash function:', req.flash); // Check if req.flash is available
+    console.log('Is flash function a function?', typeof req.flash === 'function'); // Check if req.flash is a function
+
     res.locals.flashMessage = req.flash('message');
-    res.locals.errorMessage = req.flash('errorMessage'); // Change this line
+    res.locals.errorMessage = req.flash('errorMessage');
+    console.log('Flash messages:', res.locals.flashMessage, res.locals.errorMessage); // Log flash messages for debugging
 
     next();
+});
+
+// Test route for flash messages
+app.get('/test-flash', (req, res) => {
+    req.flash('message', 'This is a test flash message!');
+    res.redirect('/test-flash-display');
+});
+
+// Route to display flash messages
+app.get('/test-flash-display', (req, res) => {
+    res.render('test-flash', {
+        flashMessage: req.flash('message')
+    });
 });
 
 app.use((req, res, next) => {
@@ -46,7 +64,6 @@ app.use((req, res, next) => {
     res.locals.userName = req.session.userName || '';
     next();
 });
-
 
 app.get("/", function(req, res){
     res.render("index", {title: "Home"});

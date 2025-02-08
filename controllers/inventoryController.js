@@ -114,26 +114,33 @@ async function getInventoryDisplay(req, res, next) {
     try {
         console.log("✅ GET /inventory/inventory-display route hit!");
 
-        // Fetch inventory data
+        // Fetch inventory data (ensure the model function works as expected)
         const inventory = await inventoryModel.getAllInventoryWithClassification();
 
+        // Check if inventory is empty and set an error flash message if necessary
         if (!inventory || inventory.length === 0) {
             req.flash("errorMessage", "No inventory items found.");
         }
 
-        // ✅ Render the correct EJS view
+        // Pass any flash messages along with the inventory data to the view
         res.render("inventory/inventory-display", {
             title: "Inventory List",
             inventory: inventory || [], // Ensure an empty array if no data
-            flashMessage: req.flash("message"),
-            errorMessage: req.flash("errorMessage"),
+            flashMessage: req.flash("message"),  // For any success messages
+            errorMessage: req.flash("errorMessage"),  // For any error messages
         });
 
     } catch (error) {
         console.error("❌ Error fetching inventory:", error);
+
+        // Flash an error message if the fetch operation fails
+        req.flash("errorMessage", "An error occurred while fetching the inventory.");
+
+        // Pass the error to the error handling middleware
         next(error);
     }
 }
+
 
 // Function to render management view
 async function renderManagementView(req, res, next) {
