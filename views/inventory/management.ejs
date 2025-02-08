@@ -27,8 +27,9 @@
     <table id="inventoryDisplay"></table>
 
     
-    <% if (flashMessage) { %>
+    <% if (typeof flashMessage !== 'undefined') { %>
         <div class="flash-message"><%= flashMessage %></div>
     <% } %>
+
 </body>
 </html>

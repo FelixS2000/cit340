@@ -17,14 +17,6 @@ app.set("layout", "./layouts/layout.ejs");
 app.set("view engine", "ejs");
 app.use(express.static('public'));
 
-// ✅ Add these BEFORE your routes
-app.use(express.json()); // Parse JSON requests
-app.use(express.urlencoded({ extended: true })); // Parse form data
-
-// ✅ Register Routes
-app.use('/inventory', inventoryRoutes);
-app.use('/account', accountRoute); // Register account route
-app.use(static);
 // Session and flash middleware
 app.use(session({
     secret: 'c52d24883f30cdd1679db69624f7fc31cb44632b',
@@ -39,6 +31,16 @@ app.use((req, res, next) => {
     res.locals.errorMessage = req.flash('error');
     next();
 });
+
+// ✅ Register Routes
+app.use('/inventory', inventoryRoutes);
+app.use('/account', accountRoute); // Register account route
+app.use(static);
+
+// ✅ Add these BEFORE your routes
+app.use(express.json()); // Parse JSON requests
+app.use(express.urlencoded({ extended: true })); // Parse form data
+
 
 app.use((req, res, next) => {
     res.locals.userLoggedIn = req.session.userLoggedIn || false;

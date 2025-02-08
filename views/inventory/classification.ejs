@@ -3,24 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/inventory-classification.css">
+    <link rel="stylesheet" href="/public/css/inventory-classification.css">
     <title>Inventory Classification</title>
 </head>
 <body>
-    <h1>Inventory Classification</h1>
-    <ul>
-        <% inventory.forEach(function(item) { %>
-            <li>
-                <h2><%= item.make %> <%= item.model %> (<%= item.year %>)</h2>
-                <img src="<%= item.image.startsWith('/images/') ? item.image : '/images/' + item.image %>" alt="<%= item.make %> <%= item.model %>">
+    <h1><%= title %></h1>
 
+<% if (errorMessage) { %>
+    <p style="color: red;"><%= errorMessage %></p>
+<% } %>
 
-                <p>Price: $<%= item.price %></p>
-                <p>Mileage: <%= item.mileage %> miles</p>
-                <p>Color: <%= item.color %></p>
-                <p>Description: <%= item.description %></p>
-            </li>
+<div class="inventory-container">
+    <% if (inventory && inventory.length > 0) { %>
+        <% inventory.forEach(item => { %>
+            <div class="inventory-item">
+                <h2><%= item.inv_make %> <%= item.inv_model %> (<%= item.inv_year %>)</h2>
+                <img src="<%= item.inv_image %>" alt="<%= item.inv_make %> <%= item.inv_model %>" width="300">
+                <p><strong>Price:</strong> $<%= item.inv_price %></p>
+                <p><strong>Mileage:</strong> <%= item.inv_miles %> miles</p>
+                <p><strong>Color:</strong> <%= item.inv_color %></p>
+                <p><strong>Description:</strong> <%= item.inv_description %></p>
+            </div>
         <% }); %>
-    </ul>
+    <% } else { %>
+        <p>No vehicles found in this classification.</p>
+    <% } %>
+</div>    
 </body>
 </html>

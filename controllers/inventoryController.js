@@ -1,5 +1,5 @@
 const { 
-    getVehicleById, 
+    getVehicleById,
     getInventoryByClassification: getInventoryFromModel, 
     saveClassificationToDatabase, 
     saveInventoryToDatabase, 
@@ -13,7 +13,7 @@ const bcrypt = require("bcryptjs"); // Import bcrypt
 // Function to fetch all inventory items
 async function fetchAllInventory(req, res, next) {
     try {
-        const inventory = await getAllInventory(); // Call the correct function to fetch all inventory
+        const inventory = await getAllInventory();
         if (!inventory || inventory.length === 0) {
             return res.status(404).render('errors/404', { 
                 title: 'No Inventory Found', 
@@ -22,10 +22,10 @@ async function fetchAllInventory(req, res, next) {
         }
         res.render('inventory/inventory-display', {
             title: 'Inventory List',
-            inventory: inventory
+            inventory
         });
     } catch (error) {
-        console.error('Error fetching all inventory:', error); // Log the error for debugging
+        console.error('❌ Error fetching all inventory:', error);
         next(error);
     }
 }
@@ -35,7 +35,6 @@ async function addClassification(req, res, next) {
     try {
         const { classificationName } = req.body;
 
-        // Server-side validation
         if (!classificationName || /\s|[!@#$%^&*()_+={}\[\]:;"'<>,.?\/\\|]/.test(classificationName)) {
             req.flash('errorMessage', 'Classification name is required and cannot contain spaces or special characters.');
             return res.render('inventory/add-classification', {
@@ -44,17 +43,15 @@ async function addClassification(req, res, next) {
             });
         }
 
-        // Save the classification to the database
         await saveClassificationToDatabase(classificationName);
-
         req.flash('message', 'Classification added successfully!');
-        res.redirect('/inventory/management'); // Redirect to management view
+        res.redirect('/inventory/management');
     } catch (error) {
-        console.error('Error adding classification:', error);
-        req.flash('errorMessage', 'An error occurred while adding the classification. Please try again.');
+        console.error('❌ Error adding classification:', error);
+        req.flash('errorMessage', 'An error occurred while adding the classification.');
         return res.render('inventory/add-classification', {
             flashMessage: req.flash('errorMessage'),
-            classificationName: classificationName || ''
+            classificationName: req.body.classificationName || ''
         });
     }
 }
@@ -64,45 +61,25 @@ async function addInventory(req, res, next) {
     try {
         const { make, model, year, price, mileage, classification_id, description, image, thumbnail, color } = req.body;
 
-        // Server-side validation
         if (!make || !model || !year || !price || !mileage || !classification_id || !description || !image || !thumbnail || !color) {
             req.flash('errorMessage', 'All fields are required.');
             return res.render('inventory/add-inventory', {
                 flashMessage: req.flash('errorMessage'),
-                make: make || '',
-                model: model || '',
-                year: year || '',
-                price: price || '',
-                mileage: mileage || '',
-                classification_id: classification_id || '', // Ensure this is passed
-                description: description || '',
-                image: image || '',
-                thumbnail: thumbnail || '',
-                color: color || '',
-                classifications: await getClassificationsFromModel() // Fetch classifications for the view
+                ...req.body,
+                classifications: await getClassificationsFromModel()
             });
         }
 
-        // Save the inventory item to the database
         await saveInventoryToDatabase(make, model, year, price, mileage, classification_id, description, image, thumbnail, color);
         req.flash('message', 'Inventory item added successfully!');
-        res.redirect('/inventory/management'); // Redirect to management view
+        res.redirect('/inventory/management');
     } catch (error) {
-        console.error('Error adding inventory:', error);
-        req.flash('errorMessage', 'An error occurred while adding the inventory item. Please try again.');
+        console.error('❌ Error adding inventory:', error);
+        req.flash('errorMessage', 'An error occurred while adding the inventory item.');
         return res.render('inventory/add-inventory', {
             flashMessage: req.flash('errorMessage'),
-            make: make || '',
-            model: model || '',
-            year: year || '',
-            price: price || '',
-            mileage: mileage || '',
-            classification_id: classification_id || '', // Ensure this is passed
-            description: description || '',
-            image: image || '',
-            thumbnail: thumbnail || '',
-            color: color || '',
-            classifications: await getClassificationsFromModel() // Fetch classifications for the view
+            ...req.body,
+            classifications: await getClassificationsFromModel()
         });
     }
 }
@@ -112,7 +89,6 @@ async function getVehicleDetails(req, res, next) {
     try {
         const vehicleId = req.params.id;
         const vehicle = await getVehicleById(vehicleId);
-        console.log('Fetched Vehicle Data:', vehicle); // Log the fetched vehicle data
 
         if (!vehicle) {
             return res.status(404).render('errors/404', { 
@@ -125,9 +101,36 @@ async function getVehicleDetails(req, res, next) {
 
         res.render('inventory/detail', {
             title: `${vehicle.year} ${vehicle.make} ${vehicle.model}`,
-            vehicleHTML,
+            vehicleHTML
         });
     } catch (error) {
+        console.error('❌ Error fetching vehicle details:', error);
+        next(error);
+    }
+}
+
+const inventoryModel = require("../models/inventoryModel");
+async function getInventoryDisplay(req, res, next) {
+    try {
+        console.log("✅ GET /inventory/inventory-display route hit!");
+
+        // Fetch inventory data
+        const inventory = await inventoryModel.getAllInventoryWithClassification();
+
+        if (!inventory || inventory.length === 0) {
+            req.flash("errorMessage", "No inventory items found.");
+        }
+
+        // ✅ Render the correct EJS view
+        res.render("inventory/inventory-display", {
+            title: "Inventory List",
+            inventory: inventory || [], // Ensure an empty array if no data
+            flashMessage: req.flash("message"),
+            errorMessage: req.flash("errorMessage"),
+        });
+
+    } catch (error) {
+        console.error("❌ Error fetching inventory:", error);
         next(error);
     }
 }
@@ -138,46 +141,48 @@ async function renderManagementView(req, res, next) {
         const classifications = await getClassificationsFromModel();
         res.render('inventory/management', {
             title: 'Inventory Management',
-            classifications: classifications
+            classifications
         });
     } catch (error) {
-        console.error('Error rendering management view:', error);
+        console.error('❌ Error rendering management view:', error);
         next(error);
     }
 }
 
 // Function to fetch inventory by classification
 async function getInventoryByClassification(req, res, next) {
-    console.log('Fetching inventory for classification ID:', req.params.classificationId); // Log the classification ID
-
     try {
+        console.log("✅ GET /inventory/classification/:id route hit!");
+        
         const classificationId = req.params.classificationId;
-        const inventory = await getInventoryFromModel(classificationId); // Fetch the inventory data
+        const inventory = await inventoryModel.getInventoryByClassification(classificationId);
+        const classifications = await inventoryModel.getClassificationsFromModel(); // Fetch classifications
 
-        console.log('Inventory data:', JSON.stringify(inventory, null, 2)); // Log the inventory data
-
+        console.log("Fetched Inventory:", inventory); // Debugging
+        
         if (!inventory || inventory.length === 0) {
-            return res.status(404).render('errors/404', { 
-                title: 'No Inventory Found', 
-                message: 'No inventory items found for this classification.' 
-            });
+            req.flash('errorMessage', 'No inventory items found for this classification.');
         }
 
-        res.render('inventory/classification', {
-            title: 'Inventory by Classification',
-            inventory: inventory,
-            classificationId: classificationId
+        // ✅ Render EJS view and explicitly pass `inventory`
+        res.render("inventory/classification", {
+            title: "Inventory Classification",
+            inventory: inventory || [],  // Ensure it's always an array
+            classifications,
+            flashMessage: req.flash('message'),
+            errorMessage: req.flash('errorMessage')
         });
+
     } catch (error) {
-        console.error('Error fetching inventory by classification:', error);
+        console.error("❌ Error fetching inventory by classification:", error);
         next(error);
     }
 }
 
 
-
 module.exports = {
     getVehicleDetails,
+    getInventoryDisplay,
     fetchAllInventory,
     addClassification,
     addInventory,
