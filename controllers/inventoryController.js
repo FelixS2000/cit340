@@ -114,29 +114,23 @@ async function getInventoryDisplay(req, res, next) {
     try {
         console.log("✅ GET /inventory/inventory-display route hit!");
 
-        // Fetch inventory data (ensure the model function works as expected)
+        // Fetch inventory data
         const inventory = await inventoryModel.getAllInventoryWithClassification();
 
-        // Check if inventory is empty and set an error flash message if necessary
         if (!inventory || inventory.length === 0) {
             req.flash("errorMessage", "No inventory items found.");
         }
 
-        // Pass any flash messages along with the inventory data to the view
+        // ✅ Render the correct EJS view
         res.render("inventory/inventory-display", {
             title: "Inventory List",
             inventory: inventory || [], // Ensure an empty array if no data
-            flashMessage: req.flash("message"),  // For any success messages
-            errorMessage: req.flash("errorMessage"),  // For any error messages
+            flashMessage: req.flash("message"),
+            errorMessage: req.flash("errorMessage"),
         });
 
     } catch (error) {
         console.error("❌ Error fetching inventory:", error);
-
-        // Flash an error message if the fetch operation fails
-        req.flash("errorMessage", "An error occurred while fetching the inventory.");
-
-        // Pass the error to the error handling middleware
         next(error);
     }
 }
@@ -145,7 +139,6 @@ async function getInventoryDisplay(req, res, next) {
 async function renderManagementView(req, res, next) {
     try {
         const classifications = await getClassificationsFromModel();
-        console.log('Fetched Classifications:', classifications); // Log the classifications
         res.render('inventory/management', {
             title: 'Inventory Management',
             classifications
@@ -185,6 +178,7 @@ async function getInventoryByClassification(req, res, next) {
         next(error);
     }
 }
+
 
 module.exports = {
     getVehicleDetails,

@@ -16,6 +16,8 @@ router.get('/management', async (req, res) => {
     }
 });
 
+
+
 // Route to get a specific classification and its inventory
 router.get('/classification/:id', async (req, res) => {
     console.log(`✅ GET /inventory/classification/${req.params.id} route hit!`);
@@ -55,6 +57,15 @@ router.get('/classification/:id', async (req, res) => {
     }
 });
 
-// Other routes...
+// Add Inventory page route
+router.get('/add-inventory', checkAuth, checkAdmin, (req, res) => {
+    res.render('inventory/add-inventory', { title: 'Add New Vehicle to Inventory' });
+});
+
+
+// Add Classification page route
+router.get('/add-classification', checkAuth, checkAdmin, (req, res) => {
+    res.render('inventory/add-classification', { title: 'Add New Classification' });
+});
 
 module.exports = router;

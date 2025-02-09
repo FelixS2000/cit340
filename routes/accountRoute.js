@@ -5,66 +5,85 @@ const jwt = require('jsonwebtoken'); // Import JWT
 const db = require('../database/connection'); // Import database connection
 const bcrypt = require("bcryptjs"); // Import bcrypt
 
+// Secret key for JWT
+const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY || 'your_secret_key'; // Use environment variable or fallback to a string
+
 // Sample route for account
 router.get('/', utilities.checkLogin, (req, res) => {
     res.json({ message: 'Account route is working!' });
 });
 
-// Login page route
+// GET route to render the login page
 router.get("/login", (req, res) => {
-    res.render("account/login", { title: "Login" });
+    res.render("account/login", { title: "Login" }); // Render the login page
 });
 
-// Login route
-router.post('/login', async (req, res) => {
-    const { username, password } = req.body;
+// POST route to handle login form submission
+router.post("/login", async (req, res) => {
+    const { email, password } = req.body;
 
-    if (!username || !password) {
-        req.flash('errorMessage', 'Please provide both username and password');
-        return res.redirect('/account/login');
+    if (!email || !password) {
+        req.flash("errorMessage", "Email and password are required.");
+        return res.redirect("/account/login");
     }
 
     try {
-        const user = await db.query('SELECT * FROM users WHERE username = $1', [username]);
-        if (user.rows.length > 0) {
-            const isMatch = await bcrypt.compare(password, user.rows[0].password);
-            if (isMatch) {
-                req.session.userLoggedIn = true;
-                req.session.userName = user.rows[0].username;
-                req.session.accountType = user.rows[0].account_type; // Set account type in session
-                
-                console.log('User logged in:', req.session.userName);
-                console.log('Account Type:', req.session.accountType);
-                
-                req.session.accountType = user.rows[0].account_type; // Set account type in session
-                return res.redirect('/account/management'); 
+        // Fetch user from the database (replace with actual DB query)
+        const user = await db.findUserByEmailOrUsername(email);  // Ensure this is correct for your DB
 
-            }
+        if (!user) {
+            req.flash("errorMessage", "User not found.");
+            return res.redirect("/account/login");
         }
-        req.flash('errorMessage', 'Invalid username or password');
-        return res.redirect('/account/login');
+
+        // Compare the password with the hashed password from DB
+        const isMatch = await bcrypt.compare(password, user.password);
+
+        if (!isMatch) {
+            req.flash("errorMessage", "Incorrect password.");
+            return res.redirect("/account/login");
+        }
+
+        // If credentials are correct, set session variables
+        req.session.userLoggedIn = true;
+        req.session.userName = user.firstName;
+        req.session.userEmail = user.email;
+
+        req.flash("message", "Login successful.");
+        return res.redirect("/dashboard");  // Redirect to a dashboard or home page after successful login
+
     } catch (error) {
-        req.flash('errorMessage', 'An error occurred during login. Please try again.');
-        return res.redirect('/account/login');
+        console.error("Error during login:", error);
+        req.flash("errorMessage", "An error occurred while logging in.");
+        return res.redirect("/account/login");
     }
 });
 
-// Account management route
-router.get('/management', (req, res) => {
-    const accountType = req.session.accountType || 'Guest'; // Ensure account type is set
-    const userLoggedIn = req.session.userLoggedIn || false; // Check if user is logged in
-    const userName = req.session.userName || ''; // Get the user's name
 
-    console.log('Account Type:', accountType); // Debugging log
-    console.log('User Logged In:', userLoggedIn); // Debugging log
-    console.log('User Name:', userName); // Debugging log
+// Register page route
+router.get("/register", (req, res) => {
+    res.render("account/register", { title: "Register" });
+});
 
-    res.render('account/management', { 
-        title: 'Account Management', 
-        accountType, 
-        userLoggedIn, 
-        userName 
-    });
+// Registration route
+router.post('/register', async (req, res) => {
+    const { firstname, lastname, email, password } = req.body;
+
+    try {
+        const hashedPassword = await bcrypt.hash(password, 10);
+        await db.query('INSERT INTO public.account (account_firstname, account_lastname, account_email, account_password) VALUES ($1, $2, $3, $4)', [firstname, lastname, email, hashedPassword]);
+        req.flash('message', 'Registration successful! Please log in.');
+        return res.redirect('/account/login');
+    } catch (error) {
+        console.error('❌ Error during registration:', error);
+        req.flash('errorMessage', 'An error occurred during registration. Please try again.');
+        return res.redirect('/account/register');
+    }
+});
+
+// Account Management page route
+router.get('/management', utilities.checkLogin, (req, res) => {
+    res.render('account/management', { title: 'Account Management' });
 });
 
 // Account update view route
@@ -87,26 +106,28 @@ router.post('/update', utilities.checkLogin, async (req, res) => {
     }
 });
 
-// Handle password change
-router.post('/change-password', utilities.checkLogin, async (req, res) => {
-    const { newPassword, account_id } = req.body;
-
-    try {
-        const hashedPassword = await bcrypt.hash(newPassword, 10);
-        await db.query('UPDATE public.account SET account_password = $1 WHERE account_id = $2', [hashedPassword, account_id]);
-        req.flash('message', 'Password changed successfully!');
-        return res.redirect('/account/management'); // Redirect to management view
-    } catch (error) {
-        req.flash('errorMessage', 'An error occurred while changing the password. Please try again.');
-        return res.redirect('/account/update'); // Redirect back to update view
-    }
-});
-
 // Logout route
 router.get('/logout', (req, res) => {
     res.clearCookie('jwt'); // Clear the JWT cookie
     req.session.destroy(); // Destroy the session
     return res.redirect('/'); // Redirect to home view
+});
+
+// Middleware to protect routes with JWT authentication
+router.use('/protected', (req, res, next) => {
+    const token = req.cookies.jwt; // Get the token from cookies
+
+    if (!token) {
+        return res.status(401).json({ message: "No token, authorization denied." });
+    }
+
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET_KEY); // Verify the token using the secret key
+        req.user = decoded; // Attach decoded user information to request
+        next(); // Proceed to the next middleware
+    } catch (err) {
+        return res.status(401).json({ message: "Token is not valid." });
+    }
 });
 
 module.exports = router;

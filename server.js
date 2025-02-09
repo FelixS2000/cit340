@@ -14,6 +14,8 @@ const inventoryRoutes = require('./routes/inventory');
 const accountRoute = require('./routes/accountRoute');
 const cookieParser = require("cookie-parser");
 
+app.use(static);
+
 app.use(cookieParser());
 app.use(expressLayouts);
 app.set("layout", "./layouts/layout.ejs");
@@ -40,6 +42,11 @@ app.use(express.static(path.join(__dirname, "public")));
 // Middleware to parse request bodies
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+// ✅ Register Routes
+app.use('/inventory', inventoryRoutes);
+app.use('/account', accountRoute); // Register account route
+
 
 // Route for Inventory Display
 app.get('/inventory/inventory-display', async (req, res, next) => {
@@ -74,10 +81,7 @@ app.get('/inventory/management', (req, res) => {
     res.render('inventory/management', { title: 'Inventory Management' });
 });
 
-// ✅ Register Routes
-app.use('/inventory', inventoryRoutes);
-app.use('/account', accountRoute); // Register account route
-app.use(static);
+
 
 
 
