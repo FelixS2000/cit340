@@ -20,4 +20,29 @@ function checkLogin(req, res, next) {
     }
 }
 
-module.exports = { buildVehicleHTML, checkLogin };
+// Placeholder for getNav function
+function getNav() {
+    // This function should return navigation data
+    return [];
+}
+
+const jwt = require("jsonwebtoken"); // Import JWT
+
+// Middleware to check token validity
+function checkJWTToken(req, res, next) {
+    const token = req.cookies.jwt; // Get token from cookie
+
+    if (!token) {
+        return res.status(401).json({ message: "No token, authorization denied." });
+    }
+
+    try {
+        const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET); // Verify the token
+        req.user = decoded; // Attach decoded user information to request
+        next(); // Proceed to the next middleware
+    } catch (err) {
+        return res.status(401).json({ message: "Token is not valid." });
+    }
+}
+
+module.exports = { buildVehicleHTML, checkLogin, checkJWTToken, getNav }; // Export the new middleware

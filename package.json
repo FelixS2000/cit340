@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^1.7.9",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.3",
     "connect-flash": "^0.1.1",
@@ -23,6 +24,7 @@
     "express-validator": "^7.2.1",
     "jsonwebtoken": "^9.0.2",
     "pg": "^8.13.1",
+    "pg-pool": "^3.7.0",
     "session": "^0.1.0"
   },
   "devDependencies": {

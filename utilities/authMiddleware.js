@@ -1,40 +1,51 @@
 const jwt = require('jsonwebtoken');
 
 function checkAuth(req, res, next) {
-    const token = req.cookies.jwt; // Get token from cookie
+    const token = req.cookies.jwt;
 
     if (!token) {
-        req.flash('errorMessage', 'You must log in first.');
-        res.clearCookie('jwt');
-        return res.redirect('/account/login'); // Redirect to login if no token
+        req.flash('error', 'Please log in first');
+        return res.redirect('/account/login');
     }
 
-    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-        if (err) {
-            req.flash('errorMessage', 'Session expired. Please log in again.');
-            res.clearCookie('jwt'); // Remove invalid token
-            return res.redirect('/account/login'); 
-        }
-
-        req.user = decoded; // Attach user info to request
-        next(); // Proceed to the next middleware
-    });
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+        req.user = decoded;
+        next();
+    } catch (error) {
+        console.error('Token verification error:', error);
+        req.flash('error', 'Session expired. Please log in again');
+        res.clearCookie('jwt');
+        return res.redirect('/account/login');
+    }
 }
 
 function checkAdmin(req, res, next) {
     if (!req.user || !['Employee', 'Admin'].includes(req.user.account_type)) {
-        req.flash('errorMessage', 'Unauthorized access.');
-        return res.redirect('/account/login'); // Redirect if not authorized
+        req.flash('error', 'Unauthorized access');
+        return res.redirect('/account/login');
     }
-    next(); // Proceed if authorized
+    next();
 }
 
 function checkEmployeeOrAdmin(req, res, next) {
     if (!req.user || !['Employee', 'Admin'].includes(req.user.account_type)) {
-        req.flash('errorMessage', 'Unauthorized access.');
-        return res.redirect('/account/login'); // Redirect if not authorized
+        req.flash('error', 'Unauthorized access');
+        return res.redirect('/account/login');
     }
-    next(); // Proceed if authorized
-}
-
-module.exports = { checkAuth, checkAdmin, checkEmployeeOrAdmin };
+    next();
+}const classificationsMiddleware = async (req, res, next) => {
+  try {
+    const classificationsResult = await db.query('SELECT * FROM classification');
+    const classifications = classificationsResult.rows;
+    res.locals.classifications = classifications;
+    res.locals.displayFeedbackMessage = true; // Set displayFeedbackMessage to true
+    next();
+  } catch (error) {
+    console.error('Error fetching classifications:', error);
+    next(error);
+  }
+};
+  
+  
+module.exports = { checkAuth, checkAdmin, checkEmployeeOrAdmin, classificationsMiddleware };

@@ -18,47 +18,10 @@ router.get("/login", (req, res) => {
     res.render("account/login", { title: "Login" }); // Render the login page
 });
 
+const accountController = require('../controllers/accountController'); // Import the account controller
+
 // POST route to handle login form submission
-router.post("/login", async (req, res) => {
-    const { email, password } = req.body;
-
-    if (!email || !password) {
-        req.flash("errorMessage", "Email and password are required.");
-        return res.redirect("/account/login");
-    }
-
-    try {
-        // Fetch user from the database (replace with actual DB query)
-        const user = await db.findUserByEmailOrUsername(email);  // Ensure this is correct for your DB
-
-        if (!user) {
-            req.flash("errorMessage", "User not found.");
-            return res.redirect("/account/login");
-        }
-
-        // Compare the password with the hashed password from DB
-        const isMatch = await bcrypt.compare(password, user.password);
-
-        if (!isMatch) {
-            req.flash("errorMessage", "Incorrect password.");
-            return res.redirect("/account/login");
-        }
-
-        // If credentials are correct, set session variables
-        req.session.userLoggedIn = true;
-        req.session.userName = user.firstName;
-        req.session.userEmail = user.email;
-
-        req.flash("message", "Login successful.");
-        return res.redirect("/dashboard");  // Redirect to a dashboard or home page after successful login
-
-    } catch (error) {
-        console.error("Error during login:", error);
-        req.flash("errorMessage", "An error occurred while logging in.");
-        return res.redirect("/account/login");
-    }
-});
-
+router.post("/login", accountController.accountLogin); // Use the accountLogin function from the controller
 
 // Register page route
 router.get("/register", (req, res) => {

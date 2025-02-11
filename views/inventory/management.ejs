@@ -1,36 +1,61 @@
+<!-- views/inventory/management.ejs -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inventory Management</title>
-    <link rel="stylesheet" href="/css/management.css">
+    <title>Vehicle Management</title>
+    <style>
+        .message {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        nav ul {
+            list-style: none;
+            padding: 0;
+        }
+        nav ul li {
+            margin: 10px 0;
+        }
+        nav ul li a {
+            text-decoration: none;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 4px;
+            display: inline-block;
+        }
+        nav ul li a:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
-    <h1>Inventory Management</h1>
-
-    <h3>Manage Inventory</h3>
-    <p>Select a classification from the list to see the items belonging to that classification.</p>
-
-    <select id="classificationList">     
-        <% classifications.forEach(function(classification) { %>
-            <option value="<%= classification.classification_id %>"><%= classification.classification_name %></option>
-        <% }); %>
-    </select>
+    <h1>Vehicle Management</h1>
     
-
-    <ul>
-        <li><a href="/inventory/add-classification">Add New Classification</a></li>
-        <li><a href="/inventory/add-inventory">Add New Inventory</a></li>
-    </ul>
-
-    <h2>Inventory List</h2>
-    <table id="inventoryDisplay"></table>
-
-    
-    <% if (typeof flashMessage !== 'undefined') { %>
-        <div class="flash-message"><%= flashMessage %></div>
+    <% if (locals.flashMessage) { %>
+        <div class="message <%= locals.flashMessage.type === 'error' ? 'error' : 'success' %>">
+            <%= flashMessage %>
+        </div>
     <% } %>
 
+    <nav>
+        <ul>
+            <li><a href="/inventory/add-classification">Add New Classification</a></li>
+            <li><a href="/inventory/add-inventory">Add New Vehicle</a></li>
+            <li><a href="/inventory/inventory-display">View All Vehicles</a></li>
+        </ul>
+    </nav>
 </body>
 </html>

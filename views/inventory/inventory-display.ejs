@@ -4,33 +4,101 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inventory List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .message {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .inventory-list {
+            list-style: none;
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .inventory-item {
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .inventory-item img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 10px;
+        }
+
+        .action-buttons {
+            margin-top: 20px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
     <h1>Inventory List</h1>
 
     <% if (flashMessage && flashMessage.length > 0) { %>
-        <div style="color: green;"><%= flashMessage %></div>
+        <div class="message success"><%= flashMessage %></div>
     <% } %>
 
-    <% if (errorMessage && errorMessage.length > 0) { %>
-        <div style="color: red;"><%= errorMessage %></div>
+
+    <% if (inventory && inventory.length > 0) { %>
+        <ul class="inventory-list">
+            <% inventory.forEach(item => { %>
+                <li class="inventory-item">
+                    <h2><%= item.inv_make %> <%= item.inv_model %> (<%= item.inv_year %>)</h2>
+                    <% if (item.inv_image) { %>
+                        <img src="<%= item.inv_image %>" alt="<%= item.inv_make %> <%= item.inv_model %>">
+                    <% } %>
+                    <p><strong>Price:</strong> $<%= item.inv_price ? parseInt(item.inv_price).toLocaleString() : 'N/A' %></p>
+                    <p><strong>Mileage:</strong> <%= item.inv_miles ? parseInt(item.inv_miles).toLocaleString() : 'N/A' %> miles</p>
+                    <p><strong>Description:</strong> <%= item.inv_description || 'No description available' %></p>
+                    <p><strong>Color:</strong> <%= item.inv_color || 'N/A' %></p>
+
+                    <a href="/inventory/classification/<%= item.classification_id %>" class="button">View Classification</a>
+                </li>
+            <% }); %>
+        </ul>
+    <% } else { %>
+        <p>No inventory items found.</p>
     <% } %>
 
-    <ul>
-        <% inventory.forEach(item => { %>
-            <li>
-                <h2><%= item.make %> <%= item.model %> (<%= item.year %>)</h2>
-                <p>Price: $<%= item.price %></p>
-                <p>Mileage: <%= item.mileage %> miles</p>
-                <p>Description: <%= item.description %></p>
-                <p>Classification: <%= item.classification_name %></p>
-                <img src="<%= item.image %>" alt="<%= item.make %> <%= item.model %>">
-                <a href="/inventory/classification/<%= item.classification_id %>">View Classification</a>
-            </li>
-        <% }); %>
-    </ul>
-
-    <a href="/inventory/add-inventory">Add New Inventory Item</a>
-    <a href="/inventory/add-classification">Add New Classification</a>
+    <div class="action-buttons">
+        <a href="/inventory/add-inventory" class="button">Add New Inventory Item</a>
+        <a href="/inventory/add-classification" class="button">Add New Classification</a>
+    </div>
 </body>
 </html>

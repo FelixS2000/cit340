@@ -9,6 +9,20 @@ const {
 
 const { buildVehicleHTML } = require('../utilities/index');
 const bcrypt = require("bcryptjs"); // Import bcrypt
+const db = require('../database/connection');
+const router = require('express').Router();
+
+// Get classifications for the dropdown
+router.get('/navigation', async (req, res) => {
+    try {
+      const classificationsResult = await db.query('SELECT * FROM classification');
+      const classifications = classificationsResult.rows;
+      res.render('partials/navigation', { classifications });
+    } catch (error) {
+      console.error('Error fetching classifications:', error);
+      res.status(500).send('An error occurred while fetching classifications');
+    }
+  });
 
 // Function to fetch all inventory items
 async function fetchAllInventory(req, res, next) {
@@ -21,6 +35,9 @@ async function fetchAllInventory(req, res, next) {
             });
         }
         res.render('inventory/inventory-display', {
+            flashMessage: req.flash("message"), // Pass flashMessage to the view
+            errorMessage: req.flash("errorMessage"), // Pass errorMessage to the view
+
             title: 'Inventory List',
             inventory
         });
@@ -188,5 +205,6 @@ module.exports = {
     addInventory,
     getInventoryByClassification,
     getClassificationsFromModel,
+    router,
     renderManagementView
 };

@@ -1,13 +1,23 @@
-const { Pool } = require('pg'); // Assuming PostgreSQL is being used
+// database/index.js
+const { Pool } = require('pg');
 
 const pool = new Pool({
-    user: 'cse340dbguzman', // Database username
-    host: 'dpg-cu55pnggph6c73du20i0-a.oregon-postgres.render.com', // Database host
-    database: 'cse340dbguzman', // Database name
-    password: 'K5RxwheTudWT21nsfYlA0rxoYGApEm7J', // Database password
-    port: 5432, // Database port
+    user: 'cse340dbguzman',
+    host: 'dpg-cu55pnggph6c73du20i0-a.oregon-postgres.render.com',
+    database: 'cse340dbguzman',
+    password: 'K5RxwheTudWT21nsfYlA0rxoYGApEm7J',
+    port: 5432,
     ssl: {
-        rejectUnauthorized: false // Adjust as needed for production
+        rejectUnauthorized: false
+    }
+});
+
+// Test database connection
+pool.query('SELECT NOW()', (err, res) => {
+    if (err) {
+        console.error('Database connection error:', err);
+    } else {
+        console.log('Database connected successfully');
     }
 });
 
