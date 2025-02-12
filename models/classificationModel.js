@@ -3,6 +3,6 @@ async function getApprovedClassifications() {
   return await db.query(sql);
 }
 
-modules.export = {
+module.export = {
   getApprovedClassifications,
 };
