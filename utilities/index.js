@@ -57,6 +57,7 @@ function checkJWTToken(req, res, next) {
     }
 }
 
+
 function checkLogin(req, res, next) {
     const token = req.cookies.jwt;
 
@@ -66,7 +67,7 @@ function checkLogin(req, res, next) {
 
     try {
         const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-        req.user = decoded;
+        req.user = decoded;  // This sets the user object
         res.locals.accountData = decoded;
         res.locals.loggedin = 1;
         next();

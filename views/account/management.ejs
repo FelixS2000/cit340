@@ -11,17 +11,16 @@
         <h1>Account Management</h1>
     </header>
     <main>
-        <h2>Welcome, <%= user ? user.account_email : "Guest" %></h2>
-        <p>Account Type: <%= user ? user.account_type : "Unknown" %></p>
-
-        <% if (user && user.account_type === 'Employee' || user.account_type === 'Admin') { %>
-            <h3>Inventory Management</h3>
-            <p><a href="/inventory/management">Access Inventory Management</a></p>
-        <% } %>
-
-        <% if (user && user.account_type === 'Admin') { %>
-            <h3>Admin Panel</h3>
-            <p><a href="/admin/pending">Approve Inventory & Classifications</a></p>
+        <% if (user) { %>
+            <h2>Welcome, <%= user.account_email %></h2>
+            <p>Account Type: <%= user.account_type %></p>
+        
+            <% if (user.account_type === 'Employee' || user.account_type === 'Admin') { %>
+                <!-- Employee/Admin specific content -->
+            <% } %>
+        <% } else { %>
+            <h2>Welcome, Guest</h2>
+            <p>Please <a href="/account/login">login</a> to access your account.</p>
         <% } %>
 
 

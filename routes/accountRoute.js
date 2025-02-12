@@ -4,7 +4,16 @@ const utilities = require('../utilities/index'); // Ensure to import utilities
 const jwt = require('jsonwebtoken'); // Import JWT
 const db = require('../database/connection'); // Import database connection
 const bcrypt = require("bcryptjs"); // Import bcrypt
-const authMiddleware = require('../utilities/authMiddleware');
+const {body} = require("express-validator");
+const accountController = require('../controllers/accountController');
+
+// Login validation rules
+const loginValidation = [
+    body('account_email').isEmail().normalizeEmail(),
+    body('account_password').not().isEmpty()
+];
+
+
 // Secret key for JWT
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY || 'your_secret_key'; // Use environment variable or fallback to a string
 
@@ -13,15 +22,22 @@ router.get('/', utilities.checkLogin, (req, res) => {
     res.json({ message: 'Account route is working!' });
 });
 
-// GET route to render the login page
-router.get("/login", (req, res) => {
-    res.render("account/login", { title: "Login" }); // Render the login page
+// Login routes
+router.get("/login", async (req, res) => {
+    try {
+        const nav = await utilities.getNav();
+        res.render("account/login", {
+            title: "Login",
+            nav,
+            errors: null,
+        });
+    } catch (error) {
+        res.status(500).send("Server Error");
+    }
 });
 
-const accountController = require('../controllers/accountController'); // Import the account controller
+router.post("/login", accountController.accountLogin);
 
-// POST route to handle login form submission
-router.post("/login", accountController.accountLogin); // Use the accountLogin function from the controller
 
 // Register page route
 router.get("/register", (req, res) => {
@@ -44,18 +60,36 @@ router.post('/register', async (req, res) => {
     }
 });
 
-// Account Management page route
+
+// Login routes
+router.get("/login", async (req, res) => {
+    try {
+        const nav = await utilities.getNav();
+        res.render("account/login", {
+            title: "Login",
+            nav,
+            errors: null,
+        });
+    } catch (error) {
+        res.status(500).send("Server Error");
+    }
+});
+
+router.post("/login", accountController.accountLogin);
+
+// Management routes
 router.get("/management", 
-    utilities.checkLogin, 
-    utilities.handleErrors(accountController.getAccountManagement)
+    utilities.checkLogin,
+    accountController.getAccountManagement
 );
 
-// For admin-only access
-router.get("/admin", 
+// Admin routes
+router.get("/admin",
     utilities.checkLogin,
     utilities.checkAdmin,
-    utilities.handleErrors(accountController.getAdminDashboard)
+    accountController.getAdminDashboard
 );
+
 
 // Account update view route
 router.get('/update', utilities.checkLogin, (req, res) => {
