@@ -65,5 +65,12 @@ function ensureAuthenticated(req, res, next) {
     next();
 }
 
+function ensureEmployeeOrAdmin(req, res, next) {
+    if (!req.user || (req.user.account_type !== 'Employee' && req.user.account_type !== 'Admin')) { 
+        return res.status(403).send("Access denied");
+    }
+    next();
+}
 
-module.exports = { checkAuth, checkAdmin, checkEmployeeOrAdmin, classificationsMiddleware, ensureAdmin, ensureAuthenticated };
+
+module.exports = { checkAuth, checkAdmin, checkEmployeeOrAdmin, classificationsMiddleware, ensureAdmin, ensureAuthenticated, ensureEmployeeOrAdmin };

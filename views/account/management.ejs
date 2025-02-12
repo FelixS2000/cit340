@@ -11,20 +11,30 @@
         <h1>Account Management</h1>
     </header>
     <main>
-        <% if (user) { %>
-            <h2>Welcome, <%= user.account_email %></h2>
-            <p>Account Type: <%= user.account_type %></p>
-        
-            <% if (user.account_type === 'Employee' || user.account_type === 'Admin') { %>
-                <!-- Employee/Admin specific content -->
+        <% if (locals.user) { %>
+            <h2>Welcome, <%= locals.user.account_firstname %> <%= locals.user.account_lastname %></h2>
+            <p>Email: <%= locals.user.account_email %></p>
+            <p>Account Type: <%= locals.user.account_type %></p>
+    
+            <% if (locals.user.account_type === 'Employee' || locals.user.account_type === 'Admin') { %>
+                <h3>Management Options:</h3>
+                <ul>
+                    <li><a href="/inventory/add-classification">Add Vehicle Classification</a></li>
+                    <li><a href="/inventory/add-inventory">Add Vehicle</a></li>
+                    <li><a href="/inventory/inventory-display">View Inventory</a></li>
+                    <li><a href="/inventory/management">Manage Inventory</a></li>
+                </ul>
             <% } %>
+    
+            <h3>Account Options:</h3>
+            <ul>
+                <li><a href="/account/update">Update Account Information</a></li>
+                <li><a href="/account/logout">Logout</a></li>
+            </ul>
         <% } else { %>
             <h2>Welcome, Guest</h2>
             <p>Please <a href="/account/login">login</a> to access your account.</p>
         <% } %>
-
-
-        <p>Your JWT token is stored in a cookie.</p>
     </main>
     <footer>
         <p>&copy; 2025 CSE Motors</p>

@@ -1,9 +1,8 @@
 const express = require('express');
-const { checkAuth, checkAdmin, checkEmployeeOrAdmin } = require('../utilities/authMiddleware');
 const router = express.Router();
 const {getApprovedClassifications} = require("../models/classificationModel");
 const db = require('../database/connection');
-
+const authMiddleware = require("../utilities/authMiddleware");
 // Route to display inventory
 router.get('/inventory-display', async (req, res) => {
     console.log(" GET /inventory/inventory-display route hit!");
@@ -155,5 +154,8 @@ router.get('/navigation', async (req, res) => {
     res.render('partials/navigation', { classifications });
 });
 
+router.get('/login', authMiddleware.ensureEmployeeOrAdmin, (req, res) => {
+    res.render('account/login', { title: 'Login' });
+});
 
 module.exports = router;

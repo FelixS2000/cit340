@@ -3,14 +3,27 @@
     <a href="/" title="Return to home page">CSE Motors</a>
   </span>
   <div id="tools">
-    <a title="Click to register" href="/account/register">Register</a>
-    <a title="Click to log in" href="/account/login">Login</a>
-    <a title="Click to log out" href="/account/logout">logout</a>
-    <a title="Click to manage your account" href="/account/management">Management</a>
-    <a title="Click to update your account" href="/account/update">Update</a>
-    <li><a title="Click to view inventory" href="/inventory/inventory-display">View Inventory</a></li>
-    <li><a title="Click to manage inventory" href="/inventory/management">Vehicle Management</a></li>
-    <li><a title="Admin Panel" href="/admin/pending">Admin Panel</a></li>
-    
+
+    <% if (!locals.user) { %> 
+      <!-- Show Register/Login if NOT logged in -->
+      <a title="Click to register" href="/account/register">Register</a>
+      <a title="Click to log in" href="/account/login">Login</a>
+    <% } else { %>
+      <!-- Show Welcome message with link to Account Management -->
+      <span>Welcome, <a href="/account/management"><%= locals.user.account_firstname %></a></span>
+      
+      <!-- Show Management & Update options -->
+      <a title="Click to manage your account" href="/account/management">Management</a>
+      <a title="Click to update your account" href="/account/update">Update</a>
+
+      <!-- Show Admin Panel only if user is an Admin -->
+      <% if (locals.user.account_type === 'Admin') { %>
+        <li><a title="Admin Panel" href="/admin/pending">Admin Panel</a></li>
+      <% } %>
+
+      <!-- Logout button -->
+      <a title="Click to log out" href="/account/logout">Logout</a>
+    <% } %>
+
   </div>
 </header>

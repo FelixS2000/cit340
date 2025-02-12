@@ -24,6 +24,8 @@ async function getNav() {
     }
 }
 
+// controllers/accountController.js
+
 async function accountLogin(req, res) {
     const { account_email, account_password } = req.body;
 
@@ -50,11 +52,21 @@ async function accountLogin(req, res) {
                 account_email: user.account_email,
                 account_type: user.account_type,
             },
-            JWT_SECRET_KEY,
+            process.env.ACCESS_TOKEN_SECRET,
             { expiresIn: '24h' }
         );
 
         res.cookie('jwt', token, { httpOnly: true });
+        
+        // Set local variables for immediate use
+        res.locals.user = {
+            account_id: user.account_id,
+            account_firstname: user.account_firstname,
+            account_lastname: user.account_lastname,
+            account_email: user.account_email,
+            account_type: user.account_type,
+        };
+        
         res.redirect('/account/management');
 
     } catch (error) {
@@ -71,7 +83,7 @@ async function getAccountManagement(req, res) {
             title: "Account Management",
             nav,
             errors: null,
-            user: req.user || null  // Add this line to pass user data
+            user: res.locals.user // Use the user from locals
         });
     } catch (error) {
         console.error("Error in getAccountManagement:", error);

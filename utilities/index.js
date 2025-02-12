@@ -58,6 +58,26 @@ function checkJWTToken(req, res, next) {
 }
 
 
+
+// utilities/index.js
+
+function checkAdmin(req, res, next) {
+    console.log("Checking admin access for user:", req.user);
+    
+    if (!req.user) {
+        console.log("❌ No user found");
+        return res.redirect('/account/login');
+    }
+
+    if (req.user.account_type !== 'Admin') {
+        console.log("❌ User is not an admin. Account type:", req.user.account_type);
+        return res.redirect('/account/management');
+    }
+
+    console.log("✅ Admin access granted");
+    next();
+}
+
 function checkLogin(req, res, next) {
     const token = req.cookies.jwt;
 
@@ -67,21 +87,13 @@ function checkLogin(req, res, next) {
 
     try {
         const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-        req.user = decoded;  // This sets the user object
-        res.locals.accountData = decoded;
+        req.user = decoded;
+        res.locals.user = decoded; // Make user available to all views
         res.locals.loggedin = 1;
         next();
     } catch (error) {
         res.clearCookie('jwt');
         return res.redirect('/account/login');
-    }
-}
-
-function checkAdmin(req, res, next) {
-    if (req.user && req.user.account_type === 'Admin') {
-        next();
-    } else {
-        return res.status(403).json({ message: "Access denied. Admin privileges required." });
     }
 }
 
