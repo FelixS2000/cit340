@@ -4,7 +4,7 @@ const utilities = require('../utilities/index'); // Ensure to import utilities
 const jwt = require('jsonwebtoken'); // Import JWT
 const db = require('../database/connection'); // Import database connection
 const bcrypt = require("bcryptjs"); // Import bcrypt
-
+const authMiddleware = require('../utilities/authMiddleware');
 // Secret key for JWT
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY || 'your_secret_key'; // Use environment variable or fallback to a string
 
@@ -46,13 +46,24 @@ router.post('/register', async (req, res) => {
 
 // Account Management page route
 router.get('/management', utilities.checkLogin, (req, res) => {
-    res.render('account/management', { title: 'Account Management' });
+    res.render('account/management', { 
+        title: 'Account Management', 
+        userName: req.user.account_firstname, // Send user data to view
+        accountType: req.user.account_type // Make sure this exists in your DB
+    });
 });
+
 
 // Account update view route
 router.get('/update', utilities.checkLogin, (req, res) => {
-    const user = req.session.user; // Assuming user info is stored in session
-    res.render('account/update', { title: 'Update Account', user });
+    if (!req.user) {
+        return res.redirect('/account/login'); // Redirect if no user is found
+    }
+    
+    res.render('account/update', { 
+        title: 'Update Account', 
+        user: req.user // ✅ Pass the user object correctly
+    });
 });
 
 // Handle account update

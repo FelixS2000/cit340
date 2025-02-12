@@ -1,7 +1,7 @@
 const express = require('express');
 const { checkAuth, checkAdmin, checkEmployeeOrAdmin } = require('../utilities/authMiddleware');
 const router = express.Router();
-const inventoryController = require('../controllers/inventoryController');
+const {getApprovedClassifications} = require("../models/classificationModel");
 const db = require('../database/connection');
 
 // Route to display inventory
@@ -99,7 +99,7 @@ router.post("/add-classification", async (req, res) => {
 router.get("/add-inventory", async (req, res) => {
     try {
         // Get classifications for the dropdown
-        const result = await pool.query("SELECT * FROM classification ORDER BY classification_name");
+        const result = await db.query("SELECT * FROM classification ORDER BY classification_name");
         res.render("inventory/add-inventory", {
             title: "Add Vehicle",
             classifications: result.rows,
@@ -135,19 +135,25 @@ router.post("/add-inventory", async (req, res) => {
             RETURNING *
         `;
 
-        await pool.query(sql, [
+        await db.query(sql, [
             make, model, year, description,
             image, thumbnail, price, mileage,
             color, classification_id
         ]);
 
         req.flash("success", "Vehicle added successfully");
-        res.redirect("/inventory/inventory-display");
+        res.redirect("/inventory/add-inventory");
     } catch (error) {
         console.error("Error adding inventory:", error);
         req.flash("error", "Failed to add vehicle");
         res.redirect("/inventory/add-inventory");
     }
 });
+
+router.get('/navigation', async (req, res) => {
+    const classifications = await classificationModel.getApprovedClassifications();
+    res.render('partials/navigation', { classifications });
+});
+
 
 module.exports = router;

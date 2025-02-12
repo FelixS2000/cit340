@@ -128,6 +128,30 @@ async function getAllInventoryWithClassification() {
     }
 }
 
+// Get all unapproved inventory items
+async function getUnapprovedInventory() {
+    const sql = 'SELECT * FROM inventory WHERE inv_approved = FALSE';
+    const result = await db.query(sql);
+    return result.rows;
+}
+
+// Approve an inventory item
+async function approveInventory(inv_id, admin_id) {
+    const sql = `
+        UPDATE inventory 
+        SET inv_approved = TRUE, 
+            account_id = $1, 
+            inv_approved_date = NOW() 
+        WHERE inv_id = $2`;
+    await db.query(sql, [admin_id, inv_id]);
+}
+
+
+// Delete/reject an unapproved inventory item
+async function deleteInventory(inv_id) {
+    const sql = 'DELETE FROM inventory WHERE inv_id = $1';
+    await db.query(sql, [inv_id]);
+}
 
 // Export the functions (removed addInventory since it belongs in the controller)
 module.exports = {
@@ -135,6 +159,9 @@ module.exports = {
     getAllInventory,
     getAllInventoryWithClassification,
     getClassificationsFromModel,
+    getUnapprovedInventory,
+    approveInventory,
+    deleteInventory,
     saveInventoryToDatabase,
     saveClassificationToDatabase,
     getInventoryByClassification

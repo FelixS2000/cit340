@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-
 function checkAuth(req, res, next) {
     const token = req.cookies.jwt;
 
@@ -47,5 +46,19 @@ function checkEmployeeOrAdmin(req, res, next) {
   }
 };
   
-  
-module.exports = { checkAuth, checkAdmin, checkEmployeeOrAdmin, classificationsMiddleware };
+function ensureAdmin(req, res, next) {
+    if (!req.user || req.user.account_type !== 'Admin') { 
+        return res.status(403).send("Access denied"); // ❌ Blocks non-admins
+    }
+    next();
+}
+
+function ensureAuthenticated(req, res, next) {
+    if (!req.user) {
+        return res.redirect('/account/login'); // Redirect to login instead of sending JSON
+    }
+    next();
+}
+
+
+module.exports = { checkAuth, checkAdmin, checkEmployeeOrAdmin, classificationsMiddleware, ensureAdmin, ensureAuthenticated };

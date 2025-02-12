@@ -12,19 +12,24 @@
     </header>
     <main>
         <form action="/account/update" method="POST">
+
             <label for="firstname">First Name:</label>
-            <input type="text" id="firstname" name="firstname" required value="<%= user.firstname %>">
-            
+            <input type="text" id="firstname" name="firstname" required 
+                   value="<%= user ? user.account_firstname : '' %>">
+        
             <label for="lastname">Last Name:</label>
-            <input type="text" id="lastname" name="lastname" required value="<%= user.lastname %>">
-            
+            <input type="text" id="lastname" name="lastname" required 
+                   value="<%= user ? user.account_lastname : '' %>">
+        
             <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required value="<%= user.email %>">
+            <input type="email" id="email" name="email" required 
+                   value="<%= user ? user.account_email : '' %>">
+        
+            <input type="hidden" name="account_id" value="<%= user ? user.account_id : '' %>">
             
-            <input type="hidden" name="account_id" value="<%= user.account_id %>">
-            
-            <input type="submit" value="Update Account">
+            <button type="submit">Update</button>
         </form>
+        
 
         <form action="/account/change-password" method="POST">
             <h2>Change Password</h2>

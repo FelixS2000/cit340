@@ -1,45 +1,51 @@
 const accountModel = require('../models/accountModel');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const db = require("../database/connection");
+
+const JWT_SECRET_KEY='a383b7b85973a305572a38bd83ca83d93814c347a44c363bc86988f29077614e4de9776c100b3ed52362ec0c59e7dc4ecb30c0003d712a5ccbd1bb35df8833de';
 
 async function accountLogin(req, res) {
     const { account_email, account_password } = req.body;
-    console.log("Login attempt for:", account_email);
 
     try {
-        const user = await accountModel.loginUser(account_email, account_password);
-        
-        if (!user) {
-            req.flash("error", "Invalid credentials");
-            return res.redirect("/account/login");
+        const result = await db.query('SELECT * FROM public.account WHERE account_email = $1', [account_email]);
+
+        if (result.rows.length === 0) {
+            req.flash('errorMessage', 'Invalid email or password.');
+            return res.redirect('/account/login');
         }
 
-        // Create JWT token
+        const user = result.rows[0];
+        const passwordMatch = await bcrypt.compare(account_password, user.account_password);
+        if (!passwordMatch) {
+            req.flash('errorMessage', 'Invalid email or password.');
+            return res.redirect('/account/login');
+        }
+
+        // ✅ Ensure JWT contains account_type
         const token = jwt.sign(
             {
                 account_id: user.account_id,
-                account_type: user.account_type,
-                account_email: user.account_email
+                account_firstname: user.account_firstname,
+                account_lastname: user.account_lastname,
+                account_email: user.account_email,
+                account_type: user.account_type, // ✅ Ensure this is included
             },
-            process.env.JWT_SECRET_KEY,
+            JWT_SECRET_KEY,
             { expiresIn: '24h' }
         );
 
-        // Set token in cookie
-        res.cookie('jwt', token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            maxAge: 24 * 60 * 60 * 1000 // 24 hours
-        });
+        res.cookie('jwt', token, { httpOnly: true });
+        res.redirect('/account/management'); 
 
-        req.flash("success", "Login successful");
-        res.redirect("/inventory/management");
     } catch (error) {
-        console.error("Login error:", error);
-        req.flash("error", "An error occurred during login");
-        res.redirect("/account/login");
+        console.error('❌ Login error:', error);
+        req.flash('errorMessage', 'An error occurred during login.');
+        res.redirect('/account/login');
     }
 }
+
 
 module.exports = {
     accountLogin

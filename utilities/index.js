@@ -13,10 +13,19 @@ function buildVehicleHTML(vehicle) {
 
 // Export as part of an object for extensibility
 function checkLogin(req, res, next) {
-    if (req.session && req.session.user) {
-        return next(); // User is authenticated, proceed to the next middleware
-    } else {
-        return res.status(401).json({ message: 'Unauthorized' }); // User is not authenticated
+    const token = req.cookies.jwt;
+    if (!token) {
+        return res.redirect('/account/login');
+    }
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY || 'your_secret_key');
+        req.user = decoded; 
+        res.locals.user = decoded; // Make user available in EJS views
+        next();
+    } catch (error) {
+        console.error("❌ JWT Verification Failed:", error);
+        return res.redirect('/account/login');
     }
 }
 

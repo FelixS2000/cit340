@@ -1,0 +1,15 @@
+<h2>Pending Inventory Approvals</h2>
+
+<ul>
+    <% inventory.forEach(item => { %>
+        <li>
+            <%= item.inv_name %> (Added by user <%= item.account_id %>)
+            <form action="/admin/approve-inventory/<%= item.inv_id %>" method="post">
+                <button type="submit">Approve</button>
+            </form>
+            <form action="/admin/reject-inventory/<%= item.inv_id %>" method="post">
+                <button type="submit">Reject</button>
+            </form>
+        </li>
+    <% }) %>
+</ul>
