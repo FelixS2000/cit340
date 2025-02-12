@@ -1,7 +1,8 @@
 // utilities/index.js
 
 const jwt = require("jsonwebtoken");
-const pool = require("../database/"); // Make sure this path is correct
+const pool = require("../database/connection");
+const { validationResult } = require('express-validator');
 
 /* ************************
  * Constructs the nav HTML unordered list
@@ -22,6 +23,20 @@ async function getNav() {
         return '<ul><li><a href="/">Home</a></li></ul>';
     }
 }
+
+// Error handling middleware
+const handleErrors = fn => (req, res, next) => {
+    Promise.resolve(fn(req, res, next)).catch(next);
+};
+
+// Validation middleware
+const checkValidation = (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+    next();
+};
 
 // Middleware to check token validity
 function checkJWTToken(req, res, next) {
@@ -87,5 +102,7 @@ module.exports = {
     buildVehicleHTML,
     checkLogin,
     checkJWTToken,
-    checkAdmin
+    checkAdmin,
+    handleErrors,
+    checkValidation
 };
