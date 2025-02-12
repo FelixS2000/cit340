@@ -1,17 +1,29 @@
-function buildVehicleHTML(vehicle) {
-    return `
-        <div class="vehicle-detail">
-            <h1>${vehicle.make} ${vehicle.model}</h1>
-            <img src="${vehicle.image}" alt="${vehicle.year} ${vehicle.make} ${vehicle.model}">
-            <p>Year: ${vehicle.year}</p>
-            <p>Price: $${vehicle.price.toLocaleString()}</p>
-            <p>Mileage: ${vehicle.mileage.toLocaleString()} miles</p>
-            <p>Description: ${vehicle.description}</p>
-        </div>
-    `;
+// utilities/index.js
+
+const jwt = require("jsonwebtoken");
+const pool = require("../database/"); // Make sure this path is correct
+
+/* ************************
+ * Constructs the nav HTML unordered list
+ ************************** */
+async function getNav() {
+    try {
+        const data = await pool.query(
+            "SELECT * FROM public.classification ORDER BY classification_name"
+        );
+        let list = "<ul>";
+        data.rows.forEach((row) => {
+            list += `<li><a href="/inv/type/${row.classification_id}">${row.classification_name}</a></li>`;
+        });
+        list += "</ul>";
+        return list;
+    } catch (error) {
+        console.error("getNav error: " + error);
+        return '<ul><li><a href="/">Home</a></li></ul>';
+    }
 }
 
-// Middleware to check token validity and admin access
+// Middleware to check token validity
 function checkJWTToken(req, res, next) {
     const token = req.cookies.jwt;
 
@@ -22,21 +34,14 @@ function checkJWTToken(req, res, next) {
     try {
         const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
         req.user = decoded;
-        res.locals.accountData = decoded; // Make user data available to views
+        res.locals.accountData = decoded;
         res.locals.loggedin = 1;
-
-        // Check if user is admin
-        if (decoded.account_type === 'Admin') {
-            next();
-        } else {
-            return res.status(403).json({ message: "Access denied. Admin privileges required." });
-        }
+        next();
     } catch (err) {
         return res.status(401).json({ message: "Token is not valid." });
     }
 }
 
-// Separate middleware for regular user authentication
 function checkLogin(req, res, next) {
     const token = req.cookies.jwt;
 
@@ -56,7 +61,6 @@ function checkLogin(req, res, next) {
     }
 }
 
-// Use this middleware for routes that require admin access
 function checkAdmin(req, res, next) {
     if (req.user && req.user.account_type === 'Admin') {
         next();
@@ -65,10 +69,23 @@ function checkAdmin(req, res, next) {
     }
 }
 
-module.exports = { 
-    buildVehicleHTML, 
-    checkLogin, 
-    checkJWTToken, 
-    checkAdmin,
-    getNav 
+function buildVehicleHTML(vehicle) {
+    return `
+        <div class="vehicle-detail">
+            <h1>${vehicle.make} ${vehicle.model}</h1>
+            <img src="${vehicle.image}" alt="${vehicle.year} ${vehicle.make} ${vehicle.model}">
+            <p>Year: ${vehicle.year}</p>
+            <p>Price: $${vehicle.price.toLocaleString()}</p>
+            <p>Mileage: ${vehicle.mileage.toLocaleString()} miles</p>
+            <p>Description: ${vehicle.description}</p>
+        </div>
+    `;
+}
+
+module.exports = {
+    getNav,
+    buildVehicleHTML,
+    checkLogin,
+    checkJWTToken,
+    checkAdmin
 };
