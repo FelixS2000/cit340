@@ -47,9 +47,14 @@ function checkEmployeeOrAdmin(req, res, next) {
 };
   
 function ensureAdmin(req, res, next) {
+    console.log("🔍 Checking admin access:", req.user); // ✅ Debugging: Check user info
+
     if (!req.user || req.user.account_type !== 'Admin') { 
-        return res.status(403).send("Access denied"); // ❌ Blocks non-admins
+        console.log("❌ Access denied. User is not an admin.");
+        return res.status(403).send("Access denied"); 
     }
+
+    console.log("✅ Access granted. User is an admin.");
     next();
 }
 

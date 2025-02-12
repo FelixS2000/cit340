@@ -46,7 +46,26 @@ async function accountLogin(req, res) {
     }
 }
 
+async function getAccountManagement(req, res) {
+    let nav = await utilities.getNav();
+    res.render("account/management", {
+        title: "Account Management",
+        nav,
+        errors: null,
+    });
+}
+
+async function getAdminDashboard(req, res) {
+    let nav = await utilities.getNav();
+    res.render("account/admin", {
+        title: "Admin Dashboard",
+        nav,
+        errors: null,
+    });
+}
 
 module.exports = {
-    accountLogin
+    accountLogin,
+    getAccountManagement,
+    getAdminDashboard,
 };

@@ -11,47 +11,64 @@ function buildVehicleHTML(vehicle) {
     `;
 }
 
-// Export as part of an object for extensibility
-function checkLogin(req, res, next) {
-    const token = req.cookies.jwt;
-    if (!token) {
-        return res.redirect('/account/login');
-    }
-
-    try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY || 'your_secret_key');
-        req.user = decoded; 
-        res.locals.user = decoded; // Make user available in EJS views
-        next();
-    } catch (error) {
-        console.error("❌ JWT Verification Failed:", error);
-        return res.redirect('/account/login');
-    }
-}
-
-// Placeholder for getNav function
-function getNav() {
-    // This function should return navigation data
-    return [];
-}
-
-const jwt = require("jsonwebtoken"); // Import JWT
-
-// Middleware to check token validity
+// Middleware to check token validity and admin access
 function checkJWTToken(req, res, next) {
-    const token = req.cookies.jwt; // Get token from cookie
+    const token = req.cookies.jwt;
 
     if (!token) {
         return res.status(401).json({ message: "No token, authorization denied." });
     }
 
     try {
-        const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET); // Verify the token
-        req.user = decoded; // Attach decoded user information to request
-        next(); // Proceed to the next middleware
+        const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+        req.user = decoded;
+        res.locals.accountData = decoded; // Make user data available to views
+        res.locals.loggedin = 1;
+
+        // Check if user is admin
+        if (decoded.account_type === 'Admin') {
+            next();
+        } else {
+            return res.status(403).json({ message: "Access denied. Admin privileges required." });
+        }
     } catch (err) {
         return res.status(401).json({ message: "Token is not valid." });
     }
 }
 
-module.exports = { buildVehicleHTML, checkLogin, checkJWTToken, getNav }; // Export the new middleware
+// Separate middleware for regular user authentication
+function checkLogin(req, res, next) {
+    const token = req.cookies.jwt;
+
+    if (!token) {
+        return res.redirect('/account/login');
+    }
+
+    try {
+        const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+        req.user = decoded;
+        res.locals.accountData = decoded;
+        res.locals.loggedin = 1;
+        next();
+    } catch (error) {
+        res.clearCookie('jwt');
+        return res.redirect('/account/login');
+    }
+}
+
+// Use this middleware for routes that require admin access
+function checkAdmin(req, res, next) {
+    if (req.user && req.user.account_type === 'Admin') {
+        next();
+    } else {
+        return res.status(403).json({ message: "Access denied. Admin privileges required." });
+    }
+}
+
+module.exports = { 
+    buildVehicleHTML, 
+    checkLogin, 
+    checkJWTToken, 
+    checkAdmin,
+    getNav 
+};

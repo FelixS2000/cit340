@@ -45,14 +45,17 @@ router.post('/register', async (req, res) => {
 });
 
 // Account Management page route
-router.get('/management', utilities.checkLogin, (req, res) => {
-    res.render('account/management', { 
-        title: 'Account Management', 
-        userName: req.user.account_firstname, // Send user data to view
-        accountType: req.user.account_type // Make sure this exists in your DB
-    });
-});
+router.get("/management", 
+    utilities.checkLogin, 
+    utilities.handleErrors(accountController.getAccountManagement)
+);
 
+// For admin-only access
+router.get("/admin", 
+    utilities.checkLogin,
+    utilities.checkAdmin,
+    utilities.handleErrors(accountController.getAdminDashboard)
+);
 
 // Account update view route
 router.get('/update', utilities.checkLogin, (req, res) => {
