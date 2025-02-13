@@ -36,8 +36,9 @@ async function loginUser(email, password) {
     }
 }
 
+
 module.exports = {
     findUserByEmailOrUsername,
     checkPassword,
-    loginUser
+    loginUser,
 };
