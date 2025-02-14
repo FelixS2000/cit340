@@ -131,7 +131,7 @@ async function getAllInventoryWithClassification() {
 // Get all unapproved inventory items
 async function getUnapprovedInventory() {
     try {
-        // First check if the inv_approved column exists
+        console.log('Checking if inv_approved column exists...');
         const checkColumn = `
             SELECT column_name 
             FROM information_schema.columns 
@@ -139,17 +139,21 @@ async function getUnapprovedInventory() {
             AND column_name='inv_approved'
         `;
         const columnExists = await pool.query(checkColumn);
+        console.log('Column check result:', columnExists.rows);
         
         if (columnExists.rows.length === 0) {
-            console.error('inv_approved column does not exist in inventory table');
-            // Create the column if it doesn't exist
+            console.log('inv_approved column does not exist - creating it...');
             await pool.query(`
                 ALTER TABLE inventory 
                 ADD COLUMN inv_approved BOOLEAN DEFAULT FALSE
             `);
-            console.log('Created inv_approved column');
+            console.log('Successfully created inv_approved column');
+            
+            // Return empty array since we just created the column
+            return [];
         }
 
+        console.log('Fetching unapproved inventory items...');
         const sql = `
             SELECT * 
             FROM inventory 
@@ -157,12 +161,19 @@ async function getUnapprovedInventory() {
             ORDER BY inv_id DESC
         `;
         const result = await pool.query(sql);
-        return result.rows;
+        console.log(`Found ${result.rows.length} unapproved items`);
+        
+        // Return empty array if no items found instead of null
+        return result.rows || [];
     } catch (error) {
         console.error('Error in getUnapprovedInventory:', error);
-        throw error;
+        console.error('Stack trace:', error.stack);
+        // Return empty array instead of throwing error
+        return [];
     }
 }
+
+
 
 
 

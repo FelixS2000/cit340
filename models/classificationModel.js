@@ -1,8 +1,11 @@
+const pool = require('../database/connection');
+
 async function getApprovedClassifications() {
   const sql = `SELECT * FROM classification WHERE classification_approved = TRUE`;
-  return await db.query(sql);
+  return await pool.query(sql);
 }
 
-module.export = {
+
+module.exports = {
   getApprovedClassifications,
 };

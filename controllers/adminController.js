@@ -5,8 +5,11 @@ const classificationModel = require('../models/classificationModel');
 
 async function getPendingItems(req, res) {
   try {
-      const classifications = await classificationModel.getClassificationsByApproval(false);
-      const inventory = await inventoryModel.getInventoryByApproval(false);
+      const classifications = await classificationModel.getApprovedClassifications();
+
+
+      const inventory = await inventoryModel.getUnapprovedInventory();
+
       res.render('admin/pending', { 
         title: 'Pending Approvals',
         classifications, 
@@ -15,7 +18,13 @@ async function getPendingItems(req, res) {
       });
 
   } catch (error) {
-      res.status(500).send('Error fetching pending items');
+      console.error('Error in getPendingItems:', error);
+      res.status(500).render('error', {
+        title: 'Error',
+        message: 'Error fetching pending items',
+        error: error
+      });
+
   }
 }
 

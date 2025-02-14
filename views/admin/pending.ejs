@@ -3,7 +3,8 @@
 <ul>
     <% inventory.forEach(item => { %>
         <li>
-            <%= item.inv_name %> (Added by user <%= item.account_id %>)
+            <%= item.inv_make %> <%= item.inv_model %> (<%= item.inv_year %>) (Added by user <%= item.account_id %>)
+
             <form action="/admin/approve-inventory/<%= item.inv_id %>" method="post">
                 <button type="submit">Approve</button>
             </form>
