@@ -1,8 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const {getApprovedClassifications} = require("../models/classificationModel");
+const { getApprovedClassifications } = require("../models/classificationModel");
+const reviewController = require('../controllers/reviewController'); // Import review controller
+
 const db = require('../database/connection');
+
 const authMiddleware = require("../utilities/authMiddleware");
+
 // Route to display inventory
 router.get('/inventory-display', async (req, res) => {
     console.log(" GET /inventory/inventory-display route hit!");
@@ -16,11 +20,26 @@ router.get('/inventory-display', async (req, res) => {
         res.render('inventory/inventory-display', { title: 'Inventory Display', inventory, flashMessage });
     } catch (error) {
         console.error('Error fetching inventory:', error);
-        res.status(500).send('An error occurred while fetching inventory');
+    res.status(500).send('An error occurred while fetching inventory'); 
+    return; // Ensure no further processing occurs after sending the response
+
     }
 });
 
-// Route to get a specific classification and its inventory
+router.get('/inventory/:id', async (req, res) => {
+    const invId = req.params.id;
+    try {
+        const inventoryItem = await db.query('SELECT * FROM inventory WHERE inv_id = $1', [invId]);
+        const reviewResult = await db.query('SELECT * FROM reviews WHERE inv_id = $1 ORDER BY review_date DESC', [invId]);
+        const reviews = reviewResult.rows;
+
+        res.render('inventory/detail', { inventoryItem: inventoryItem.rows[0], reviews }); // Render the detail view with inventory item and reviews
+    } catch (error) {
+        console.error('Error fetching inventory item details:', error);
+        res.status(500).send('Error fetching inventory item details');
+    }
+});
+
 router.get('/classification/:id', async (req, res) => {
     console.log(`✅ GET /inventory/classification/${req.params.id} route hit!`);
     const classificationId = req.params.id;
@@ -67,10 +86,6 @@ router.get("/management", (req, res) => {
     });
 });
 
-
-
-
-
 // Add Classification form route
 router.get("/add-classification", (req, res) => {
     res.render("inventory/add-classification", {
@@ -89,8 +104,9 @@ router.post("/add-classification", async (req, res) => {
         res.redirect("/inventory/inventory-display");
     } catch (error) {
         console.error("Error adding classification:", error);
-        req.flash("error", "Failed to add classification");
-        res.redirect("/inventory/add-classification");
+        req.flash("error", "Failed to add classification"); 
+        return res.redirect("/inventory/add-classification"); // Ensure no further processing occurs after sending the response
+
     }
 });
 
@@ -110,8 +126,9 @@ router.get("/add-inventory", async (req, res) => {
         });
     } catch (error) {
         console.error("Error loading add inventory form:", error);
-        req.flash("error", "Error loading form");
-        res.redirect("/inventory/inventory-display");
+        req.flash("error", "Error loading form"); 
+        return res.redirect("/inventory/inventory-display"); // Ensure no further processing occurs after sending the response
+
     }
 });
 
@@ -148,6 +165,25 @@ router.post("/add-inventory", async (req, res) => {
         res.redirect("/inventory/add-inventory");
     }
 });
+
+// Review routes
+router.post('/reviews', reviewController.createReview); // Route to create a review
+router.get('/reviews/:id', async (req, res) => {
+    try {
+        const invId = req.params.id;
+        const reviewResult = await db.query('SELECT * FROM reviews WHERE inv_id = $1', [invId]);
+        const reviews = reviewResult.rows;
+
+        res.render('review/reviews', { invId, reviews });
+    } catch (error) {
+        console.error('Error fetching reviews:', error);
+        res.status(500).send('An error occurred while fetching reviews');
+    }
+});
+
+
+router.put('/reviews', reviewController.updateReview); // Route to update a review
+router.delete('/reviews/:id', reviewController.deleteReview); // Route to delete a review
 
 router.get('/navigation', async (req, res) => {
     const classifications = await classificationModel.getApprovedClassifications();

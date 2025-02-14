@@ -1,23 +1,39 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= vehicle.year %> <%= vehicle.make %> <%= vehicle.model %></title>
-    <link rel="stylesheet" href="/css/styles.css">
-</head>
-<body>
-    <div class="vehicle-detail">
-        <h1><%= vehicle.year %> <%= vehicle.make %> <%= vehicle.model %></h1>
-        <img src="/images/<%= vehicle.image %>" alt="<%= vehicle.year %> <%= vehicle.make %> <%= vehicle.model %>" class="full-size-image">
-        <div class="vehicle-info">
-            <p><strong>Price:</strong> $<%= vehicle.price.toLocaleString() %></p>
-            <p><strong>Mileage:</strong> <%= vehicle.mileage.toLocaleString() %> miles</p>
-            <p><strong>Description:</strong> <%= vehicle.description %></p>
-        </div>
-    </div>
-    <nav>
-        <a href="/inventory/management">Back to Management</a>
-    </nav>
-</body>
-</html>
+<h1>Inventory Item Details</h1>
+// Inventory item details
+
+<h2>Classification</h2>
+<p><%= classification.classification_name %></p>
+
+<h2>Vehicle Details</h2>
+<p>Image: <img src="<%= vehicle.inv_image %>" alt="<%= vehicle.inv_make %> <%= vehicle.inv_model %>"></p>
+<p>Make: <%= vehicle.inv_make %></p>
+<p>Model: <%= vehicle.inv_model %></p>
+<p>Year: <%= vehicle.inv_year %></p>
+<p>Price: $<%= vehicle.inv_price %></p>
+<p>Mileage: <%= vehicle.inv_miles %></p>
+<p>Color: <%= vehicle.inv_color %></p>
+<p>Description: <%= vehicle.inv_description %></p>
+
+
+
+<h2>Reviews</h2>
+<ul>
+    <% reviews.forEach(review => { %>
+        <li>
+            <p><%= review.review_text %></p>
+            <small>Reviewed by: <%= review.reviewer_screen_name %></small>
+            <small>Reviewed on: <%= new Date(review.review_date).toLocaleString() %></small>
+        </li>
+    <% }) %>
+</ul>
+
+<% if (user) { %>
+    <form action="/reviews" method="POST">
+        <textarea name="reviewText" required placeholder="Write your review here..."></textarea>
+        <input type="hidden" name="invId" value="<%= invId %>">
+        <input type="hidden" name="accountId" value="<%= user.account_id %>">
+        <button type="submit">Submit Review</button>
+    </form>
+<% } else { %>
+    <p>Please <a href="/login">log in</a> to add a review.</p>
+<% } %>

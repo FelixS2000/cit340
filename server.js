@@ -33,6 +33,8 @@ const inventoryRoute = require('./routes/inventory');
 const accountRoutes = require('./routes/accountRoute');
 const errorRoutes = require('./routes/error');
 const adminRoutes = require('./routes/admin');
+const reviewRoutes = require('./routes/review'); 
+
 
 
 // Use the routes
@@ -40,6 +42,7 @@ app.use(staticRoutes);
 app.use('/inventory', inventoryRoute);
 app.use('/account', accountRoutes);
 app.use('/admin', adminRoutes);
+app.use('/review', reviewRoutes);
 app.use(errorRoutes);
 
 // Set up view engine
@@ -57,10 +60,15 @@ app.get("/", (req, res) => {
 
 // Use the authentication middleware
 const combinedMiddleware = (req, res, next) => {
-    authMiddleware.checkAuth(req, res, next);
-    authMiddleware.checkAdmin(req, res, next);
-    authMiddleware.checkEmployeeOrAdmin(req, res, next);
-  };
+    authMiddleware.checkAuth(req, res, (err) => {
+        if (err) return next(err); // Handle error if checkAuth fails
+        authMiddleware.checkAdmin(req, res, (err) => {
+            if (err) return next(err); // Handle error if checkAdmin fails
+            authMiddleware.checkEmployeeOrAdmin(req, res, next); // Only call this last
+        });
+    });
+};
+
   app.use(combinedMiddleware);
 
 // Protected route that requires authentication

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reviews</title>
+    <link rel="stylesheet" href="/css/styles.css"> <!-- Link to your CSS -->
+</head>
+<body>
+    <h1>Reviews for Inventory Item</h1>
+    
+    <form action="/reviews" method="POST">
+        <textarea name="reviewText" required placeholder="Write your review here..."></textarea>
+        <input type="hidden" name="invId" value="<%= invId %>">
+        <button type="submit">Submit Review</button>
+    </form>
+
+    <h2>Existing Reviews</h2>
+    <ul>
+        <% reviews.forEach(review => { %>
+            <li>
+                <p><%= review.review_text %></p>
+                <small>Reviewed on: <%= new Date(review.review_date).toLocaleString() %></small>
+                <!-- Add buttons for updating and deleting reviews if needed -->
+            </li>
+        <% }) %>
+    </ul>
+</body>
+</html>
