@@ -1,11 +1,19 @@
 const inventoryModel = require('../models/inventoryModel');
+const classificationModel = require('../models/classificationModel');
 
 // Show all pending (unapproved) inventory items
+
 async function getPendingItems(req, res) {
   try {
-      const classifications = await classificationModel.getUnapprovedClassifications();
-      const inventory = await inventoryModel.getUnapprovedInventory();
-      res.render('admin/pending', { classifications, inventory });
+      const classifications = await classificationModel.getClassificationsByApproval(false);
+      const inventory = await inventoryModel.getInventoryByApproval(false);
+      res.render('admin/pending', { 
+        title: 'Pending Approvals',
+        classifications, 
+        inventory,
+        errors: null
+      });
+
   } catch (error) {
       res.status(500).send('Error fetching pending items');
   }

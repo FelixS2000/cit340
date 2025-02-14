@@ -30,11 +30,15 @@ app.use(cookieParser());
 app.use(expressLayouts);
 app.set("layout", "./layouts/layout.ejs");
 app.use(session({
-    secret: process.env.SESSION_SECRET || 'default_session_secret',
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: false }
+    secret: process.env.SESSION_SECRET || 'strong_default_secret_key_123!',
+    resave: true,
+    saveUninitialized: false,
+    cookie: { 
+        secure: false,
+        maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    }
 }));
+
 app.use(flash());
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
@@ -67,9 +71,12 @@ app.use(errorRoutes);
 app.set("view engine", "ejs");
 app.use(expressLayouts);
 app.use((req, res, next) => {
-    res.locals.user = req.user || null; // Make user available in EJS views
+    // Make session data available in views and middleware
+    res.locals.user = req.session.accountData || null;
+    res.locals.session = req.session;
     next();
 });
+
 
 // Add a default route for the home page
 app.get("/", (req, res) => {

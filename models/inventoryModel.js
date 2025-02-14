@@ -130,10 +130,42 @@ async function getAllInventoryWithClassification() {
 
 // Get all unapproved inventory items
 async function getUnapprovedInventory() {
-    const sql = 'SELECT * FROM inventory WHERE inv_approved = FALSE';
-    const result = await db.query(sql);
-    return result.rows;
+    try {
+        // First check if the inv_approved column exists
+        const checkColumn = `
+            SELECT column_name 
+            FROM information_schema.columns 
+            WHERE table_name='inventory' 
+            AND column_name='inv_approved'
+        `;
+        const columnExists = await pool.query(checkColumn);
+        
+        if (columnExists.rows.length === 0) {
+            console.error('inv_approved column does not exist in inventory table');
+            // Create the column if it doesn't exist
+            await pool.query(`
+                ALTER TABLE inventory 
+                ADD COLUMN inv_approved BOOLEAN DEFAULT FALSE
+            `);
+            console.log('Created inv_approved column');
+        }
+
+        const sql = `
+            SELECT * 
+            FROM inventory 
+            WHERE inv_approved = FALSE 
+            ORDER BY inv_id DESC
+        `;
+        const result = await pool.query(sql);
+        return result.rows;
+    } catch (error) {
+        console.error('Error in getUnapprovedInventory:', error);
+        throw error;
+    }
 }
+
+
+
 
 // Approve an inventory item
 async function approveInventory(inv_id, admin_id) {
@@ -143,15 +175,17 @@ async function approveInventory(inv_id, admin_id) {
             account_id = $1, 
             inv_approved_date = NOW() 
         WHERE inv_id = $2`;
-    await db.query(sql, [admin_id, inv_id]);
+    await pool.query(sql, [admin_id, inv_id]);
 }
+
 
 
 // Delete/reject an unapproved inventory item
 async function deleteInventory(inv_id) {
     const sql = 'DELETE FROM inventory WHERE inv_id = $1';
-    await db.query(sql, [inv_id]);
+    await pool.query(sql, [inv_id]);
 }
+
 
 // Export the functions (removed addInventory since it belongs in the controller)
 module.exports = {
