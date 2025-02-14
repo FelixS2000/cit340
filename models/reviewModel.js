@@ -35,24 +35,7 @@ async function createReview(reviewText, invId, accountId) {
     }
 }
 
-async function createReview(req, res) {    
-  // Check if user is authenticated
-  if (!req.user || !req.user.account_id) {
-      console.log('User not authenticated');
-      return res.status(401).json({ error: 'User not authenticated' });
-  }
 
-  const accountId = req.user.account_id;
-
-  try {
-      await reviewModel.createReview(reviewText, invId, accountId);
-      console.log('Review created successfully');
-      res.status(201).json({ message: 'Review created successfully' });
-  } catch (error) {
-      console.error('Error creating review:', error);
-      res.status(500).json({ error: 'Error creating review' });
-  }
-}
 
 
 // Fetch all reviews for a specific inventory item
