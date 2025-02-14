@@ -59,11 +59,12 @@ function ensureAdmin(req, res, next) {
 }
 
 function ensureAuthenticated(req, res, next) {
-    if (!req.user) {
+    if (!req.session.accountData) {
         return res.redirect('/account/login'); // Redirect to login instead of sending JSON
     }
     next();
 }
+
 
 function ensureEmployeeOrAdmin(req, res, next) {
     if (!req.user || (req.user.account_type !== 'Employee' && req.user.account_type !== 'Admin')) { 

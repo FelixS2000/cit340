@@ -58,14 +58,18 @@ async function accountLogin(req, res) {
 
         res.cookie('jwt', token, { httpOnly: true });
         
-        // Set local variables for immediate use
-        res.locals.user = {
+        // Store user data in session
+        req.session.accountData = {
             account_id: user.account_id,
             account_firstname: user.account_firstname,
             account_lastname: user.account_lastname,
             account_email: user.account_email,
             account_type: user.account_type,
         };
+        
+        // Set local variables for immediate use
+        res.locals.user = req.session.accountData;
+
         
         res.redirect('/account/management');
 

@@ -1,29 +1,102 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reviews</title>
-    <link rel="stylesheet" href="/css/styles.css"> <!-- Link to your CSS -->
-</head>
-<body>
-    <h1>Reviews for Inventory Item</h1>
-    
-    <form action="/reviews" method="POST">
-        <textarea name="reviewText" required placeholder="Write your review here..."></textarea>
-        <input type="hidden" name="invId" value="<%= invId %>">
-        <button type="submit">Submit Review</button>
-    </form>
+<!-- views/review/reviews.ejs -->
+<% if (title) { %>
+    <h1><%= title %></h1>
+<% } %>
 
-    <h2>Existing Reviews</h2>
-    <ul>
-        <% reviews.forEach(review => { %>
-            <li>
-                <p><%= review.review_text %></p>
-                <small>Reviewed on: <%= new Date(review.review_date).toLocaleString() %></small>
-                <!-- Add buttons for updating and deleting reviews if needed -->
-            </li>
-        <% }) %>
-    </ul>
-</body>
-</html>
+<main>
+    <!-- Add Review Form -->
+    <% if (locals.accountData) { %>
+        <div class="review-form-container">
+            <h2>Add a Review</h2>
+            <form id="addReviewForm" action="/reviews" method="POST">
+                <label for="inv_id">Select Vehicle:</label>
+                <select name="inv_id" id="inv_id" required>
+                    <option value="">Choose a vehicle...</option>
+                    <% if (locals.vehicles) { %>
+                        <% vehicles.forEach(vehicle => { %>
+                            <option value="<%= vehicle.inv_id %>">
+                                <%= vehicle.inv_make %> <%= vehicle.inv_model %>
+                            </option>
+                        <% }) %>
+                    <% } %>
+                </select>
+
+                <label for="review_text">Your Review:</label>
+                <textarea name="review_text" id="review_text" required 
+                          rows="4" placeholder="Write your review here..."></textarea>
+
+                <button type="submit">Submit Review</button>
+            </form>
+        </div>
+    <% } else { %>
+        <p>Please <a href="/account/login">login</a> to add a review.</p>
+    <% } %>
+
+    <!-- Existing Reviews Display -->
+        <div class="reviews-container">
+        <h2>Current Reviews</h2>
+        <% if (reviews && reviews.length > 0) { %>
+            <% reviews.forEach(review => { %>
+                <div class="review-card">
+                    <p class="review-text"><%= review.review_text %></p>
+                    <p class="review-details">
+                        <% if (review.inv_make && review.inv_model) { %>
+                            Vehicle: <%= review.inv_make %> <%= review.inv_model %>
+                            <br>
+                        <% } %>
+                        <% if (review.account_firstname) { %>
+                            By: <%= review.account_firstname %>
+                            <br>
+                        <% } %>
+                        Date: <%= new Date(review.review_date).toLocaleDateString() %>
+                    </p>
+                </div>
+            <% }); %>
+        <% } else { %>
+            <p>No reviews found.</p>
+        <% } %>
+    </div>
+</main>
+
+<!-- Add this CSS to your styles.css -->
+<style>
+.review-form-container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #f5f5f5;
+    border-radius: 8px;
+}
+
+.review-form-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.review-form-container label {
+    font-weight: bold;
+}
+
+.review-form-container select,
+.review-form-container textarea {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 100%;
+}
+
+.review-form-container button {
+    padding: 10px;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.review-form-container button:hover {
+    background: #45a049;
+}
+</style>
+<script src="/js/review.js"></script>

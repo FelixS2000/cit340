@@ -1,15 +1,23 @@
 const express = require('express');
 const router = express.Router();
 const reviewController = require('../controllers/reviewController');
+const authMiddleware = require('../utilities/authMiddleware');
 
-router.get('/reviews', reviewController.renderReviews);
-router.post('/reviews', reviewController.createReview);
+// Base routes
+router.get('/', authMiddleware.ensureAuthenticated, reviewController.renderReviews);
 
-router.get('/reviews/:id', reviewController.getReviews);
-router.put('/reviews/:id', reviewController.updateReview);
-router.delete('/reviews/:id', reviewController.deleteReview);
 
-router.put('/reviews', reviewController.updateReview);
-router.delete('/reviews/:id', reviewController.deleteReview);
+router.post('/', authMiddleware.ensureAuthenticated, reviewController.createReview);
+
+
+router.get('/:id', authMiddleware.ensureAuthenticated, reviewController.getReviews);
+
+
+router.put('/:id', authMiddleware.ensureAuthenticated, reviewController.updateReview);
+
+
+router.delete('/:id', authMiddleware.ensureAuthenticated, reviewController.deleteReview);
+
+
 
 module.exports = router;

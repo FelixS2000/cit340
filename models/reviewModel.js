@@ -1,18 +1,59 @@
 const pool = require('../database/connection'); // Import database connection
 
-// Create a new review
+
+// Get all reviews
+async function getAllReviews() {
+    try {
+        const sql = `
+            SELECT r.*, i.inv_make, i.inv_model, a.account_firstname
+            FROM public.review r
+            JOIN public.inventory i ON r.inv_id = i.inv_id
+            JOIN public.account a ON r.account_id = a.account_id
+            ORDER BY r.review_date DESC
+        `;
+        const result = await pool.query(sql);
+        return result.rows;
+    } catch (error) {
+        console.error('Error getting all reviews:', error);
+        throw error;
+    }
+}
+
+// Create a review
 async function createReview(reviewText, invId, accountId) {
     try {
         const sql = `
             INSERT INTO public.review (review_text, inv_id, account_id)
             VALUES ($1, $2, $3)
+            RETURNING *
         `;
-        await pool.query(sql, [reviewText, invId, accountId]);
+        const result = await pool.query(sql, [reviewText, invId, accountId]);
+        return result.rows[0];
     } catch (error) {
-        console.error('❌ Error creating review:', error.message);
+        console.error('Error creating review:', error);
         throw error;
     }
 }
+
+async function createReview(req, res) {    
+  // Check if user is authenticated
+  if (!req.user || !req.user.account_id) {
+      console.log('User not authenticated');
+      return res.status(401).json({ error: 'User not authenticated' });
+  }
+
+  const accountId = req.user.account_id;
+
+  try {
+      await reviewModel.createReview(reviewText, invId, accountId);
+      console.log('Review created successfully');
+      res.status(201).json({ message: 'Review created successfully' });
+  } catch (error) {
+      console.error('Error creating review:', error);
+      res.status(500).json({ error: 'Error creating review' });
+  }
+}
+
 
 // Fetch all reviews for a specific inventory item
 async function getReviewsByInventoryId(invId) {
@@ -59,4 +100,5 @@ module.exports = {
     getReviewsByInventoryId,
     updateReview,
     deleteReview,
+    getAllReviews,
 };
