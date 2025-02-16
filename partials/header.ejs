@@ -17,9 +17,10 @@
       <a title="Click to update your account" href="/account/update">Update</a>
 
       <!-- Show Admin Panel only if user is an Admin -->
-      <% if (locals.user.account_type === 'Admin') { %>
+      <% if (locals.user.account_type === 3) { %>
         <li><a title="Admin Panel" href="/admin/pending">Admin Panel</a></li>
       <% } %>
+
 
       <!-- Logout button -->
       <a title="Click to log out" href="/account/logout">Logout</a>

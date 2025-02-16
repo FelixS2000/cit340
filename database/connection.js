@@ -2,15 +2,16 @@
 const { Pool } = require('pg');
 
 const pool = new Pool({
-    user: 'cse340dbguzman',
-    host: 'dpg-cu55pnggph6c73du20i0-a.oregon-postgres.render.com',
-    database: 'cse340dbguzman',
-    password: 'K5RxwheTudWT21nsfYlA0rxoYGApEm7J',
+    user: 'cse340dbguzman',  // Replace with new credentials
+    host: 'dpg-cup1f2qj1k6c739epkqg-a.oregon-postgres.render.com',   // Replace with new host
+    database: 'cse340dbguzman_ij3z', // Replace with new database name
+    password: 'P6hRWe2R6eJzUqYgImRxKhKVs7N7gZUy', // Replace with new password
     port: 5432,
     ssl: {
         rejectUnauthorized: false
     }
 });
+
 
 // Test database connection
 pool.query('SELECT NOW()', (err, res) => {

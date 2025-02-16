@@ -49,7 +49,8 @@ function checkEmployeeOrAdmin(req, res, next) {
 function ensureAdmin(req, res, next) {
     console.log("🔍 Checking admin access:", req.session.accountData); // ✅ Debugging: Check user info
 
-    if (!req.session.accountData || req.session.accountData.account_type !== 'Admin') { 
+    if (!req.session.accountData || req.session.accountData.account_type !== 3) { 
+
         console.log("❌ Access denied. User is not an admin.");
         return res.status(403).send("Access denied"); 
     }
